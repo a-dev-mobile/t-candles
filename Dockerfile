@@ -21,7 +21,7 @@ RUN mkdir src && \
 # 3. Теперь копируем реальный исходный код
 COPY src ./src
 COPY config ./config
-COPY .sqlx .sqlx/
+# COPY .sqlx .sqlx/
 
 # 4. Выполняем финальную сборку
 RUN cargo build --release
