@@ -1,0 +1,66 @@
+[log]
+level = "info"
+format = "json"            # Use JSON format in production for better log parsing
+
+[postgres_db]
+max_connections = 20      # More connections for production
+timeout_seconds = 10
+pool_size = 10            # Larger pool for production
+
+[mongo_db]
+timeout_seconds = 30      # Longer timeout for production
+pool_size = 20            # Larger pool for production
+retry_writes = true       
+write_concern = "majority"
+read_concern = "local"    
+
+[tinkoff_api]
+base_url = "https://invest-public-api.tinkoff.ru:443"
+domain = "invest-public-api.tinkoff.ru"
+timeout = 60   # longer timeout for production
+keepalive = 120 # longer keepalive for production
+
+[tinkoff_market_data_updater]
+enabled = true
+interval_seconds = 3600   # Run every hour in production
+max_retries = 5
+retry_delay_seconds = 30
+update_start_time = "07:00"
+update_end_time = "23:59"
+timezone = "Europe/Moscow"
+
+[currency_rates_updater]
+enabled = true
+interval_seconds = 1800   # Run every 30 minutes in production
+max_retries = 5
+retry_delay_seconds = 30
+update_start_time = "07:00"
+update_end_time = "23:59"
+timezone = "Europe/Moscow"
+
+[tinkoff_market_data_stream]
+enabled = true
+interval_seconds = 0  
+max_retries = 5
+retry_delay_seconds = 30
+update_start_time = "07:00"
+update_end_time = "23:59"
+timezone = "Europe/Moscow"
+
+[historical_candle_data]
+enabled = true
+max_days_history = 7      # Keep 7 days of history in production
+request_delay_ms = 300    # Higher delay for production to be safer with API limits
+run_on_startup = false    # Don't run on startup in production
+force_update = false      # Don't force updates in production
+
+[historical_candle_updater]
+enabled = true
+interval_seconds = 86400  # Run once a day
+max_retries = 5
+retry_delay_seconds = 300
+update_start_time = "02:00" # Run at 2 AM to avoid peak hours
+update_end_time = "06:00"   # Finish by 6 AM
+timezone = "Europe/Moscow"
+run_on_startup = false      # Don't run on startup in production
+timeout_seconds = 14400     # Maximum runtime of 4 hours

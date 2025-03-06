@@ -1,0 +1,12 @@
+[package]
+name = "t-candles"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+axum = { version = "0.8.1", features = ["macros"] }
+tokio = { version = "1.43.0", features = ["full", "test-util"] }
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.139"
+toml = "0.8.20"
+dotenv = "0.15"

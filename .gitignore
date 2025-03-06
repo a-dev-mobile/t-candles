@@ -1,0 +1,11 @@
+/target
+.env
+.env.*
+*.log
+.idea/
+
+rust_doc
+.vscode/scripts/*
+
+.vscode/tasks.json
+makefile

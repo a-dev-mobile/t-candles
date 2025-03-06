@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Run API (${input:env})",
+      "program": "${workspaceFolder}/target/debug/investment_tracker",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "sourceLanguages": ["rust"],
+      "preLaunchTask": "cargo build:${input:env}",
+      "envFile": "${workspaceFolder}/.env.${input:env}",
+      "console": "integratedTerminal"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "env",
+      "type": "pickString",
+      "description": "Выберите окружение",
+      "options": ["local", "dev", "prod"],
+      "default": "local"
+    }
+  ]
+}

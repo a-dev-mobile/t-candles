@@ -1,0 +1,64 @@
+[log]
+level = "debug,sqlx=debug"
+format = "text"            # Возможные значения: "json" или "text"
+
+[postgres_db]
+max_connections = 5
+timeout_seconds = 10
+pool_size = 2
+
+[mongo_db]
+timeout_seconds = 10
+pool_size = 10             # MongoDB connections pool size
+retry_writes = true       
+write_concern = "majority" # Options: "majority", "1" (default), "2", etc.
+read_concern = "local"     # Options: "local", "majority", "available", "linearizable"
+
+[tinkoff_api]
+base_url = "https://invest-public-api.tinkoff.ru:443"
+domain = "invest-public-api.tinkoff.ru"
+timeout = 30   # seconds
+keepalive = 60 # seconds
+
+[tinkoff_market_data_updater]
+enabled = false
+interval_seconds = 10  # 
+max_retries = 3
+retry_delay_seconds = 5
+update_start_time = "07:00"
+update_end_time = "23:59"
+timezone = "Europe/Moscow"
+
+[currency_rates_updater]
+enabled = false
+interval_seconds = 10
+max_retries = 3
+retry_delay_seconds = 5
+update_start_time = "07:00"
+update_end_time = "23:59"
+timezone = "Europe/Moscow"
+
+[tinkoff_market_data_stream]
+enabled = false
+interval_seconds = 0  
+max_retries = 3
+retry_delay_seconds = 5
+update_start_time = "07:00"
+update_end_time = "23:59"
+timezone = "Europe/Moscow"
+
+[historical_candle_data]
+enabled = false                # Включить/выключить сервис загрузки исторических свечей
+max_days_history = 4          # Количество дней истории для загрузки (сколько дней хранить)
+request_delay_ms = 200        # Задержка между API запросами в мс (для избежания лимитов API)
+run_on_startup = false         # Запускать ли загрузку исторических данных при старте приложения
+force_update = false          # Принудительное обновление данных даже если они уже есть
+
+[historical_candle_updater]
+enabled = false                # Включить/выключить сервис периодического обновления исторических свечей
+max_retries = 3               # Максимальное количество попыток при ошибке
+retry_delay_seconds = 60      # Задержка между повторными попытками в секундах
+update_start_time = "00:00"   # Время начала обновления (по Московскому времени)
+update_end_time = "05:00"     # Время окончания обновления (по Московскому времени)
+timezone = "Europe/Moscow"    # Часовой пояс для расписания обновления
+run_on_startup = false        # Запускать ли обновление сразу при старте приложения
