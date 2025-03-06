@@ -1,1 +1,1 @@
-pub mod tinkoff;
+pub mod db_service;

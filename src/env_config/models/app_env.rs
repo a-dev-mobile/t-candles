@@ -6,6 +6,9 @@ use std::str::FromStr;
 pub struct AppEnv {
     pub env: Env,
     pub clickhouse_url: String,
+    pub clickhouse_user: String,
+    pub clickhouse_password: String,
+    pub clickhouse_database: String,
     pub tinkoff_token: String,
     pub server_port: u16,
     pub server_address: String,

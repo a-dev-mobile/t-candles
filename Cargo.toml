@@ -11,4 +11,15 @@ serde_json = "1.0.140"
 toml = "0.8.20"
 
 tracing = "0.1.41"
-tracing-subscriber = { version = "0.3.19", features = ["fmt", "env-filter", "json"] }
+tracing-subscriber = { version = "0.3.19", features = [
+  "fmt",
+  "env-filter",
+  "json",
+] }
+base64 = "0.22.1"
+clickhouse = "0.13.1"
+clickhouse-derive = "0.2.0"
+async-trait = "0.1.87"
+chrono = { version = "0.4.40", features = ["serde"] }
+uuid = { version = "1.15.1", features = ["v4", "serde"] }
+futures = "0.3.31"

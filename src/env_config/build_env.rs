@@ -8,6 +8,9 @@ impl AppEnv {
         let server_port = get_env_var("SERVER_PORT");
         let server_address = get_env_var("SERVER_ADDRESS");
         let clickhouse_url = get_env_var("CLICKHOUSE_URL");
+        let clickhouse_user = get_env_var("CLICKHOUSE_USER");
+        let clickhouse_password = get_env_var("CLICKHOUSE_PASSWORD");
+        let clickhouse_database = get_env_var("CLICKHOUSE_DATABASE");
         let tinkoff_token = get_env_var("TINKOFF_TOKEN");
 
         AppEnv {
@@ -15,8 +18,17 @@ impl AppEnv {
             server_port: server_port.parse().expect("PORT must be a number"),
             server_address,
             clickhouse_url,
+            clickhouse_user,
+            clickhouse_password,
+            clickhouse_database,
             tinkoff_token,
         }
+    }
+}
+
+impl Default for AppEnv {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
