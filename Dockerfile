@@ -1,8 +1,12 @@
 # Сборка приложения
 # https://hub.docker.com/_/rust/tags
-FROM rust:1.84.1 AS builder
+FROM rust:1.85.0 AS builder
 
 WORKDIR /app
+
+# Добавляем переменную окружения для сборки
+ARG RUST_ENV=production
+ENV RUST_ENV=${RUST_ENV}
 
 # 1. Копируем только файлы для зависимостей
 COPY Cargo.toml Cargo.lock ./
@@ -31,9 +35,11 @@ RUN apt-get update && \
 
 WORKDIR /usr/local/bin
 
-COPY --from=builder /app/target/release/investment_tracker .
+COPY --from=builder /app/target/release/t-candles .
 COPY --from=builder /app/config /usr/local/bin/config
 
 EXPOSE 5000
 
-CMD ["./investment_tracker"]
+ENV RUST_ENV=production
+
+CMD ["./t-candles"]

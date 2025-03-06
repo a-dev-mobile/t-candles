@@ -1,24 +1,26 @@
-use std::sync::Arc;
+use std::{sync::Arc, time::Duration};
+use tokio::time;
 use tracing::{debug, error, info};
 
 use crate::{
     AppState,
-    db::clickhouse::error::ClickhouseError,
-    generate::tinkoff_public_invest_api_contract_v1::{
-        InstrumentStatus, InstrumentsRequest, Share,
-    },
+    generate::tinkoff_public_invest_api_contract_v1::{InstrumentStatus, InstrumentsRequest},
 };
 
-pub struct TinkoffInstrumentsUpdater {
+// Mark the struct as pub(super) to make it visible only within the parent module
+pub(super) struct TinkoffInstrumentsUpdater {
     app_state: Arc<AppState>,
 }
 
 impl TinkoffInstrumentsUpdater {
-    pub async fn new(app_state: Arc<AppState>) -> Self {
+    pub(super) async fn new(app_state: Arc<AppState>) -> Self {
         TinkoffInstrumentsUpdater { app_state }
     }
 
-    pub async fn update_shares(&self) -> Result<u64, Box<dyn std::error::Error>> {
+    // This method is now pub(super) and can be called only by code in the parent module
+    pub(super) async fn update_shares(&self) -> Result<u64, Box<dyn std::error::Error>> {
+        info!("Fetching updated instruments data");
+        
         // Fetch shares from Tinkoff API
         let request = self
             .app_state

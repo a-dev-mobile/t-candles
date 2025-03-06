@@ -8,7 +8,8 @@ use env_config::models::{
     app_env::{AppEnv, Env},
     app_setting::AppSettings,
 };
-use services::{db_service::DbService, tinkoff_client_grpc::TinkoffClient, tinkoff_instruments::client::TinkoffInstrumentsUpdater};
+use services::{db_service::DbService, tinkoff_client_grpc::TinkoffClient, tinkoff_instruments::scheduler::TinkoffInstrumentsScheduler, };
+use tokio::signal;
 use std::{net::SocketAddr, sync::Arc};
 use tracing::{debug, error, info}; // Import the DbService
 
@@ -88,20 +89,44 @@ async fn main() {
         db_service: Arc::new(db_service),
         grpc_tinkoff,
     });
-    let updater = TinkoffInstrumentsUpdater::new(app_state).await;
 
-
-    let a = updater.update_shares().await;
-
-    println!("{:?}", a);
-    // You would add other initialization code here:
-    // - Setup databases
-    // - Create application router
-    // - Initialize clients
-    // - Start background services
-    // - Start HTTP server
+    // Initialize and start services
+    start_services(app_state).await;
 
     info!("Application initialization complete!");
+    
+    // Keep the application running until a shutdown signal is received
+    wait_for_shutdown_signal().await;
+    info!("Shutdown signal received, terminating application...");
+}
+
+// Wait for a shutdown signal (Ctrl+C on most systems)
+async fn wait_for_shutdown_signal() {
+    // Wait for CTRL+C
+    match signal::ctrl_c().await {
+        Ok(()) => info!("CTRL+C received, shutting down..."),
+        Err(e) => error!("Failed to listen for shutdown signal: {}", e),
+    }
+    
+    // Here you can add a graceful shutdown sequence if needed:
+    // - Close database connections
+    // - Finish pending tasks
+    // - Notify services to terminate
+}
+
+// Start all required services
+async fn start_services(app_state: Arc<AppState>) {
+    // Initialize the instruments scheduler
+    let instruments_scheduler = TinkoffInstrumentsScheduler::new(app_state.clone()).await;
+    
+    // If you need to trigger an immediate update before starting the scheduler:
+    match instruments_scheduler.trigger_update().await {
+        Ok(count) => info!("Initial instrument update completed. Updated {} records", count),
+        Err(e) => error!("Failed to perform initial instrument update: {}", e),
+    }
+    
+    // Start the automatic scheduler
+    instruments_scheduler.start().await;
 }
 
 // Application state struct to hold all services
