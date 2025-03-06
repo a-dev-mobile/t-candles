@@ -42,7 +42,7 @@ pub fn init_logger(log_level: &str, log_format: &str) -> Result<(), Error> {
     // Parse and validate the log level, falling back to "info" if invalid
     let filter = EnvFilter::try_new(log_level)
         .map_err(|_| Error::new(ErrorKind::InvalidInput, "Invalid log level"))?;
-
+    
     // Create the base formatter with common configuration
     let builder = tracing_subscriber::fmt()
         .with_env_filter(filter)
@@ -50,14 +50,14 @@ pub fn init_logger(log_level: &str, log_format: &str) -> Result<(), Error> {
         .with_target(false)
         // Track span lifecycle events (creation and closure)
         .with_span_events(FmtSpan::NEW | FmtSpan::CLOSE);
-
+    
     // Initialize the logger with the specified format
     let format = LogFormat::from(log_format);
     match format {
         LogFormat::Json => builder.json().init(),
         LogFormat::Plain => builder.init(),
     }
-
+    
     Ok(())
     // Err(())
 }

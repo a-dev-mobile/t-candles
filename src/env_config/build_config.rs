@@ -7,13 +7,13 @@ use toml;
 
 impl AppConfig {
     pub fn new(env: &Env) -> Self {
-        let config = Self::load_config(&env).expect("Failed to load configuration");
+        
 
-        config
+        Self::load_config(env).expect("Failed to load configuration")
     }
 
     fn load_config(env: &Env) -> Result<AppConfig, Box<dyn std::error::Error>> {
-        let config_path = format!("config/{}.toml", env.to_string());
+        let config_path = format!("config/{}.toml", env);
         let path = Path::new(&config_path);
 
         let content = fs::read_to_string(path)?;
