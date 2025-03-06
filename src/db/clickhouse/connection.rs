@@ -23,13 +23,12 @@ impl ClickhouseConnection {
             .with_url(&settings.app_env.clickhouse_url)
             .with_user(&settings.app_env.clickhouse_user)
             .with_password(&settings.app_env.clickhouse_password)
-            .with_database(&settings.app_env.clickhouse_database);
-            
-        // Add timeout options
-        let client = client
+            .with_database(&settings.app_env.clickhouse_database)
             .with_option("connect_timeout", settings.app_config.clickhouse.timeout.to_string())
             .with_option("receive_timeout", settings.app_config.clickhouse.timeout.to_string())
             .with_option("send_timeout", settings.app_config.clickhouse.timeout.to_string());
+            
+      
             
         // Test connection
         let test_query = "SELECT 1";

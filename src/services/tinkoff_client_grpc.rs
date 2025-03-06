@@ -1,6 +1,6 @@
 use crate::env_config::models::app_setting::AppSettings;
-use crate::gen::tinkoff_public_invest_api_contract_v1::market_data_stream_service_client::MarketDataStreamServiceClient;
-use crate::gen::tinkoff_public_invest_api_contract_v1::{
+use crate::generate::tinkoff_public_invest_api_contract_v1::market_data_stream_service_client::MarketDataStreamServiceClient;
+use crate::generate::tinkoff_public_invest_api_contract_v1::{
     instruments_service_client::InstrumentsServiceClient,
     market_data_service_client::MarketDataServiceClient,
     operations_service_client::OperationsServiceClient, users_service_client::UsersServiceClient,

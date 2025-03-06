@@ -9,13 +9,18 @@ tokio = { version = "1.43.0", features = ["full", "test-util"] }
 serde = { version = "1.0.218", features = ["derive"] }
 serde_json = "1.0.140"
 toml = "0.8.20"
-
+prost = "0.13.5"
+prost-types = "0.13.5"
+tonic = { version = "0.12.3", features =  ["tls", "transport","tls-webpki-roots"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = [
   "fmt",
   "env-filter",
   "json",
 ] }
+rustls-native-certs = "0.8.1"
+
+rustls = { version = "0.23.23", features = ["ring"] }
 base64 = "0.22.1"
 clickhouse = "0.13.1"
 clickhouse-derive = "0.2.0"

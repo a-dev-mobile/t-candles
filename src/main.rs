@@ -1,15 +1,16 @@
+mod db;
 mod env_config;
+mod generate;
 mod logger;
-mod db; 
-mod services; 
+mod services;
 use env_config::models::{
     app_config::AppConfig,
     app_env::{AppEnv, Env},
     app_setting::AppSettings,
 };
+use services::{db_service::DbService, tinkoff_client_grpc::TinkoffClient, tinkoff_instruments::client::TinkoffInstrumentsUpdater};
 use std::{net::SocketAddr, sync::Arc};
-use tracing::{debug, info, error};
-use services::db_service::DbService;  // Import the DbService
+use tracing::{debug, error, info}; // Import the DbService
 
 /// Initialize application settings and logger
 async fn initialize() -> AppSettings {
@@ -44,21 +45,6 @@ async fn initialize() -> AppSettings {
     app_settings
 }
 
-// Function to check database connection
-async fn check_database(db_service: &DbService) -> bool {
-    // Use direct client query instead of repository
-    match db_service.connection.get_client().query("SELECT 1").fetch_one::<u8>().await {
-        Ok(_) => {
-            info!("Successfully connected to ClickHouse and executed a query");
-            true
-        },
-        Err(err) => {
-            error!("Failed to execute test query on ClickHouse: {}", err);
-            false
-        }
-    }
-}
-
 #[tokio::main]
 async fn main() {
     // Environment variables are already loaded via IDE/editor settings
@@ -72,20 +58,12 @@ async fn main() {
         Ok(service) => {
             info!("Database service initialized successfully");
             service
-        },
+        }
         Err(err) => {
             error!("Failed to initialize database service: {}", err);
             panic!("Cannot continue without database service");
         }
     };
-
-    // Check that database is working
-    if check_database(&db_service).await {
-        info!("✅ ClickHouse database connection verified");
-    } else {
-        error!("❌ ClickHouse database connection check failed");
-        panic!("Cannot continue with database issues");
-    }
 
     // Parse server address
     let http_addr: SocketAddr = format!(
@@ -97,12 +75,25 @@ async fn main() {
 
     info!("Server address configured at: {}", http_addr);
 
+    // Initialize Tinkoff client
+    let grpc_tinkoff = Arc::new(
+        TinkoffClient::new(settings.clone())
+            .await
+            .expect("Failed to initialize Tinkoff client"),
+    );
+
     // Create application state with services
-    let app_state = Arc::new(AppState {
+    let app_state: Arc<AppState> = Arc::new(AppState {
         settings: settings.clone(),
         db_service: Arc::new(db_service),
+        grpc_tinkoff,
     });
+    let updater = TinkoffInstrumentsUpdater::new(app_state).await;
 
+
+    let a = updater.update_shares().await;
+
+    println!("{:?}", a);
     // You would add other initialization code here:
     // - Setup databases
     // - Create application router
@@ -117,4 +108,5 @@ async fn main() {
 pub struct AppState {
     pub settings: Arc<AppSettings>,
     pub db_service: Arc<DbService>,
+    pub grpc_tinkoff: Arc<TinkoffClient>,
 }
