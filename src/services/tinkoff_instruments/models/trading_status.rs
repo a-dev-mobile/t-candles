@@ -1,3 +1,5 @@
+// src/services/tinkoff_instruments/models/trading_status.rs
+use crate::generate::tinkoff_public_invest_api_contract_v1::SecurityTradingStatus;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -8,30 +10,19 @@ pub struct TinkoffTradingStatusModel {
 
 impl From<i32> for TinkoffTradingStatusModel {
     fn from(raw: i32) -> Self {
-        let value = match raw {
-            0 => "UNSPECIFIED",
-            1 => "NOT_AVAILABLE_FOR_TRADING",
-            2 => "OPENING_PERIOD",
-            3 => "CLOSING_PERIOD",
-            4 => "BREAK_IN_TRADING",
-            5 => "NORMAL_TRADING",
-            6 => "CLOSING_AUCTION",
-            7 => "DARK_POOL_AUCTION",
-            8 => "DISCRETE_AUCTION",
-            9 => "OPENING_AUCTION_PERIOD",
-            10 => "TRADING_AT_CLOSING_AUCTION_PRICE",
-            11 => "SESSION_ASSIGNED",
-            12 => "SESSION_CLOSE",
-            13 => "SESSION_OPEN",
-            14 => "DEALER_NORMAL_TRADING",
-            15 => "DEALER_BREAK_IN_TRADING",
-            16 => "DEALER_NOT_AVAILABLE_FOR_TRADING",
-            _ => "UNKNOWN",
-        };
+        let value = SecurityTradingStatus::from_i32(raw)
+            .map(|status| status.as_str_name().to_string())
+            .unwrap_or_else(|| "UNKNOWN".to_string());
 
+        Self { raw, value }
+    }
+}
+
+impl From<SecurityTradingStatus> for TinkoffTradingStatusModel {
+    fn from(status: SecurityTradingStatus) -> Self {
         Self {
-            raw,
-            value: value.to_string(),
+            raw: status as i32,
+            value: status.as_str_name().to_string(),
         }
     }
 }
