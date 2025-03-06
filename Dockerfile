@@ -10,7 +10,7 @@ ENV RUST_ENV=${RUST_ENV}
 
 # 1. Копируем только файлы для зависимостей
 COPY Cargo.toml Cargo.lock ./
-COPY build.rs ./
+# COPY build.rs ./
 
 # 2. Создаем фиктивную структуру src для сборки зависимостей
 RUN mkdir src && \
