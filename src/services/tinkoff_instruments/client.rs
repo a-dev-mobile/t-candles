@@ -3,8 +3,8 @@ use tokio::time;
 use tracing::{debug, error, info};
 
 use crate::{
-    AppState,
-    generate::tinkoff_public_invest_api_contract_v1::{InstrumentStatus, InstrumentsRequest},
+
+    app_state::models::AppState, generate::tinkoff_public_invest_api_contract_v1::{InstrumentStatus, InstrumentsRequest}
 };
 
 // Mark the struct as pub(super) to make it visible only within the parent module

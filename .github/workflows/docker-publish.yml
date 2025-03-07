@@ -38,5 +38,3 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/t-candles:latest
           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/t-candles:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/t-candles:buildcache,mode=max
-          build-args: |
-            RUST_ENV=${{ env.BUILD_ENV }}

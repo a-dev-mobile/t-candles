@@ -1,17 +1,28 @@
+mod api;
 mod db;
 mod env_config;
 mod generate;
+mod layers;
 mod logger;
 mod services;
-use env_config::models::{
-    app_config::AppConfig,
-    app_env::{AppEnv, Env},
-    app_setting::AppSettings,
+mod utils;
+
+mod app_state;
+
+
+use app_state::models::AppState;
+use axum::{Router, routing::get};
+use db::db_service::DbService;
+use env_config::models::{app_config::AppConfig, app_env::AppEnv, app_setting::AppSettings};
+use layers::{create_cors, create_trace};
+use services::{
+
+    tinkoff_client_grpc::TinkoffClient, tinkoff_instruments::scheduler::TinkoffInstrumentsScheduler
 };
-use services::{db_service::DbService, tinkoff_client_grpc::TinkoffClient, tinkoff_instruments::scheduler::TinkoffInstrumentsScheduler, };
-use tokio::signal;
 use std::{net::SocketAddr, sync::Arc};
-use tracing::{debug, error, info}; // Import the DbService
+use tokio::{net::TcpListener, signal};
+use tracing::{debug, error, info};
+
 
 /// Initialize application settings and logger
 async fn initialize() -> AppSettings {
@@ -29,11 +40,9 @@ async fn initialize() -> AppSettings {
         &app_settings.app_config.log.format,
     )
     .expect("Failed to initialize logger");
-
     // Log startup information using tracing
     info!("Starting application...");
     info!("Current environment: {}", app_settings.app_env.env);
-
     // Add environment-specific logging
     if app_settings.app_env.is_local() {
         info!("Running in local development mode");
@@ -42,20 +51,13 @@ async fn initialize() -> AppSettings {
     } else {
         info!("Running in production mode");
     }
-
     app_settings
 }
 
-#[tokio::main]
-async fn main() {
-    // Environment variables are already loaded via IDE/editor settings
-
-    // Initialize application
-    let settings = Arc::new(initialize().await);
-
-    // Initialize database service
+/// Setup database connections
+async fn setup_databases(settings: Arc<AppSettings>) -> DbService {
     info!("Initializing database service...");
-    let db_service = match DbService::new(settings.clone()).await {
+    let db_service: DbService = match DbService::new(settings).await {
         Ok(service) => {
             info!("Database service initialized successfully");
             service
@@ -65,7 +67,37 @@ async fn main() {
             panic!("Cannot continue without database service");
         }
     };
+    db_service
+}
 
+fn create_app(app_state: Arc<AppState>) -> Router {
+    Router::new()
+        .layer(create_cors())
+        .route("/api-health", get(api::health_api))
+        .route("/db-health", get(api::health_db))
+        .layer(axum::Extension(app_state.clone()))
+        .layer(create_trace())
+}
+
+/// Start the HTTP server
+async fn run_server(app: Router, addr: SocketAddr) {
+    tracing::info!("Starting server on {}", addr);
+    let listener = TcpListener::bind(addr).await.unwrap();
+    tracing::info!("Server started successfully");
+    axum::serve(listener, app)
+        .await
+        .expect("Failed to start server");
+}
+
+#[tokio::main]
+async fn main() {
+    // Initialize application
+    let settings: Arc<AppSettings> = Arc::new(initialize().await);
+    // Initialize database service
+    let db_service = setup_databases(settings.clone()).await;
+    
+    // No need to extract ClickHouse connection separately as we'll use AppState
+    
     // Parse server address
     let http_addr: SocketAddr = format!(
         "{}:{}",
@@ -73,30 +105,35 @@ async fn main() {
     )
     .parse()
     .expect("Invalid server address configuration");
-
+    
     info!("Server address configured at: {}", http_addr);
-
+    
     // Initialize Tinkoff client
     let grpc_tinkoff = Arc::new(
         TinkoffClient::new(settings.clone())
             .await
             .expect("Failed to initialize Tinkoff client"),
     );
-
+    
     // Create application state with services
     let app_state: Arc<AppState> = Arc::new(AppState {
         settings: settings.clone(),
         db_service: Arc::new(db_service),
         grpc_tinkoff,
     });
-
+    
     // Initialize and start services
-    start_services(app_state).await;
-
+    start_services(app_state.clone()).await;
+    
+    // Create application router
+    let app = create_app(app_state.clone());
+    run_server(app, http_addr).await;
+    
     info!("Application initialization complete!");
     
     // Keep the application running until a shutdown signal is received
     wait_for_shutdown_signal().await;
+    
     info!("Shutdown signal received, terminating application...");
 }
 
@@ -107,7 +144,6 @@ async fn wait_for_shutdown_signal() {
         Ok(()) => info!("CTRL+C received, shutting down..."),
         Err(e) => error!("Failed to listen for shutdown signal: {}", e),
     }
-    
     // Here you can add a graceful shutdown sequence if needed:
     // - Close database connections
     // - Finish pending tasks
@@ -121,17 +157,13 @@ async fn start_services(app_state: Arc<AppState>) {
     
     // If you need to trigger an immediate update before starting the scheduler:
     match instruments_scheduler.trigger_update().await {
-        Ok(count) => info!("Initial instrument update completed. Updated {} records", count),
+        Ok(count) => info!(
+            "Initial instrument update completed. Updated {} records",
+            count
+        ),
         Err(e) => error!("Failed to perform initial instrument update: {}", e),
     }
     
     // Start the automatic scheduler
     instruments_scheduler.start().await;
-}
-
-// Application state struct to hold all services
-pub struct AppState {
-    pub settings: Arc<AppSettings>,
-    pub db_service: Arc<DbService>,
-    pub grpc_tinkoff: Arc<TinkoffClient>,
 }

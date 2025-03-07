@@ -1,12 +1,9 @@
 # Сборка приложения
 # https://hub.docker.com/_/rust/tags
-FROM rust:1.85.0 AS builder
+FROM rust:1.85.0-slim-bookworm AS builder
 
 WORKDIR /app
 
-# Добавляем переменную окружения для сборки
-ARG RUST_ENV=production
-ENV RUST_ENV=${RUST_ENV}
 
 # 1. Копируем только файлы для зависимостей
 COPY Cargo.toml Cargo.lock ./
@@ -39,7 +36,5 @@ COPY --from=builder /app/target/release/t-candles .
 COPY --from=builder /app/config /usr/local/bin/config
 
 EXPOSE 5000
-
-ENV RUST_ENV=production
 
 CMD ["./t-candles"]

@@ -18,6 +18,7 @@ tracing-subscriber = { version = "0.3.19", features = [
   "env-filter",
   "json",
 ] }
+tower-http = { version = "0.6.2", features = ["trace", "cors"] }
 rustls-native-certs = "0.8.1"
 
 rustls = { version = "0.23.23", features = ["ring"] }
