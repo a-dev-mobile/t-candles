@@ -7,14 +7,23 @@ use crate::{
     generate::tinkoff_public_invest_api_contract_v1::Share,
 };
 use async_trait::async_trait;
+use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
+
 use std::collections::HashSet;
 use std::sync::Arc;
 use tracing::{debug, error, info};
+// Структура для десериализации результатов запроса
+#[derive(Debug, clickhouse::Row, Deserialize, Serialize)]
+pub struct DbSharesLiquid {
+    figi: String,
+    first_1min_candle_date: DateTime<Utc>,
+}
 
 #[async_trait]
 pub trait ShareRepository {
-    /// Insert multiple shares into the database
     async fn insert_shares(&self, shares: &[Share]) -> Result<u64, ClickhouseError>;
+    async fn get_liquid_shares(&self) -> Result<Vec<DbSharesLiquid>, ClickhouseError>;
 }
 
 pub struct ClickhouseShareRepository {
@@ -27,11 +36,9 @@ impl ClickhouseShareRepository {
     pub fn new(connection: Arc<ClickhouseConnection>) -> Self {
         // Инициализируем список проблемных FIGI
         let mut problematic_figis = HashSet::new();
-
         // Добавляем известные проблемные FIGI
         problematic_figis.insert("BBG000BC26P7".to_string());
         // Можно добавить больше проблемных FIGI по мере их обнаружения
-
         Self {
             connection,
             problematic_figis,
@@ -71,7 +78,6 @@ impl ClickhouseShareRepository {
                 None => "NULL".to_string(),
             }
         }
-
         fn quotation_nano(
             quotation: &Option<crate::generate::tinkoff_public_invest_api_contract_v1::Quotation>,
         ) -> String {
@@ -80,7 +86,6 @@ impl ClickhouseShareRepository {
                 None => "NULL".to_string(),
             }
         }
-
         // Timestamp -> DateTime
         fn timestamp_to_sql(ts: &Option<prost_types::Timestamp>) -> String {
             match ts {
@@ -95,7 +100,6 @@ impl ClickhouseShareRepository {
                 None => "NULL".to_string(),
             }
         }
-
         // Обработка опционального MoneyValue
         let (nominal_currency, nominal_units, nominal_nano) = match &share.nominal {
             Some(n) => (
@@ -105,7 +109,6 @@ impl ClickhouseShareRepository {
             ),
             None => ("NULL".to_string(), "NULL".to_string(), "NULL".to_string()),
         };
-
         // Return the VALUES part of the SQL query for this share
         format!(
             "(
@@ -182,14 +185,11 @@ impl ShareRepository for ClickhouseShareRepository {
             debug!("No shares to insert");
             return Ok(0);
         }
-
         let client = self.connection.get_client();
         let mut successful_inserts = 0;
         let total_count = shares.len();
         const BATCH_SIZE: usize = 100; // Размер пакета для обработки
-
         info!("Starting batch insertion of {} shares", total_count);
-
         // Конвертируем shares в Vec, чтобы можно было удалять элементы
         // Фильтруем проблемные FIGI при создании списка
         let mut remaining_shares: Vec<&Share> = shares
@@ -205,41 +205,33 @@ impl ShareRepository for ClickhouseShareRepository {
                 !is_problematic
             })
             .collect();
-
         // Реализация двоичного поиска для обработки пакетов с ошибками
         // Начинаем с максимального размера пакета
         let mut current_batch_size = BATCH_SIZE;
-
         while !remaining_shares.is_empty() {
             // Ограничиваем размер пакета оставшимися элементами
             let actual_batch_size = std::cmp::min(current_batch_size, remaining_shares.len());
             let batch = &remaining_shares[0..actual_batch_size];
-
             info!(
                 "Processing batch of {} shares, {} remaining",
                 actual_batch_size,
                 remaining_shares.len()
             );
-
             // Формируем части VALUES для SQL запроса пакетной вставки
             let mut values_parts = Vec::with_capacity(batch.len());
-
             for share in batch {
                 debug!(
                     "Preparing share: FIGI={}, Name='{}', Ticker='{}'",
                     share.figi, share.name, share.ticker
                 );
-
                 values_parts.push(self.format_share_values(share));
             }
-
             // Формируем полный SQL-запрос для пакетной вставки
             let sql = format!(
                 "INSERT INTO market_data.tinkoff_shares ({}) VALUES {}",
                 self.get_insert_columns(),
                 values_parts.join(",")
             );
-
             // Выполняем пакетную вставку
             match client.query(&sql).execute().await {
                 Ok(_) => {
@@ -249,24 +241,20 @@ impl ShareRepository for ClickhouseShareRepository {
                         "Successfully inserted batch of {} shares ({}/{})",
                         actual_batch_size, successful_inserts, total_count
                     );
-
                     // Удаляем обработанные элементы из оставшихся
                     remaining_shares.drain(0..actual_batch_size);
-
                     // Возвращаемся к максимальному размеру пакета
                     current_batch_size = BATCH_SIZE;
                 }
                 Err(e) => {
                     // Ошибка при вставке пакета
                     error!("Batch insertion failed: {}", e);
-
                     // Если пакет состоит из одного элемента, удаляем его и продолжаем
                     if actual_batch_size == 1 {
                         error!(
                             "Failed to insert share FIGI={}: {}",
                             remaining_shares[0].figi, e
                         );
-
                         // Диагностика ошибок
                         let error_str = e.to_string();
                         if error_str.contains("Too large string size") {
@@ -277,14 +265,12 @@ impl ShareRepository for ClickhouseShareRepository {
                                 remaining_shares[0].name.len()
                             );
                         }
-
                         // Добавляем проблемный FIGI в список проблемных для будущих запусков
                         let problematic_figi = remaining_shares[0].figi.clone();
                         error!(
                             "Adding FIGI={} to problematic list for future runs",
                             problematic_figi
                         );
-
                         // Удаляем проблемный элемент и продолжаем с максимальным размером
                         remaining_shares.remove(0);
                         current_batch_size = BATCH_SIZE;
@@ -296,13 +282,31 @@ impl ShareRepository for ClickhouseShareRepository {
                 }
             }
         }
-
         info!(
             "Insertion complete. Successfully inserted {} out of {} shares",
             successful_inserts, total_count
         );
-
         Ok(successful_inserts)
+    }
+
+    async fn get_liquid_shares(&self) -> Result<Vec<DbSharesLiquid>, ClickhouseError> {
+        let client = self.connection.get_client();
+
+        // SQL запрос для получения ликвидных акций, доступных для торговли через API
+        let query = "
+                SELECT figi, first_1min_candle_date
+            FROM market_data.tinkoff_shares
+            WHERE liquidity_flag = 1
+              AND buy_available_flag = 1
+              AND sell_available_flag = 1
+              AND api_trade_available_flag = 1
+      AND first_1min_candle_date IS NOT NULL
+        ";
+
+        // Выполнение запроса и получение результатов
+        info!("Fetching liquid shares available for trading");
+        let result = client.query(query).fetch_all::<DbSharesLiquid>().await?;
+        Ok(result)
     }
 }
 

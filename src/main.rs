@@ -12,12 +12,14 @@ mod app_state;
 
 use app_state::models::AppState;
 use axum::{Router, routing::get};
+use chrono::DateTime;
 use db::db_service::DbService;
 use env_config::models::{app_config::AppConfig, app_env::AppEnv, app_setting::AppSettings};
 use layers::{create_cors, create_trace};
+use serde::de;
 use services::{
 
-    tinkoff_client_grpc::TinkoffClient, tinkoff_instruments::scheduler::TinkoffInstrumentsScheduler
+    tinkoff_candles::client::TinkoffCandleClient, tinkoff_client_grpc::TinkoffClient, tinkoff_instruments::scheduler::TinkoffInstrumentsScheduler
 };
 use std::{net::SocketAddr, sync::Arc};
 use tokio::{net::TcpListener, signal};
@@ -127,10 +129,27 @@ async fn main() {
     
     // Create application router
     let app = create_app(app_state.clone());
+    
+    let a  = app_state.db_service.share_repository.get_liquid_shares().await.unwrap();
+    
+    dbg!(a);
+    
+    let client = TinkoffCandleClient::new(app_state.clone());
+    
+    let from = DateTime::from_timestamp(1709769600, 0).unwrap();
+    let to = DateTime::from_timestamp(1709856000, 0).unwrap();
+    
+    let b = client.get_minute_candles("BBG000BBV4M5",from,to ).await.unwrap();
+    
+    dbg!(b);
+
+    
     run_server(app, http_addr).await;
     
     info!("Application initialization complete!");
     
+
+
     // Keep the application running until a shutdown signal is received
     wait_for_shutdown_signal().await;
     

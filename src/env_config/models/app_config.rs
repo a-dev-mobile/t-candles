@@ -5,11 +5,11 @@ pub struct AppConfig {
     pub log: LogConfig,
     pub clickhouse: ClickhouseConfig,
     pub tinkoff_api: TinkoffApiConfig,
-    pub tinkoff_market_data_updater: UpdaterConfig,
+    pub tinkoff_market_data_updater: TinkoffMarketDataUpdater,
     pub historical_candle_data: HistoricalCandleDataConfig,
 }
 #[derive(Debug, Deserialize)]
-pub struct UpdaterConfig {
+pub struct TinkoffMarketDataUpdater {
     pub enabled: bool,
     pub interval_seconds: u64,
     #[serde(default)]
@@ -44,8 +44,12 @@ pub struct TinkoffApiConfig {
 pub struct HistoricalCandleDataConfig {
     pub enabled: bool,
     pub request_delay_ms: u64,
+    #[serde(default)]
+    pub start_time: Option<String>, // Start time in UTC, format: "HH:MM:SS"
+    #[serde(default)]
+    pub end_time: Option<String>,   // End time in UTC, format: "HH:MM:SS"
 }
-impl UpdaterConfig {
+impl TinkoffMarketDataUpdater {
     /// Checks if the current time is within the allowed operation window
     pub fn is_operation_allowed(&self) -> bool {
         // If no time window is configured, always allow operation

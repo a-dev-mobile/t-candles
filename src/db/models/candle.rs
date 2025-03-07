@@ -3,7 +3,7 @@ use clickhouse::Row;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Row)]
-pub struct Candle {
+pub struct DbCandle {
     pub figi: String,
     pub time: DateTime<Utc>,
     pub open_units: i64,
@@ -18,19 +18,19 @@ pub struct Candle {
     pub is_complete: bool,
 }
 
-impl Candle {
+impl DbCandle {
     pub fn open_price(&self) -> f64 {
         self.open_units as f64 + (self.open_nano as f64 / 1_000_000_000.0)
     }
-    
+
     pub fn high_price(&self) -> f64 {
         self.high_units as f64 + (self.high_nano as f64 / 1_000_000_000.0)
     }
-    
+
     pub fn low_price(&self) -> f64 {
         self.low_units as f64 + (self.low_nano as f64 / 1_000_000_000.0)
     }
-    
+
     pub fn close_price(&self) -> f64 {
         self.close_units as f64 + (self.close_nano as f64 / 1_000_000_000.0)
     }
@@ -56,7 +56,7 @@ impl DailyCandle {
     pub fn open_price(&self) -> f64 {
         self.first_open_units as f64 + (self.first_open_nano as f64 / 1_000_000_000.0)
     }
-    
+
     pub fn close_price(&self) -> f64 {
         self.last_close_units as f64 + (self.last_close_nano as f64 / 1_000_000_000.0)
     }
