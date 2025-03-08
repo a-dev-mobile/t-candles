@@ -24,7 +24,7 @@ end_time = "04:00:00"       # 7:00 Moscow time (UTC+3)
 
 
 [historical_candle_data]
-enabled = true                # Включить/выключить сервис загрузки исторических свечей
+enabled = false                # Включить/выключить сервис загрузки исторических свечей
 request_delay_ms = 200        # Задержка между API запросами в мс (для избежания лимитов API)
 start_time = "04:00:00"     # 7:00 Moscow time (UTC+3)
 end_time = "21:00:00"       # 0:00 Moscow time (UTC+3)

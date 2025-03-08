@@ -32,7 +32,7 @@ rustls = { version = "0.23.23", features = ["ring"] }
 rustls-native-certs = "0.8.1"
 
 # Database
-clickhouse = "0.13.1"
+clickhouse = { version = "0.13.1", features = ["time"] }
 clickhouse-derive = "0.2.0"
 
 # Misc utilities

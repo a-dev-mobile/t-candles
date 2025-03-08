@@ -1,5 +1,5 @@
 use crate::db::clickhouse::connection::ClickhouseConnection;
-use crate::db::clickhouse::error::ClickhouseError;
+use clickhouse::error::Error as ClickhouseError;
 use crate::db::models::load_status::LoadStatus;
 use async_trait::async_trait;
 use chrono::{NaiveDate, Utc};

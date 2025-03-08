@@ -1,5 +1,5 @@
 [log]
-level = "debug,sqlx=debug"
+level = "info,sqlx=info"
 format = "text"            # Возможные значения: "json" или "text"
 
 

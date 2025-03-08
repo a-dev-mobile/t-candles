@@ -1,9 +1,10 @@
 use crate::db::clickhouse::connection::ClickhouseConnection;
-use crate::db::clickhouse::error::ClickhouseError;
+
 use crate::db::models::candle::{DailyCandle, DbCandle};
 use async_trait::async_trait;
 use chrono::{DateTime, NaiveDate, Utc};
 use clickhouse::Row;
+use clickhouse::error::Error as ClickhouseError;
 use std::sync::Arc;
 use tracing::info;
 

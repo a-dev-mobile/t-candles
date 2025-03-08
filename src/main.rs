@@ -130,18 +130,19 @@ async fn main() {
     // Create application router
     let app = create_app(app_state.clone());
     
-    let a  = app_state.db_service.share_repository.get_liquid_shares().await.unwrap();
+    // let a  = app_state.db_service.share_repository.get_liquid_shares().await;
     
-    dbg!(a);
+    // dbg!(a);
+    // dbg!(a);
     
     let client = TinkoffCandleClient::new(app_state.clone());
     
     let from = DateTime::from_timestamp(1709769600, 0).unwrap();
     let to = DateTime::from_timestamp(1709856000, 0).unwrap();
     
-    let b = client.get_minute_candles("BBG000BBV4M5",from,to ).await.unwrap();
+    // let b = client.get_minute_candles("BBG000BBV4M5",from,to ).await.unwrap();
     
-    dbg!(b);
+    // dbg!(b);
 
     
     run_server(app, http_addr).await;

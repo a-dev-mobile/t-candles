@@ -1,23 +1,21 @@
-// src/db/repository/share_repository.rs
 
-use crate::db::clickhouse::error::ClickhouseError;
-use crate::services::tinkoff_instruments::models::share::DbTinkoffShare;
 use crate::{
     db::clickhouse::connection::ClickhouseConnection,
     generate::tinkoff_public_invest_api_contract_v1::Share,
 };
+use clickhouse::error::Error as ClickhouseError;
 use async_trait::async_trait;
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, NaiveDateTime, Utc};
 use serde::{Deserialize, Serialize};
-
 use std::collections::HashSet;
 use std::sync::Arc;
 use tracing::{debug, error, info};
-// Структура для десериализации результатов запроса
+
 #[derive(Debug, clickhouse::Row, Deserialize, Serialize)]
 pub struct DbSharesLiquid {
     figi: String,
-    first_1min_candle_date: DateTime<Utc>,
+    // Изменяем тип с DateTime<Utc> на i64, так как теперь храним как Int64 вместо DateTime
+    first_1min_candle_date: Option<i64>,
 }
 
 #[async_trait]
@@ -78,6 +76,7 @@ impl ClickhouseShareRepository {
                 None => "NULL".to_string(),
             }
         }
+
         fn quotation_nano(
             quotation: &Option<crate::generate::tinkoff_public_invest_api_contract_v1::Quotation>,
         ) -> String {
@@ -86,20 +85,18 @@ impl ClickhouseShareRepository {
                 None => "NULL".to_string(),
             }
         }
-        // Timestamp -> DateTime
+
+        // Timestamp -> Int64 (хранение timestamp в секундах)
         fn timestamp_to_sql(ts: &Option<prost_types::Timestamp>) -> String {
             match ts {
                 Some(ts) => {
-                    let seconds = ts.seconds;
-                    let datetime = chrono::DateTime::from_timestamp(seconds, 0);
-                    match datetime {
-                        Some(dt) => format!("'{}'", dt.format("%Y-%m-%d %H:%M:%S")),
-                        None => "NULL".to_string(),
-                    }
+                    // Возвращаем timestamp в секундах
+                    ts.seconds.to_string()
                 }
                 None => "NULL".to_string(),
             }
         }
+
         // Обработка опционального MoneyValue
         let (nominal_currency, nominal_units, nominal_nano) = match &share.nominal {
             Some(n) => (
@@ -109,6 +106,7 @@ impl ClickhouseShareRepository {
             ),
             None => ("NULL".to_string(), "NULL".to_string(), "NULL".to_string()),
         };
+
         // Return the VALUES part of the SQL query for this share
         format!(
             "(
@@ -185,11 +183,14 @@ impl ShareRepository for ClickhouseShareRepository {
             debug!("No shares to insert");
             return Ok(0);
         }
+
         let client = self.connection.get_client();
         let mut successful_inserts = 0;
         let total_count = shares.len();
         const BATCH_SIZE: usize = 100; // Размер пакета для обработки
+
         info!("Starting batch insertion of {} shares", total_count);
+
         // Конвертируем shares в Vec, чтобы можно было удалять элементы
         // Фильтруем проблемные FIGI при создании списка
         let mut remaining_shares: Vec<&Share> = shares
@@ -205,6 +206,7 @@ impl ShareRepository for ClickhouseShareRepository {
                 !is_problematic
             })
             .collect();
+
         // Реализация двоичного поиска для обработки пакетов с ошибками
         // Начинаем с максимального размера пакета
         let mut current_batch_size = BATCH_SIZE;
@@ -212,11 +214,13 @@ impl ShareRepository for ClickhouseShareRepository {
             // Ограничиваем размер пакета оставшимися элементами
             let actual_batch_size = std::cmp::min(current_batch_size, remaining_shares.len());
             let batch = &remaining_shares[0..actual_batch_size];
+
             info!(
                 "Processing batch of {} shares, {} remaining",
                 actual_batch_size,
                 remaining_shares.len()
             );
+
             // Формируем части VALUES для SQL запроса пакетной вставки
             let mut values_parts = Vec::with_capacity(batch.len());
             for share in batch {
@@ -226,12 +230,14 @@ impl ShareRepository for ClickhouseShareRepository {
                 );
                 values_parts.push(self.format_share_values(share));
             }
+
             // Формируем полный SQL-запрос для пакетной вставки
             let sql = format!(
                 "INSERT INTO market_data.tinkoff_shares ({}) VALUES {}",
                 self.get_insert_columns(),
                 values_parts.join(",")
             );
+
             // Выполняем пакетную вставку
             match client.query(&sql).execute().await {
                 Ok(_) => {
@@ -282,6 +288,7 @@ impl ShareRepository for ClickhouseShareRepository {
                 }
             }
         }
+
         info!(
             "Insertion complete. Successfully inserted {} out of {} shares",
             successful_inserts, total_count
@@ -294,13 +301,13 @@ impl ShareRepository for ClickhouseShareRepository {
 
         // SQL запрос для получения ликвидных акций, доступных для торговли через API
         let query = "
-                SELECT figi, first_1min_candle_date
+            SELECT figi, first_1min_candle_date
             FROM market_data.tinkoff_shares
             WHERE liquidity_flag = 1
               AND buy_available_flag = 1
               AND sell_available_flag = 1
               AND api_trade_available_flag = 1
-      AND first_1min_candle_date IS NOT NULL
+              AND first_1min_candle_date IS NOT NULL
         ";
 
         // Выполнение запроса и получение результатов
@@ -311,7 +318,6 @@ impl ShareRepository for ClickhouseShareRepository {
 }
 
 // Функция безопасного экранирования строк для SQL запросов
-
 fn escape_string_max(s: &str) -> String {
     s.replace('\\', "\\\\")
         .replace('\'', "\\'")
