@@ -9,22 +9,20 @@ mod utils;
 
 mod app_state;
 
-
 use app_state::models::AppState;
 use axum::{Router, routing::get};
 use chrono::DateTime;
 use db::db_service::DbService;
 use env_config::models::{app_config::AppConfig, app_env::AppEnv, app_setting::AppSettings};
 use layers::{create_cors, create_trace};
-use serde::de;
-use services::{
 
-    tinkoff_candles::client::TinkoffCandleClient, tinkoff_client_grpc::TinkoffClient, tinkoff_instruments::scheduler::TinkoffInstrumentsScheduler
+use services::{
+    tinkoff_candles::client::TinkoffCandleClient, tinkoff_client_grpc::TinkoffClient,
+    tinkoff_instruments::scheduler::TinkoffInstrumentsScheduler,
 };
 use std::{net::SocketAddr, sync::Arc};
 use tokio::{net::TcpListener, signal};
 use tracing::{debug, error, info};
-
 
 /// Initialize application settings and logger
 async fn initialize() -> AppSettings {
@@ -97,9 +95,9 @@ async fn main() {
     let settings: Arc<AppSettings> = Arc::new(initialize().await);
     // Initialize database service
     let db_service = setup_databases(settings.clone()).await;
-    
+
     // No need to extract ClickHouse connection separately as we'll use AppState
-    
+
     // Parse server address
     let http_addr: SocketAddr = format!(
         "{}:{}",
@@ -107,74 +105,56 @@ async fn main() {
     )
     .parse()
     .expect("Invalid server address configuration");
-    
+
     info!("Server address configured at: {}", http_addr);
-    
+
     // Initialize Tinkoff client
     let grpc_tinkoff = Arc::new(
         TinkoffClient::new(settings.clone())
             .await
             .expect("Failed to initialize Tinkoff client"),
     );
-    
+
     // Create application state with services
     let app_state: Arc<AppState> = Arc::new(AppState {
         settings: settings.clone(),
         db_service: Arc::new(db_service),
         grpc_tinkoff,
     });
-    
+
     // Initialize and start services
     start_services(app_state.clone()).await;
-    
+
     // Create application router
     let app = create_app(app_state.clone());
-    
-    // let a  = app_state.db_service.share_repository.get_liquid_shares().await;
-    
+
     // dbg!(a);
-    // dbg!(a);
-    
+
     let client = TinkoffCandleClient::new(app_state.clone());
-    
-    let from = DateTime::from_timestamp(1709769600, 0).unwrap();
-    let to = DateTime::from_timestamp(1709856000, 0).unwrap();
-    
-    // let b = client.get_minute_candles("BBG000BBV4M5",from,to ).await.unwrap();
-    
+
+    client.load_and_save_candles().await;
+
+    // let b = client
+    //     .get_minute_candles(
+    //         "c05fd0a1-0c8e-4bc3-bf9e-43e364d278ef",
+    //         1709769600,
+    //         1709856000,
+    //     )
+    //     .await
+    //     .unwrap();
+
     // dbg!(b);
 
-    
     run_server(app, http_addr).await;
-    
+
     info!("Application initialization complete!");
-    
-
-
-    // Keep the application running until a shutdown signal is received
-    wait_for_shutdown_signal().await;
-    
-    info!("Shutdown signal received, terminating application...");
-}
-
-// Wait for a shutdown signal (Ctrl+C on most systems)
-async fn wait_for_shutdown_signal() {
-    // Wait for CTRL+C
-    match signal::ctrl_c().await {
-        Ok(()) => info!("CTRL+C received, shutting down..."),
-        Err(e) => error!("Failed to listen for shutdown signal: {}", e),
-    }
-    // Here you can add a graceful shutdown sequence if needed:
-    // - Close database connections
-    // - Finish pending tasks
-    // - Notify services to terminate
 }
 
 // Start all required services
 async fn start_services(app_state: Arc<AppState>) {
     // Initialize the instruments scheduler
     let instruments_scheduler = TinkoffInstrumentsScheduler::new(app_state.clone()).await;
-    
+
     // If you need to trigger an immediate update before starting the scheduler:
     match instruments_scheduler.trigger_update().await {
         Ok(count) => info!(
@@ -183,7 +163,7 @@ async fn start_services(app_state: Arc<AppState>) {
         ),
         Err(e) => error!("Failed to perform initial instrument update: {}", e),
     }
-    
+
     // Start the automatic scheduler
     instruments_scheduler.start().await;
 }

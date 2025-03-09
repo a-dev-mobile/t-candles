@@ -1,28 +1,14 @@
-
+use super::{ShareRepository, helper};
 use crate::{
-    db::clickhouse::connection::ClickhouseConnection,
+    db::{clickhouse::connection::ClickhouseConnection, models::share::DbSharesLiquid},
     generate::tinkoff_public_invest_api_contract_v1::Share,
 };
-use clickhouse::error::Error as ClickhouseError;
 use async_trait::async_trait;
-use chrono::{DateTime, NaiveDateTime, Utc};
-use serde::{Deserialize, Serialize};
+use clickhouse::error::Error as ClickhouseError;
+use serde::Deserialize;
 use std::collections::HashSet;
 use std::sync::Arc;
 use tracing::{debug, error, info};
-
-#[derive(Debug, clickhouse::Row, Deserialize, Serialize)]
-pub struct DbSharesLiquid {
-    figi: String,
-    // Изменяем тип с DateTime<Utc> на i64, так как теперь храним как Int64 вместо DateTime
-    first_1min_candle_date: Option<i64>,
-}
-
-#[async_trait]
-pub trait ShareRepository {
-    async fn insert_shares(&self, shares: &[Share]) -> Result<u64, ClickhouseError>;
-    async fn get_liquid_shares(&self) -> Result<Vec<DbSharesLiquid>, ClickhouseError>;
-}
 
 pub struct ClickhouseShareRepository {
     connection: Arc<ClickhouseConnection>,
@@ -37,6 +23,7 @@ impl ClickhouseShareRepository {
         // Добавляем известные проблемные FIGI
         problematic_figis.insert("BBG000BC26P7".to_string());
         // Можно добавить больше проблемных FIGI по мере их обнаружения
+
         Self {
             connection,
             problematic_figis,
@@ -46,133 +33,6 @@ impl ClickhouseShareRepository {
     // Метод для проверки, является ли FIGI проблемным
     fn is_problematic_figi(&self, figi: &str) -> bool {
         self.problematic_figis.contains(figi)
-    }
-
-    // Helper method to generate the SQL insert statement columns
-    fn get_insert_columns(&self) -> &str {
-        "figi, ticker, class_code, isin, lot, currency, 
-        klong_units, klong_nano, kshort_units, kshort_nano, 
-        dlong_units, dlong_nano, dshort_units, dshort_nano, 
-        dlong_min_units, dlong_min_nano, dshort_min_units, dshort_min_nano, 
-        short_enabled_flag, name, exchange, ipo_date, issue_size, 
-        country_of_risk, country_of_risk_name, sector, issue_size_plan, 
-        nominal_currency, nominal_units, nominal_nano, trading_status, 
-        otc_flag, buy_available_flag, sell_available_flag, div_yield_flag, 
-        share_type, min_price_increment_units, min_price_increment_nano, 
-        api_trade_available_flag, uid, real_exchange, position_uid, 
-        for_iis_flag, for_qual_investor_flag, weekend_flag, 
-        blocked_tca_flag, liquidity_flag, first_1min_candle_date, 
-        first_1day_candle_date"
-    }
-
-    // Helper method to format a share into an SQL VALUES clause
-    fn format_share_values(&self, share: &Share) -> String {
-        // Quotation -> (units, nano)
-        fn quotation_units(
-            quotation: &Option<crate::generate::tinkoff_public_invest_api_contract_v1::Quotation>,
-        ) -> String {
-            match quotation {
-                Some(q) => q.units.to_string(),
-                None => "NULL".to_string(),
-            }
-        }
-
-        fn quotation_nano(
-            quotation: &Option<crate::generate::tinkoff_public_invest_api_contract_v1::Quotation>,
-        ) -> String {
-            match quotation {
-                Some(q) => q.nano.to_string(),
-                None => "NULL".to_string(),
-            }
-        }
-
-        // Timestamp -> Int64 (хранение timestamp в секундах)
-        fn timestamp_to_sql(ts: &Option<prost_types::Timestamp>) -> String {
-            match ts {
-                Some(ts) => {
-                    // Возвращаем timestamp в секундах
-                    ts.seconds.to_string()
-                }
-                None => "NULL".to_string(),
-            }
-        }
-
-        // Обработка опционального MoneyValue
-        let (nominal_currency, nominal_units, nominal_nano) = match &share.nominal {
-            Some(n) => (
-                format!("'{}'", (&n.currency)),
-                n.units.to_string(),
-                n.nano.to_string(),
-            ),
-            None => ("NULL".to_string(), "NULL".to_string(), "NULL".to_string()),
-        };
-
-        // Return the VALUES part of the SQL query for this share
-        format!(
-            "(
-                '{}', '{}', '{}', '{}', {}, '{}', 
-                {}, {}, {}, {}, 
-                {}, {}, {}, {}, 
-                {}, {}, {}, {}, 
-                {}, '{}', '{}', {}, {}, 
-                '{}', '{}', '{}', {}, 
-                {}, {}, {}, {}, 
-                {}, {}, {}, {}, 
-                {}, {}, {}, 
-                {}, '{}', {}, '{}', 
-                {}, {}, {}, 
-                {}, {}, {}, {}
-            )",
-            (&share.figi),
-            (&share.ticker),
-            (&share.class_code),
-            (&share.isin),
-            share.lot,
-            (&share.currency),
-            quotation_units(&share.klong),
-            quotation_nano(&share.klong),
-            quotation_units(&share.kshort),
-            quotation_nano(&share.kshort),
-            quotation_units(&share.dlong),
-            quotation_nano(&share.dlong),
-            quotation_units(&share.dshort),
-            quotation_nano(&share.dshort),
-            quotation_units(&share.dlong_min),
-            quotation_nano(&share.dlong_min),
-            quotation_units(&share.dshort_min),
-            quotation_nano(&share.dshort_min),
-            if share.short_enabled_flag { 1 } else { 0 },
-            escape_string_max(&share.name),
-            (&share.exchange),
-            timestamp_to_sql(&share.ipo_date),
-            share.issue_size,
-            (&share.country_of_risk),
-            (&share.country_of_risk_name),
-            (&share.sector),
-            share.issue_size_plan,
-            nominal_currency,
-            nominal_units,
-            nominal_nano,
-            share.trading_status,
-            if share.otc_flag { 1 } else { 0 },
-            if share.buy_available_flag { 1 } else { 0 },
-            if share.sell_available_flag { 1 } else { 0 },
-            if share.div_yield_flag { 1 } else { 0 },
-            share.share_type,
-            quotation_units(&share.min_price_increment),
-            quotation_nano(&share.min_price_increment),
-            if share.api_trade_available_flag { 1 } else { 0 },
-            (&share.uid),
-            share.real_exchange,
-            (&share.position_uid),
-            if share.for_iis_flag { 1 } else { 0 },
-            if share.for_qual_investor_flag { 1 } else { 0 },
-            if share.weekend_flag { 1 } else { 0 },
-            if share.blocked_tca_flag { 1 } else { 0 },
-            if share.liquidity_flag { 1 } else { 0 },
-            timestamp_to_sql(&share.first_1min_candle_date),
-            timestamp_to_sql(&share.first_1day_candle_date)
-        )
     }
 }
 
@@ -210,6 +70,7 @@ impl ShareRepository for ClickhouseShareRepository {
         // Реализация двоичного поиска для обработки пакетов с ошибками
         // Начинаем с максимального размера пакета
         let mut current_batch_size = BATCH_SIZE;
+
         while !remaining_shares.is_empty() {
             // Ограничиваем размер пакета оставшимися элементами
             let actual_batch_size = std::cmp::min(current_batch_size, remaining_shares.len());
@@ -228,13 +89,13 @@ impl ShareRepository for ClickhouseShareRepository {
                     "Preparing share: FIGI={}, Name='{}', Ticker='{}'",
                     share.figi, share.name, share.ticker
                 );
-                values_parts.push(self.format_share_values(share));
+                values_parts.push(helper::format_share_values(share));
             }
 
             // Формируем полный SQL-запрос для пакетной вставки
             let sql = format!(
                 "INSERT INTO market_data.tinkoff_shares ({}) VALUES {}",
-                self.get_insert_columns(),
+                helper::get_insert_columns(),
                 values_parts.join(",")
             );
 
@@ -293,15 +154,16 @@ impl ShareRepository for ClickhouseShareRepository {
             "Insertion complete. Successfully inserted {} out of {} shares",
             successful_inserts, total_count
         );
+
         Ok(successful_inserts)
     }
 
     async fn get_liquid_shares(&self) -> Result<Vec<DbSharesLiquid>, ClickhouseError> {
         let client = self.connection.get_client();
 
-        // SQL запрос для получения ликвидных акций, доступных для торговли через API
+        // SQL запрос для получения ликвидных акций
         let query = "
-            SELECT figi, first_1min_candle_date
+            SELECT uid, first_1min_candle_date
             FROM market_data.tinkoff_shares
             WHERE liquidity_flag = 1
               AND buy_available_flag = 1
@@ -310,21 +172,33 @@ impl ShareRepository for ClickhouseShareRepository {
               AND first_1min_candle_date IS NOT NULL
         ";
 
-        // Выполнение запроса и получение результатов
         info!("Fetching liquid shares available for trading");
-        let result = client.query(query).fetch_all::<DbSharesLiquid>().await?;
+
+        // Определяем временную версию структуры с Option<i64>
+        // Важно: Это не создает новый тип, а просто модифицирует шаблон для десериализации
+        #[derive(Debug, clickhouse::Row, Deserialize)]
+        struct DbSharesLiquidTemp {
+            uid: String,
+            first_1min_candle_date: Option<i64>,
+        }
+
+        // Получаем результаты запроса
+        let temp_rows = client
+            .query(query)
+            .fetch_all::<DbSharesLiquidTemp>()
+            .await?;
+
+        // Преобразуем в окончательную структуру DbSharesLiquid
+        let result = temp_rows
+            .into_iter()
+            .filter_map(|row| {
+                row.first_1min_candle_date.map(|date| DbSharesLiquid {
+                    instrument_id: row.uid,
+                    first_1min_candle_date: date,
+                })
+            })
+            .collect();
+
         Ok(result)
     }
-}
-
-// Функция безопасного экранирования строк для SQL запросов
-fn escape_string_max(s: &str) -> String {
-    s.replace('\\', "\\\\")
-        .replace('\'', "\\'")
-        .replace('?', "\\?")
-        .replace('"', "\\\"")
-        .replace('\n', "\\n")
-        .replace('\r', "\\r")
-        .replace('\t', "\\t")
-        .replace('\0', "\\0")
 }
