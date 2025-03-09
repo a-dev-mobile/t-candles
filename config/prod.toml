@@ -22,7 +22,7 @@ keepalive = 60 # seconds
 
 [tinkoff_market_data_updater]
 enabled = true
-interval_seconds = 120  # секунды
+interval_seconds = 300  # секунды
 start_time = "04:00:00"     # 7:00 Moscow time (UTC+3)
 end_time = "21:00:00"       # 0:00 Moscow time (UTC+3)
 
