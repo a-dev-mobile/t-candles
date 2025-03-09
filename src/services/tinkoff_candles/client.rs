@@ -62,40 +62,6 @@ impl TinkoffCandleClient {
         Ok(candles_response.candles)
     }
 
-    /// Преобразование HistoricCandle из API в модель Candle для БД
-    fn convert_candles(&self, figi: &str, api_candles: Vec<HistoricCandle>) -> Vec<DbCandle> {
-        let mut result = Vec::with_capacity(api_candles.len());
-
-        for candle in api_candles {
-            // Парсим временную метку
-            if let Some(time_stamp) = candle.time {
-                let seconds = time_stamp.seconds;
-                if let Some(time) = DateTime::from_timestamp(seconds, 0) {
-                    let db_candle = DbCandle {
-                        figi: figi.to_string(),
-                        time,
-                        open_units: candle.open.as_ref().map_or(0, |q| q.units),
-                        open_nano: candle.open.as_ref().map_or(0, |q| q.nano),
-                        high_units: candle.high.as_ref().map_or(0, |q| q.units),
-                        high_nano: candle.high.as_ref().map_or(0, |q| q.nano),
-                        low_units: candle.low.as_ref().map_or(0, |q| q.units),
-                        low_nano: candle.low.as_ref().map_or(0, |q| q.nano),
-                        close_units: candle.close.as_ref().map_or(0, |q| q.units),
-                        close_nano: candle.close.as_ref().map_or(0, |q| q.nano),
-                        volume: candle.volume as u64,
-                        is_complete: candle.is_complete,
-                    };
-
-                    result.push(db_candle);
-                } else {
-                    debug!("Failed to parse timestamp for candle: {}", seconds);
-                }
-            }
-        }
-
-        result
-    }
-
     /// Загрузка и сохранение свечей в БД
     pub async fn load_and_save_candles(&self) -> Result<usize, Box<dyn std::error::Error>> {
         let liquid_shares = self
@@ -105,7 +71,7 @@ impl TinkoffCandleClient {
             .get_liquid_shares()
             .await?;
 
-        let share = liquid_shares.first().unwrap();
+        let share = &liquid_shares[1];
 
         let status_candle = self
             .app_state
@@ -130,7 +96,7 @@ impl TinkoffCandleClient {
             self.app_state
                 .clickhouse_service
                 .repository_candle
-                .insert_candles(vec_candles)
+                .insert_candles(vec_candles, &share.instrument_id)
                 .await?;
 
             self.app_state
@@ -138,41 +104,26 @@ impl TinkoffCandleClient {
                 .repository_tinkoff_candles_status
                 .upsert(&share.instrument_id, end_of_day)
                 .await?;
+        } else {
+            let to_second = status_candle.unwrap().to_second;
+            let (next_day_start, next_day_end) = get_next_day_range(to_second);
+            let vec_candles: Vec<HistoricCandle> = self
+                .get_minute_candles(&share.instrument_id, next_day_start, next_day_end)
+                .await?;
+
+            self.app_state
+                .clickhouse_service
+                .repository_candle
+                .insert_candles(vec_candles, &share.instrument_id)
+                .await?;
+
+            self.app_state
+                .postgres_service
+                .repository_tinkoff_candles_status
+                .update_to_second(&share.instrument_id, next_day_end)
+                .await?;
         }
 
-        // if api_candles.is_empty() {
-        //     debug!("No candles received for {} from {} to {}", figi, from, to);
-        //     return Ok(0);
-        // }
-
-        // // Преобразуем в модель для БД
-        // let db_candles = self.convert_candles(figi, api_candles);
-
-        // if db_candles.is_empty() {
-        //     debug!(
-        //         "No valid candles to save for {} from {} to {}",
-        //         figi, from, to
-        //     );
-        //     return Ok(0);
-        // }
-
-        // // Сохраняем в БД
-        // let inserted = self
-        //     .app_state
-        //     .db_service
-        //     .candle_repository
-        //     .insert_candles(&db_candles)
-        //     .await?;
-
-        // info!(
-        //     "Saved {} candles for {} from {} to {}",
-        //     db_candles.len(),
-        //     figi,
-        //     from,
-        //     to
-        // );
-
-        // Ok(db_candles.len())
         Ok(0)
     }
 }
