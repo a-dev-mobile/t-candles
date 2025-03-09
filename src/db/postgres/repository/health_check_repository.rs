@@ -11,40 +11,33 @@ use tracing::info;
 // use crate::db::models::portfolio::Portfolio;
 
 #[async_trait]
-pub trait OperationalRepository {
+pub trait TraitHealthCheckRepository {
     // Example methods - add your actual operational data methods here
-    async fn health_check(&self) -> Result<bool, SqlxError>;
-    
-    // Examples of other methods you might implement:
-    // async fn create_user(&self, user: &User) -> Result<User, SqlxError>;
-    // async fn get_user_by_id(&self, user_id: &str) -> Result<Option<User>, SqlxError>;
-    // async fn update_user(&self, user: &User) -> Result<(), SqlxError>;
-    // async fn create_order(&self, order: &Order) -> Result<Order, SqlxError>;
-    // async fn get_user_portfolio(&self, user_id: &str) -> Result<Portfolio, SqlxError>;
+    async fn check(&self) -> Result<bool, SqlxError>;
 }
 
-pub struct PgOperationalRepository {
+pub struct StructHealthCheckRepository {
     connection: Arc<PostgresConnection>,
 }
 
-impl PgOperationalRepository {
+impl StructHealthCheckRepository {
     pub fn new(connection: Arc<PostgresConnection>) -> Self {
         Self { connection }
     }
 }
 
 #[async_trait]
-impl OperationalRepository for PgOperationalRepository {
-    async fn health_check(&self) -> Result<bool, SqlxError> {
+impl TraitHealthCheckRepository for StructHealthCheckRepository {
+    async fn check(&self) -> Result<bool, SqlxError> {
         let pool = self.connection.get_pool();
-        
+
         // Simple health check query
         let result = sqlx::query_scalar::<_, i32>("SELECT 1")
             .fetch_one(pool)
             .await?;
-            
+
         Ok(result == 1)
     }
-    
+
     // Implement the other operational methods here
 }

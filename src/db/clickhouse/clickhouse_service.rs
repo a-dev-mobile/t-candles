@@ -15,7 +15,7 @@ pub struct ClickhouseService {
     pub connection: Arc<ClickhouseConnection>,
 
     // Analytical repositories (ClickHouse)
-    pub candle_repository: Arc<dyn CandleRepository + Send + Sync>,
+    pub repository_candle: Arc<dyn CandleRepository + Send + Sync>,
 
     pub share_repository: Arc<dyn ShareRepository + Send + Sync>,
 }
@@ -54,7 +54,7 @@ impl ClickhouseService {
         Ok(Self {
             connection: clickhouse_connection,
 
-            candle_repository,
+            repository_candle: candle_repository,
 
             share_repository: analytics_share_repository,
         })

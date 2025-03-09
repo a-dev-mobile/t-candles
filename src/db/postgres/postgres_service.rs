@@ -1,5 +1,10 @@
-use crate::db::postgres::repository::operational_repository::OperationalRepository;
-use crate::db::postgres::{connection::PostgresConnection, repository::operational_repository::PgOperationalRepository};
+use crate::db::postgres::repository::health_check_repository::TraitHealthCheckRepository;
+use crate::db::postgres::repository::tinkoff_candles_status_repository::TraitTinkoffCandlesStatusRepository;
+use crate::db::postgres::{
+    connection::PostgresConnection,
+    repository::health_check_repository::StructHealthCheckRepository,
+    repository::tinkoff_candles_status_repository::StructTinkoffCandlesStatusRepository,
+};
 
 use crate::env_config::models::app_setting::AppSettings;
 use std::sync::Arc;
@@ -10,8 +15,8 @@ pub struct PostgresService {
     pub connection: Arc<PostgresConnection>,
 
     // Operational repositories (PostgreSQL)
-    pub operational_repository: Arc<dyn OperationalRepository + Send + Sync>,
-    
+    pub repository_health_check: Arc<dyn TraitHealthCheckRepository + Send + Sync>,
+    pub repository_tinkoff_candles_status: Arc<dyn TraitTinkoffCandlesStatusRepository + Send + Sync>,
     // Add other PostgreSQL repositories here as needed
     // Example: pub user_repository: Arc<dyn UserRepository + Send + Sync>,
     // Example: pub order_repository: Arc<dyn OrderRepository + Send + Sync>,
@@ -34,11 +39,15 @@ impl PostgresService {
             }
         };
 
-        // Initialize  repositories
-        info!("Initializing  repositories");
-        let operational_repository = Arc::new(PgOperationalRepository::new(
+        // Initialize repositories
+        info!("Initializing repositories");
+        let health_check_repository = Arc::new(StructHealthCheckRepository::new(
             postgres_connection.clone(),
-        )) as Arc<dyn OperationalRepository + Send + Sync>;
+        )) as Arc<dyn TraitHealthCheckRepository + Send + Sync>;
+
+        let tinkoff_candles_status_repository = Arc::new(StructTinkoffCandlesStatusRepository::new(
+            postgres_connection.clone(),
+        )) as Arc<dyn TraitTinkoffCandlesStatusRepository + Send + Sync>;
 
         // Initialize any other repositories here
         // Example:
@@ -49,21 +58,14 @@ impl PostgresService {
         info!("PostgreSQL service initialized successfully");
         Ok(Self {
             connection: postgres_connection,
-            operational_repository,
+            repository_health_check: health_check_repository,
+            repository_tinkoff_candles_status: tinkoff_candles_status_repository,
             // Add other repositories here as they are implemented
             // Example: user_repository,
         })
     }
-    
+
     // Add any service-level methods here that might coordinate between repositories
-    
-    pub async fn health_check(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        match self.operational_repository.health_check().await {
-            Ok(result) => Ok(result),
-            Err(e) => {
-                error!("PostgreSQL health check failed: {}", e);
-                Err(Box::new(e))
-            }
-        }
-    }
+
+  
 }

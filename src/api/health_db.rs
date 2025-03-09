@@ -11,7 +11,12 @@ pub async fn health_db(
     let clickhouse_ok = client.query("SELECT 1").execute().await.is_ok();
 
     // Check PostgreSQL connection
-    let pg_health_check = app_state.postgres_service.health_check().await.is_ok();
+    let pg_health_check = app_state
+        .postgres_service
+        .repository_health_check
+        .check()
+        .await
+        .is_ok();
 
     // Return OK only if the database is healthy
     if clickhouse_ok && pg_health_check {

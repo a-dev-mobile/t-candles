@@ -105,18 +105,40 @@ impl TinkoffCandleClient {
             .get_liquid_shares()
             .await?;
 
-        // let share = liquid_shares.first().unwrap();
+        let share = liquid_shares.first().unwrap();
 
-        // let endTime = self.app_state.db_service.candle_repository.get_last_candle_time(&share.figi).await?;
+        let status_candle = self
+            .app_state
+            .postgres_service
+            .repository_tinkoff_candles_status
+            .get_by_instrument_uid(&share.instrument_id)
+            .await?;
 
-        // // Получаем свечи из API
-        // let api_candles = self
-        //     .get_minute_candles(
-        //         &share.instrument_id,
-        //         share.first_1min_candle_date,
-        //         get_end_of_day(share.first_1min_candle_date),
-        //     )
-        //     .await?;
+        let is_empty_status = status_candle.is_none();
+
+        if is_empty_status {
+            let end_of_day = get_end_of_day(share.first_1min_candle_date);
+            // Получаем свечи из API
+            let vec_candles: Vec<HistoricCandle> = self
+                .get_minute_candles(
+                    &share.instrument_id,
+                    share.first_1min_candle_date,
+                    end_of_day,
+                )
+                .await?;
+
+            self.app_state
+                .clickhouse_service
+                .repository_candle
+                .insert_candles(vec_candles)
+                .await?;
+
+            self.app_state
+                .postgres_service
+                .repository_tinkoff_candles_status
+                .upsert(&share.instrument_id, end_of_day)
+                .await?;
+        }
 
         // if api_candles.is_empty() {
         //     debug!("No candles received for {} from {} to {}", figi, from, to);
