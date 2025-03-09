@@ -1,6 +1,6 @@
 use super::{ShareRepository, helper};
 use crate::{
-    db::{clickhouse::connection::ClickhouseConnection, models::share::DbSharesLiquid},
+    db::clickhouse::{connection::ClickhouseConnection, models::share::DbSharesLiquid},
     generate::tinkoff_public_invest_api_contract_v1::Share,
 };
 use async_trait::async_trait;

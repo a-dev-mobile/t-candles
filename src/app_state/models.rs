@@ -1,4 +1,5 @@
-use crate::db::db_service::DbService;
+use crate::db::clickhouse::clickhouse_service::ClickhouseService;
+use crate::db::postgres::postgres_service::PostgresService;
 // src/app_state/mod.rs
 use crate::env_config::models::app_setting::AppSettings;
 
@@ -7,26 +8,23 @@ use std::sync::Arc;
 
 pub struct AppState {
     pub settings: Arc<AppSettings>,
-    pub db_service: Arc<DbService>,
+    pub clickhouse_service: Arc<ClickhouseService>,
+    pub postgres_service: Arc<PostgresService>,
     pub grpc_tinkoff: Arc<TinkoffClient>,
 }
-
 
 impl AppState {
     pub fn new(
         settings: Arc<AppSettings>,
-        db_service: Arc<DbService>,
+        clickhouse_service: Arc<ClickhouseService>,
+        postgres_service: Arc<PostgresService>,
         grpc_tinkoff: Arc<TinkoffClient>,
     ) -> Self {
         Self {
             settings,
-            db_service,
+            clickhouse_service,
+            postgres_service,
             grpc_tinkoff,
         }
-    }
-    
-    // Вспомогательные методы для упрощения доступа к часто используемым сервисам
-    pub fn get_clickhouse_client(&self) -> clickhouse::Client {
-        self.db_service.connection.get_client()
     }
 }

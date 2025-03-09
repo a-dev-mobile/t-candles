@@ -9,7 +9,14 @@ pub struct AppEnv {
     pub clickhouse_user: String,
     pub clickhouse_password: String,
     pub clickhouse_database: String,
+    // 
+    pub postgres_host: String,
+    pub postgres_user: String,
+    pub postgres_password: String,
+    pub postgres_database: String,
+    // 
     pub tinkoff_token: String,
+    // 
     pub server_port: u16,
     pub server_address: String,
 }

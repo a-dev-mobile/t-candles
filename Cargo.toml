@@ -34,6 +34,8 @@ rustls-native-certs = "0.8.1"
 # Database
 clickhouse = { version = "0.13.1", features = ["time"] }
 clickhouse-derive = "0.2.0"
+sqlx = { version = "0.8.3", features = ["postgres", "runtime-tokio-native-tls", "macros", "time", "uuid", "chrono","runtime-tokio", "tls-rustls",  ] }
+
 
 # Misc utilities
 async-trait = "0.1.87"

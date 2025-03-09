@@ -6,71 +6,108 @@ mod layers;
 mod logger;
 mod services;
 mod utils;
-
 mod app_state;
 
 use app_state::models::AppState;
 use axum::{Router, routing::get};
 use chrono::DateTime;
-use db::db_service::DbService;
+use db::{
+    clickhouse::clickhouse_service::{self, ClickhouseService},
+    postgres::postgres_service::PostgresService,
+};
 use env_config::models::{app_config::AppConfig, app_env::AppEnv, app_setting::AppSettings};
 use layers::{create_cors, create_trace};
-
 use services::{
-    tinkoff_candles::client::TinkoffCandleClient, tinkoff_client_grpc::TinkoffClient,
+    tinkoff_candles::client::TinkoffCandleClient, 
+    tinkoff_client_grpc::TinkoffClient,
     tinkoff_instruments::scheduler::TinkoffInstrumentsScheduler,
 };
 use std::{net::SocketAddr, sync::Arc};
 use tokio::{net::TcpListener, signal};
 use tracing::{debug, error, info};
 
-/// Initialize application settings and logger
-async fn initialize() -> AppSettings {
-    let app_env = AppEnv::new();
-    let app_config = AppConfig::new(&app_env.env);
-
+/// Initializes the application's configuration and logging system
+///
+/// Returns the application settings loaded from environment and config files
+async fn initialize_application() -> AppSettings {
+    // Load environment variables and configuration
+    let environment = AppEnv::new();
+    let config = AppConfig::new(&environment.env);
+    
     let app_settings = AppSettings {
-        app_config,
-        app_env,
+        app_config: config,
+        app_env: environment,
     };
-
-    // Initialize logger with settings
+    
+    // Setup logging with configured level and format
     logger::init_logger(
         &app_settings.app_config.log.level,
         &app_settings.app_config.log.format,
     )
     .expect("Failed to initialize logger");
-    // Log startup information using tracing
+    
+    // Log application startup information
     info!("Starting application...");
     info!("Current environment: {}", app_settings.app_env.env);
-    // Add environment-specific logging
+    
+    // Add more detailed logging in development environments
     if app_settings.app_env.is_local() {
         info!("Running in local development mode");
-        // Debug dump of complete configuration only in local mode
-        debug!("Full configuration dump: {:#?}", app_settings);
+        debug!("Configuration details: {:#?}", app_settings);
     } else {
         info!("Running in production mode");
     }
+    
     app_settings
 }
 
-/// Setup database connections
-async fn setup_databases(settings: Arc<AppSettings>) -> DbService {
-    info!("Initializing database service...");
-    let db_service: DbService = match DbService::new(settings).await {
+/// Establishes connections to databases
+///
+/// # Arguments
+/// * `settings` - Application settings containing database configuration
+///
+/// # Returns
+/// A tuple containing initialized Clickhouse and Postgres service instances
+async fn initialize_database_connections(
+    settings: Arc<AppSettings>
+) -> (ClickhouseService, PostgresService) {
+    info!("Initializing database connections...");
+    
+    // Initialize ClickHouse connection
+    let clickhouse_service = match ClickhouseService::new(&settings).await {
         Ok(service) => {
-            info!("Database service initialized successfully");
+            info!("ClickHouse connection established successfully");
             service
         }
         Err(err) => {
-            error!("Failed to initialize database service: {}", err);
-            panic!("Cannot continue without database service");
+            error!("Failed to connect to ClickHouse: {}", err);
+            panic!("Cannot continue without ClickHouse connection");
         }
     };
-    db_service
+    
+    // Initialize PostgreSQL connection
+    let postgres_service = match PostgresService::new(&settings).await {
+        Ok(service) => {
+            info!("PostgreSQL connection established successfully");
+            service
+        }
+        Err(err) => {
+            error!("Failed to connect to PostgreSQL: {}", err);
+            panic!("Cannot continue without PostgreSQL connection");
+        }
+    };
+    
+    (clickhouse_service, postgres_service)
 }
 
-fn create_app(app_state: Arc<AppState>) -> Router {
+/// Creates the application router with all API endpoints and middleware
+///
+/// # Arguments
+/// * `app_state` - Shared application state containing all services
+///
+/// # Returns
+/// Configured Axum router with all routes and middleware
+fn create_application_router(app_state: Arc<AppState>) -> Router {
     Router::new()
         .layer(create_cors())
         .route("/api-health", get(api::health_api))
@@ -79,91 +116,99 @@ fn create_app(app_state: Arc<AppState>) -> Router {
         .layer(create_trace())
 }
 
-/// Start the HTTP server
-async fn run_server(app: Router, addr: SocketAddr) {
-    tracing::info!("Starting server on {}", addr);
-    let listener = TcpListener::bind(addr).await.unwrap();
-    tracing::info!("Server started successfully");
-    axum::serve(listener, app)
-        .await
-        .expect("Failed to start server");
+/// Starts the HTTP server on the specified address
+///
+/// # Arguments
+/// * `app` - Configured Axum router
+/// * `addr` - Socket address to bind the server to
+async fn start_http_server(app: Router, addr: SocketAddr) {
+    info!("Starting HTTP server on {}", addr);
+    
+    let listener = match TcpListener::bind(addr).await {
+        Ok(listener) => listener,
+        Err(err) => {
+            error!("Failed to bind to address {}: {}", addr, err);
+            panic!("Cannot start server: {}", err);
+        }
+    };
+    
+    info!("Server started successfully, now accepting connections");
+    
+    if let Err(err) = axum::serve(listener, app).await {
+        error!("Server error: {}", err);
+        panic!("Server failed: {}", err);
+    }
+}
+
+/// Initializes and starts all background services
+///
+/// # Arguments
+/// * `app_state` - Shared application state containing all services
+async fn initialize_background_services(app_state: Arc<AppState>) {
+    // Initialize the instruments scheduler for fetching market data
+    let instruments_scheduler = TinkoffInstrumentsScheduler::new(app_state.clone()).await;
+    
+    // Perform initial instruments update before starting scheduler
+    match instruments_scheduler.trigger_update().await {
+        Ok(count) => info!(
+            "Initial market instruments update completed: {} instruments updated",
+            count
+        ),
+        Err(err) => error!("Failed to perform initial instruments update: {}", err),
+    }
+    
+    // Start the periodic scheduler for regular updates
+    instruments_scheduler.start().await;
+    
+    info!("Background services initialized successfully");
 }
 
 #[tokio::main]
 async fn main() {
-    // Initialize application
-    let settings: Arc<AppSettings> = Arc::new(initialize().await);
-    // Initialize database service
-    let db_service = setup_databases(settings.clone()).await;
-
-    // No need to extract ClickHouse connection separately as we'll use AppState
-
-    // Parse server address
-    let http_addr: SocketAddr = format!(
+    // Initialize application settings and logging
+    let settings: Arc<AppSettings> = Arc::new(initialize_application().await);
+    
+    // Connect to databases
+    let (clickhouse_service, postgres_service) = initialize_database_connections(settings.clone()).await;
+    
+    // Parse server address from configuration
+    let server_address: SocketAddr = format!(
         "{}:{}",
-        settings.app_env.server_address, settings.app_env.server_port,
+        settings.app_env.server_address, 
+        settings.app_env.server_port,
     )
     .parse()
     .expect("Invalid server address configuration");
-
-    info!("Server address configured at: {}", http_addr);
-
-    // Initialize Tinkoff client
-    let grpc_tinkoff = Arc::new(
+    
+    info!("Server will listen on: {}", server_address);
+    
+    // Initialize Tinkoff API client
+    let tinkoff_client = Arc::new(
         TinkoffClient::new(settings.clone())
             .await
-            .expect("Failed to initialize Tinkoff client"),
+            .expect("Failed to initialize Tinkoff API client"),
     );
-
-    // Create application state with services
+    
+    // Create application state with all services
     let app_state: Arc<AppState> = Arc::new(AppState {
         settings: settings.clone(),
-        db_service: Arc::new(db_service),
-        grpc_tinkoff,
+        clickhouse_service: Arc::new(clickhouse_service),
+        postgres_service: Arc::new(postgres_service),
+        grpc_tinkoff: tinkoff_client,
     });
-
-    // Initialize and start services
-    start_services(app_state.clone()).await;
-
-    // Create application router
-    let app = create_app(app_state.clone());
-
-    // dbg!(a);
-
-    let client = TinkoffCandleClient::new(app_state.clone());
-
-    client.load_and_save_candles().await;
-
-    // let b = client
-    //     .get_minute_candles(
-    //         "c05fd0a1-0c8e-4bc3-bf9e-43e364d278ef",
-    //         1709769600,
-    //         1709856000,
-    //     )
-    //     .await
-    //     .unwrap();
-
-    // dbg!(b);
-
-    run_server(app, http_addr).await;
-
-    info!("Application initialization complete!");
-}
-
-// Start all required services
-async fn start_services(app_state: Arc<AppState>) {
-    // Initialize the instruments scheduler
-    let instruments_scheduler = TinkoffInstrumentsScheduler::new(app_state.clone()).await;
-
-    // If you need to trigger an immediate update before starting the scheduler:
-    match instruments_scheduler.trigger_update().await {
-        Ok(count) => info!(
-            "Initial instrument update completed. Updated {} records",
-            count
-        ),
-        Err(e) => error!("Failed to perform initial instrument update: {}", e),
-    }
-
-    // Start the automatic scheduler
-    instruments_scheduler.start().await;
+    
+    // Initialize and start background services
+    initialize_background_services(app_state.clone()).await;
+    
+    // Create API router
+    let app_router = create_application_router(app_state.clone());
+    
+    // Initialize candle client and load candle data
+    let candle_client = TinkoffCandleClient::new(app_state.clone());
+    candle_client.load_and_save_candles().await;
+    
+    // Start HTTP server
+    start_http_server(app_router, server_address).await;
+    
+    info!("Application started successfully!");
 }

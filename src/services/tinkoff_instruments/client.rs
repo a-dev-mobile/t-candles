@@ -3,8 +3,8 @@ use tokio::time;
 use tracing::{debug, error, info};
 
 use crate::{
-
-    app_state::models::AppState, generate::tinkoff_public_invest_api_contract_v1::{InstrumentStatus, InstrumentsRequest}
+    app_state::models::AppState,
+    generate::tinkoff_public_invest_api_contract_v1::{InstrumentStatus, InstrumentsRequest},
 };
 
 // Mark the struct as pub(super) to make it visible only within the parent module
@@ -20,7 +20,7 @@ impl TinkoffInstrumentsUpdater {
     // This method is now pub(super) and can be called only by code in the parent module
     pub(super) async fn update_shares(&self) -> Result<u64, Box<dyn std::error::Error>> {
         info!("Fetching updated instruments data");
-        
+
         // Fetch shares from Tinkoff API
         let request = self
             .app_state
@@ -44,7 +44,7 @@ impl TinkoffInstrumentsUpdater {
         // Insert directly from proto models
         match self
             .app_state
-            .db_service
+            .clickhouse_service
             .share_repository
             .insert_shares(&shares_response.instruments)
             .await

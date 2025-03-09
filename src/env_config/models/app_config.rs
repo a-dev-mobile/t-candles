@@ -4,6 +4,7 @@ use serde::Deserialize;
 pub struct AppConfig {
     pub log: LogConfig,
     pub clickhouse: ClickhouseConfig,
+    pub postgres: PostgresConfig,
     pub tinkoff_api: TinkoffApiConfig,
     pub tinkoff_market_data_updater: TinkoffMarketDataUpdater,
     pub historical_candle_data: HistoricalCandleDataConfig,
@@ -30,6 +31,14 @@ pub struct ClickhouseConfig {
     pub timeout: u64,
     pub pool_min: u32,
     pub pool_max: u32,
+}
+#[derive(Debug, Deserialize)]
+pub struct PostgresConfig {
+    pub timeout: u64,
+    pub max_connections: u32,
+    pub min_connections: u32,
+    pub max_lifetime: u64,
+    pub idle_timeout: u64,
 }
 
 #[derive(Debug, Deserialize)]

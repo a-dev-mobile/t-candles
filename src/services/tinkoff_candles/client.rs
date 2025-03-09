@@ -1,6 +1,6 @@
 use crate::app_state::models::AppState;
-use crate::db::models::candle::DbCandle;
-use crate::db::models::share;
+
+use crate::db::clickhouse::models::candle::DbCandle;
 use crate::generate::tinkoff_public_invest_api_contract_v1::{
     CandleInterval, GetCandlesRequest, HistoricCandle,
 };
@@ -100,17 +100,14 @@ impl TinkoffCandleClient {
     pub async fn load_and_save_candles(&self) -> Result<usize, Box<dyn std::error::Error>> {
         let liquid_shares = self
             .app_state
-            .db_service
+            .clickhouse_service
             .share_repository
             .get_liquid_shares()
             .await?;
 
-        let share = liquid_shares.first().unwrap();
+        // let share = liquid_shares.first().unwrap();
 
-
-// let endTime = self.app_state.db_service.candle_repository.get_last_candle_time(&share.figi).await?;
-
-
+        // let endTime = self.app_state.db_service.candle_repository.get_last_candle_time(&share.figi).await?;
 
         // // Получаем свечи из API
         // let api_candles = self

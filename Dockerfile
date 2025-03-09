@@ -19,6 +19,7 @@ RUN mkdir -p src && \
     rm -rf src target/release/deps/t_candles* target/release/t-candles*
 
 # Copy actual source code and rebuild
+COPY .sqlx ./.sqlx
 COPY src ./src
 COPY config ./config
 

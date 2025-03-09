@@ -1,11 +1,13 @@
 mod clickhouse_impl;
 mod helper;
 
-pub use clickhouse_impl::ClickhouseShareRepository;
-use crate::generate::tinkoff_public_invest_api_contract_v1::Share;
-use clickhouse::error::Error as ClickhouseError;
+use crate::{
+    db::clickhouse::models::share::DbSharesLiquid,
+    generate::tinkoff_public_invest_api_contract_v1::Share,
+};
 use async_trait::async_trait;
-use crate::db::models::share::DbSharesLiquid;
+use clickhouse::error::Error as ClickhouseError;
+pub use clickhouse_impl::ClickhouseShareRepository;
 
 #[async_trait]
 pub trait ShareRepository {

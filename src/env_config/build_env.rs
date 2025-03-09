@@ -7,7 +7,7 @@ impl AppEnv {
         let env = get_env_var("ENV");
         let server_port = get_env_var("SERVER_PORT");
         let server_address = get_env_var("SERVER_ADDRESS");
-        let clickhouse_url = get_env_var("CLICKHOUSE_URL");
+        let clickhouse_url = get_env_var("CLICKHOUSE_HOST");
         let clickhouse_user = get_env_var("CLICKHOUSE_USER");
         let clickhouse_password = get_env_var("CLICKHOUSE_PASSWORD");
         let clickhouse_database = get_env_var("CLICKHOUSE_DATABASE");
@@ -22,6 +22,10 @@ impl AppEnv {
             clickhouse_password,
             clickhouse_database,
             tinkoff_token,
+            postgres_host: get_env_var("POSTGRES_HOST"),
+            postgres_user: get_env_var("POSTGRES_USER"),
+            postgres_password: get_env_var("POSTGRES_PASSWORD"),
+            postgres_database: get_env_var("POSTGRES_DATABASE"),
         }
     }
 }
