@@ -197,7 +197,7 @@ async fn main() {
     });
 
     // Initialize and start background services
-    // initialize_background_services(app_state.clone()).await;
+    initialize_background_services(app_state.clone()).await;
 
     // Create API router
     let app_router = create_application_router(app_state.clone());
