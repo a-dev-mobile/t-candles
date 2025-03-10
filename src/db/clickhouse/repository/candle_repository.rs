@@ -118,22 +118,32 @@ impl CandleRepository for ClickhouseCandleRepository {
                 ));
             }
 
-            // Формируем полный SQL-запрос для пакетной вставки
+            // Формируем полный SQL-запрос для пакетной вставки с обновлением дубликатов
             let sql = format!(
                 "INSERT INTO market_data.tinkoff_candles_1min 
-            (instrument_uid, time, open_units, open_nano, high_units, high_nano, 
-             low_units, low_nano, close_units, close_nano, volume) 
-             VALUES {}",
+                (instrument_uid, time, open_units, open_nano, high_units, high_nano, 
+                low_units, low_nano, close_units, close_nano, volume) 
+                VALUES {}
+                ON DUPLICATE KEY UPDATE 
+                open_units = VALUES(open_units),
+                open_nano = VALUES(open_nano),
+                high_units = VALUES(high_units),
+                high_nano = VALUES(high_nano),
+                low_units = VALUES(low_units),
+                low_nano = VALUES(low_nano),
+                close_units = VALUES(close_units),
+                close_nano = VALUES(close_nano),
+                volume = VALUES(volume)",
                 values_parts.join(",")
             );
 
-            // Выполняем пакетную вставку
+            // Выполняем пакетную вставку или обновление
             match client.query(&sql).execute().await {
                 Ok(_) => {
-                    // Успешная вставка пакета
+                    // Успешная вставка/обновление пакета
                     successful_inserts += actual_batch_size as u64;
                     debug!(
-                        "Successfully inserted batch of {} candles ({}/{})",
+                        "Successfully inserted/updated batch of {} candles ({}/{})",
                         actual_batch_size, successful_inserts, total_count
                     );
                     // Удаляем обработанные элементы из оставшихся
@@ -164,7 +174,7 @@ impl CandleRepository for ClickhouseCandleRepository {
         }
 
         info!(
-            "Insertion complete. Successfully inserted {} out of {} candles for instrument_uid={}",
+            "Insertion complete. Successfully inserted/updated {} out of {} candles for instrument_uid={}",
             successful_inserts, total_count, instrument_uid
         );
 
