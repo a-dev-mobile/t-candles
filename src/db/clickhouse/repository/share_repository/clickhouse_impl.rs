@@ -163,13 +163,11 @@ impl ShareRepository for ClickhouseShareRepository {
 
         // SQL запрос для получения ликвидных акций
         let query = "
-            SELECT uid, first_1min_candle_date
-            FROM market_data.tinkoff_shares
-            WHERE liquidity_flag = 1
-              AND buy_available_flag = 1
-              AND sell_available_flag = 1
-              AND api_trade_available_flag = 1
-              AND first_1min_candle_date IS NOT NULL
+           SELECT uid, first_1min_candle_date
+FROM market_data.tinkoff_shares
+WHERE buy_available_flag = 1
+  AND sell_available_flag = 1
+  AND first_1min_candle_date IS NOT NULL
         ";
 
         info!("Fetching liquid shares available for trading");
