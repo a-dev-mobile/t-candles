@@ -210,11 +210,11 @@ async fn main() {
     // Create API router
     let app_router = create_application_router(app_state.clone());
 
-    // Initialize candle client and load candle data
-    let candle_client = TinkoffCandleClient::new(app_state.clone());
-    if let Err(err) = candle_client.load_and_save_candles().await {
-        error!("Failed to load and save candles: {}", err);
-    }
+    // // Initialize candle client and load candle data
+    // let candle_client = TinkoffCandleClient::new(app_state.clone());
+    // if let Err(err) = candle_client.load_and_save_candles().await {
+    //     error!("Failed to load and save candles: {}", err);
+    // }
 
     // Start HTTP server
     start_http_server(app_router, server_address).await;
