@@ -18,7 +18,7 @@ use db::{
 use env_config::models::{app_config::AppConfig, app_env::AppEnv, app_setting::AppSettings};
 use layers::{create_cors, create_trace};
 use services::{
-    tinkoff_candles::client::TinkoffCandleClient, tinkoff_client_grpc::TinkoffClient,
+    tinkoff_candles::{client::TinkoffCandleClient, scheduler::TinkoffCandlesScheduler}, tinkoff_client_grpc::TinkoffClient,
     tinkoff_instruments::scheduler::TinkoffInstrumentsScheduler,
 };
 use std::{net::SocketAddr, sync::Arc};
@@ -158,6 +158,14 @@ async fn initialize_background_services(app_state: Arc<AppState>) {
 
     // Start the periodic scheduler for regular updates
     instruments_scheduler.start().await;
+    
+    // Initialize the candles scheduler for fetching historical candle data
+    let candles_scheduler = TinkoffCandlesScheduler::new(app_state.clone());
+    
+    // Start the periodic scheduler for candle data updates
+    // We don't do an initial update here as it will be handled by the scheduler
+    // after the appropriate delay
+    candles_scheduler.start().await;
 
     info!("Background services initialized successfully");
 }

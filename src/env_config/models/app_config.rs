@@ -7,7 +7,7 @@ pub struct AppConfig {
     pub postgres: PostgresConfig,
     pub tinkoff_api: TinkoffApiConfig,
     pub tinkoff_market_data_updater: TinkoffMarketDataUpdater,
-    pub historical_candle_data: HistoricalCandleDataConfig,
+    pub tinkoff_historical_candle_updater: TinkoffHistoricalCandleDataConfig,
 }
 #[derive(Debug, Deserialize)]
 pub struct TinkoffMarketDataUpdater {
@@ -16,9 +16,8 @@ pub struct TinkoffMarketDataUpdater {
     #[serde(default)]
     pub start_time: Option<String>, // Start time in UTC, format: "HH:MM:SS"
     #[serde(default)]
-    pub end_time: Option<String>,   // End time in UTC, format: "HH:MM:SS"
+    pub end_time: Option<String>, // End time in UTC, format: "HH:MM:SS"
 }
-
 
 #[derive(Debug, Deserialize)]
 pub struct LogConfig {
@@ -50,13 +49,13 @@ pub struct TinkoffApiConfig {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct HistoricalCandleDataConfig {
+pub struct TinkoffHistoricalCandleDataConfig {
     pub enabled: bool,
     pub request_delay_ms: u64,
     #[serde(default)]
     pub start_time: Option<String>, // Start time in UTC, format: "HH:MM:SS"
     #[serde(default)]
-    pub end_time: Option<String>,   // End time in UTC, format: "HH:MM:SS"
+    pub end_time: Option<String>, // End time in UTC, format: "HH:MM:SS"
 }
 impl TinkoffMarketDataUpdater {
     /// Checks if the current time is within the allowed operation window
@@ -68,7 +67,7 @@ impl TinkoffMarketDataUpdater {
 
         // Get current UTC time
         let now = chrono::Utc::now().time();
-        
+
         // Parse start and end times
         if let (Some(start_str), Some(end_str)) = (&self.start_time, &self.end_time) {
             if let (Ok(start), Ok(end)) = (
@@ -86,7 +85,7 @@ impl TinkoffMarketDataUpdater {
                 }
             }
         }
-        
+
         // If parsing fails, default to allowing operation
         true
     }
