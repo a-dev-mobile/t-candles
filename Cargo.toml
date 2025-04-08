@@ -9,7 +9,7 @@ axum = { version = "0.8.1", features = ["macros"] }
 tower-http = { version = "0.6.2", features = ["trace", "cors"] }
 
 # Async runtime
-tokio = { version = "1.43.0", features = ["full", "test-util"] }
+tokio = { version = "1.43.1", features = ["full", "test-util"] }
 
 # Serialization
 serde = { version = "1.0.218", features = ["derive"] }
