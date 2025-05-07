@@ -27,36 +27,44 @@ impl From<&str> for LogFormat {
     }
 }
 
-/// # Examples
-///
-/// ```rust
-///  Initialize with INFO level and plain text format
-/// init_logger("info", "plain").expect("Failed to initialize logger");
-///
-///  Initialize with DEBUG level and JSON format
-/// init_logger("debug", "json").expect("Failed to initialize logger");
-
-/// ```
-
 pub fn init_logger(log_level: &str, log_format: &str) -> Result<(), Error> {
     // Parse and validate the log level, falling back to "info" if invalid
     let filter = EnvFilter::try_new(log_level)
         .map_err(|_| Error::new(ErrorKind::InvalidInput, "Invalid log level"))?;
-    
-    // Create the base formatter with common configuration
-    let builder = tracing_subscriber::fmt()
-        .with_env_filter(filter)
-        // Disable target field in output for cleaner logs
-        .with_target(false)
-        // Track span lifecycle events (creation and closure)
-        .with_span_events(FmtSpan::NEW | FmtSpan::CLOSE);
-    
-    // Initialize the logger with the specified format
-    let format = LogFormat::from(log_format);
-    match format {
-        LogFormat::Json => builder.json().init(),
-        LogFormat::Plain => builder.init(),
+        // Get environment type to customize logging behavior
+        let env = crate::env_config::models::app_env::AppEnv::new();
+        let is_production = !env.is_local();
+
+    // Create builders with appropriate time settings
+    if is_production {
+        // Production mode without timestamps
+        let builder = tracing_subscriber::fmt()
+            .with_env_filter(filter)
+            .with_target(false)
+            .with_span_events(FmtSpan::NEW | FmtSpan::CLOSE)
+            .without_time();
+            
+        // Initialize with the specified format
+        let format = LogFormat::from(log_format);
+        match format {
+            LogFormat::Json => builder.json().init(),
+            LogFormat::Plain => builder.init(),
+        }
+    } else {
+        // Development mode with timestamps
+        let builder = tracing_subscriber::fmt()
+            .with_env_filter(filter)
+            .with_target(false)
+            .with_span_events(FmtSpan::NEW | FmtSpan::CLOSE);
+            
+        // Initialize with the specified format
+        let format = LogFormat::from(log_format);
+        match format {
+            LogFormat::Json => builder.json().init(),
+            LogFormat::Plain => builder.init(),
+        }
     }
+    
     
     Ok(())
     // Err(())

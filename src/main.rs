@@ -165,7 +165,7 @@ async fn initialize_background_services(app_state: Arc<AppState>) {
     // Start the periodic scheduler for candle data updates
     // We don't do an initial update here as it will be handled by the scheduler
     // after the appropriate delay
-    // candles_scheduler.start().await;
+    candles_scheduler.start().await;
     candles_scheduler.trigger_update().await;
 
     info!("Background services initialized successfully");
