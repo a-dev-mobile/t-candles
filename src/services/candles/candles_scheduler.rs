@@ -2,7 +2,7 @@ use std::{sync::Arc, time::Duration};
 use tracing::{debug, error, info};
 
 use super::client::TinkoffCandleClient;
-use crate::AppState;
+use crate::{env_config::models::app_config::OperationWindow, AppState};
 
 pub struct CandlesScheduler {
     app_state: Arc<AppState>,
@@ -13,27 +13,33 @@ impl CandlesScheduler {
         CandlesScheduler { app_state }
     }
 
+    /// Trigger a manual update (respects enabled flag)
     pub async fn trigger_update(&self) -> Result<usize, Box<dyn std::error::Error>> {
+        // Check if enabled before proceeding
+        if !self.app_state.settings.app_config.candles_scheduler.enabled {
+            info!("Candle updates are disabled in configuration");
+            return Ok(0);
+        }
+        
         // Create the client and delegate to its implementation
         let client = TinkoffCandleClient::new(self.app_state.clone());
         client.load_and_save_candles().await
     }
 
+    /// Start the scheduler with proper configuration checks
     pub async fn start(&self) {
-        if !self
-            .app_state
-            .settings
-            .app_config
-            .historical_candle_updater
-            .enabled
-        {
+        let config = &self.app_state.settings.app_config.candles_scheduler;
+        
+        // Check if enabled
+        if !config.enabled {
             info!("Historical candle data scheduler is disabled in configuration");
             return;
         }
 
-        let candle_config = &self.app_state.settings.app_config.historical_candle_updater;
-        // Проверяем, нужен ли первоначальный запуск
-        if candle_config.initial_run {
+        info!("Starting candles scheduler");
+
+        // Run initial update if configured
+        if config.initial_run {
             info!("Performing initial historical candle data update");
             match self.trigger_update().await {
                 Ok(count) => info!(
@@ -43,47 +49,44 @@ impl CandlesScheduler {
                 Err(e) => error!("Failed to perform initial candle update: {}", e),
             }
         }
-        // Log operation window if configured
-        let (start, end) = (&candle_config.start_time, &candle_config.end_time);
+
+        // Log operation window
         info!(
-            "Candle scheduler operation window configured: {} to {} UTC",
-            start, end
+            "Candle scheduler operation window: {} to {} UTC",
+            config.start_time, config.end_time
         );
 
         info!(
-            "Starting historical candle data scheduler with {} ms request delay",
-            candle_config.request_delay_ms,
+            "Candle scheduler configured with {} ms request delay",
+            config.request_delay_ms,
         );
 
-        // Create the candle client that will handle the actual API calls
+        // Create the candle client
         let candle_client = TinkoffCandleClient::new(self.app_state.clone());
-
-        // Clone app_state for use in the task
+        
+        // Clone app_state for the task
         let app_state = self.app_state.clone();
 
-        // Create a task that runs periodically
         tokio::spawn(async move {
-            // Create initial delay (1 minute) to allow other initialization to complete
+            // Initial delay to allow other initialization to complete
             tokio::time::sleep(Duration::from_secs(60)).await;
 
             // Main scheduler loop
             loop {
-                // Check if we're in the allowed operation window
-                let candle_config = &app_state.settings.app_config.historical_candle_updater;
-                let operation_allowed = is_operation_allowed(candle_config);
-
-                if !operation_allowed {
+                // Check operation window
+                let config = &app_state.settings.app_config.candles_scheduler;
+                if !config.is_operation_allowed() {
                     debug!(
                         "Candle scheduler: skipping update - outside operation window (current time: {})",
                         chrono::Utc::now().format("%H:%M:%S")
                     );
 
-                    // Wait for 5 minutes before checking again
+                    // Wait before checking again
                     tokio::time::sleep(Duration::from_secs(300)).await;
                     continue;
                 }
 
-                info!("Candle scheduler");
+                info!("Candle scheduler: triggering update");
 
                 // Trigger candle update
                 match candle_client.load_and_save_candles().await {
@@ -94,42 +97,9 @@ impl CandlesScheduler {
                     Err(e) => error!("Candle scheduler: failed to update candle data: {}", e),
                 }
 
-                // Wait for 12 hours before the next full update
-                // This is a reasonable interval since candles are usually updated once per day
+                // Wait before the next full update
                 tokio::time::sleep(Duration::from_secs(12 * 60 * 60)).await;
             }
         });
-
-        // Return immediately after spawning the background task
     }
-}
-
-// Helper function outside the impl block to check if operation is allowed based on time window
-fn is_operation_allowed(
-    candle_config: &crate::env_config::models::app_config::HistoricalCandleDataConfig,
-) -> bool {
-    // Get current UTC time
-    let now = chrono::Utc::now().time();
-
-    // Parse start and end times
-    let (start_str, end_str) = (&candle_config.start_time, &candle_config.end_time);
-    {
-        if let (Ok(start), Ok(end)) = (
-            chrono::NaiveTime::parse_from_str(start_str, "%H:%M:%S"),
-            chrono::NaiveTime::parse_from_str(end_str, "%H:%M:%S"),
-        ) {
-            // Check if current time is within the operation window
-            if start <= end {
-                // Simple case: start time is before end time
-                return start <= now && now <= end;
-            } else {
-                // Case where operation window crosses midnight
-                // e.g., start=21:00:00, end=04:00:00
-                return start <= now || now <= end;
-            }
-        }
-    }
-
-    // If parsing fails, default to allowing operation
-    true
 }

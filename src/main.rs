@@ -120,23 +120,19 @@ async fn start_http_server(app: Router, addr: SocketAddr) {
 }
 
 /// Initializes and starts all background services
+/// Initializes and starts all background services
 async fn initialize_background_services(app_state: Arc<AppState>) {
-    // Initialize the instruments scheduler for fetching market data
+    // Initialize the instruments scheduler
     let instruments_scheduler = InstrumentsScheduler::new(app_state.clone()).await;
-
-
-    // Start the periodic scheduler for regular updates
-    instruments_scheduler.start().await;
-
-    // Initialize the candles scheduler for fetching historical candle data
+    
+    // Initialize the candles scheduler
     let candles_scheduler = CandlesScheduler::new(app_state.clone());
-
-    // Start the periodic scheduler for candle data updates
-    if let Err(err) = candles_scheduler.trigger_update().await {
-        error!("Failed to trigger candles update: {}", err);
-    }
-
-    info!("Background services initialized successfully");
+    
+    // Start both schedulers (they'll check their enabled status internally)
+    instruments_scheduler.start().await;
+    candles_scheduler.start().await;
+    
+    info!("Background services initialization completed");
 }
 
 #[tokio::main]

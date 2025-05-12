@@ -6,21 +6,21 @@ use tracing::{debug, error, info};
 #[derive(Clone)]
 pub struct ClickhouseConnection {
     client: Client,
+       database: String, 
 }
 
 impl ClickhouseConnection {
     pub async fn new(settings: Arc<AppSettings>) -> Result<Self, clickhouse::error::Error> {
         info!("Initializing ClickHouse connection...");
 
-        // Using the current AppEnv structure which only has clickhouse_url
-        // We'll embed credentials in the URL instead of using with_user/with_password
-
-        // Create client with the authenticated URL
+        // Сохраняем имя базы данных
+        let database = settings.app_env.clickhouse_database.clone();
+             // Создаем клиент с настройками аутентификации
         let client = Client::default()
             .with_url(&settings.app_env.clickhouse_url)
             .with_user(&settings.app_env.clickhouse_user)
             .with_password(&settings.app_env.clickhouse_password)
-            .with_database(&settings.app_env.clickhouse_database)
+             .with_database(&database) 
             .with_option(
                 "connect_timeout",
                 settings.app_config.clickhouse.timeout.to_string(),
@@ -46,10 +46,15 @@ impl ClickhouseConnection {
             }
         }
 
-        Ok(Self { client })
+        Ok(Self { client, database })
     }
 
     pub fn get_client(&self) -> Client {
         self.client.clone()
+    }
+
+    /// Возвращает имя базы данных из конфигурации
+    pub fn get_database(&self) -> &str {
+        &self.database
     }
 }

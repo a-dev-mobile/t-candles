@@ -6,11 +6,11 @@ pub struct AppConfig {
     pub clickhouse: ClickhouseConfig,
     pub postgres: PostgresConfig,
     pub tinkoff_api: TinkoffApiConfig,
-    pub market_instruments_updater: MarketInstrumentsUpdater,
-    pub historical_candle_updater: HistoricalCandleDataConfig,
+    pub instruments_scheduler: InstrumentsScheduler,
+    pub candles_scheduler: CandlesScheduler,
 }
 #[derive(Debug, Deserialize)]
-pub struct MarketInstrumentsUpdater {
+pub struct InstrumentsScheduler {
     pub enabled: bool,
     pub initial_run: bool,
     pub interval_seconds: u64,
@@ -48,7 +48,7 @@ pub struct TinkoffApiConfig {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct HistoricalCandleDataConfig {
+pub struct CandlesScheduler {
     pub enabled: bool,
     pub initial_run: bool,
     pub request_delay_ms: u64,
@@ -57,31 +57,79 @@ pub struct HistoricalCandleDataConfig {
 
     pub end_time: String, // End time in UTC, format: "HH:MM:SS"
 }
-impl MarketInstrumentsUpdater {
-    /// Checks if the current time is within the allowed operation window
-    pub fn is_operation_allowed(&self) -> bool {
+
+// For CandlesScheduler
+impl OperationWindow for CandlesScheduler {
+    fn is_enabled(&self) -> bool {
+        self.enabled
+    }
+
+    fn start_time(&self) -> &str {
+        &self.start_time
+    }
+
+    fn end_time(&self) -> &str {
+        &self.end_time
+    }
+}
+impl OperationWindow for InstrumentsScheduler {
+    fn is_enabled(&self) -> bool {
+        self.enabled
+    }
+
+    fn start_time(&self) -> &str {
+        &self.start_time
+    }
+
+    fn end_time(&self) -> &str {
+        &self.end_time
+    }
+}
+
+/// Common trait for schedulers that have time-based operation windows
+pub trait OperationWindow {
+    /// Check if scheduler is enabled
+    fn is_enabled(&self) -> bool;
+
+    /// Get the start time string
+    fn start_time(&self) -> &str;
+
+    /// Get the end time string
+    fn end_time(&self) -> &str;
+
+    /// Check if operation is allowed based on enabled flag and time window
+    fn is_operation_allowed(&self) -> bool {
+        // First check the enabled flag - highest priority
+        if !self.is_enabled() {
+            return false;
+        }
+
         // Get current UTC time
         let now = chrono::Utc::now().time();
 
         // Parse start and end times
-        if let (start_str, end_str) = (&self.start_time, &self.end_time) {
-            if let (Ok(start), Ok(end)) = (
-                NaiveTime::parse_from_str(start_str, "%H:%M:%S"),
-                NaiveTime::parse_from_str(end_str, "%H:%M:%S"),
-            ) {
-                // Check if current time is within the operation window
-                if start <= end {
-                    // Simple case: start time is before end time
-                    return start <= now && now <= end;
-                } else {
-                    // Case where operation window crosses midnight
-                    // e.g., start=21:00:00, end=04:00:00
-                    return start <= now || now <= end;
-                }
+        let (start_str, end_str) = (self.start_time(), self.end_time());
+        if let (Ok(start), Ok(end)) = (
+            NaiveTime::parse_from_str(start_str, "%H:%M:%S"),
+            NaiveTime::parse_from_str(end_str, "%H:%M:%S"),
+        ) {
+            // Check if current time is within the operation window
+            if start <= end {
+                // Simple case: start time is before end time
+                return start <= now && now <= end;
+            } else {
+                // Case where operation window crosses midnight
+                // e.g., start=21:00:00, end=04:00:00
+                return start <= now || now <= end;
             }
         }
 
-        // If parsing fails, default to allowing operation
-        true
+        // If parsing fails, log the error and default to not allowing operation
+        tracing::error!(
+            "Failed to parse time window: start='{}', end='{}'",
+            start_str,
+            end_str
+        );
+        false
     }
 }

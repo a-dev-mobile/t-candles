@@ -30,11 +30,15 @@ pub trait CandleRepository {
 
 pub struct ClickhouseCandleRepository {
     connection: Arc<ClickhouseConnection>,
+
 }
 
 impl ClickhouseCandleRepository {
     pub fn new(connection: Arc<ClickhouseConnection>) -> Self {
-        Self { connection }
+        Self {
+            connection,
+ 
+        }
     }
 }
 
@@ -69,6 +73,9 @@ impl CandleRepository for ClickhouseCandleRepository {
         // Реализация двоичного поиска для обработки пакетов с ошибками
         // Начинаем с максимального размера пакета
         let mut current_batch_size = BATCH_SIZE;
+
+        // Получаем полное имя таблицы с использованием схемы из конфигурации
+        let table_name = format!("{}.{}", self.connection.get_database(), "tinkoff_candles_1min");
 
         while !remaining_candles.is_empty() {
             // Ограничиваем размер пакета оставшимися элементами
@@ -118,12 +125,13 @@ impl CandleRepository for ClickhouseCandleRepository {
                 ));
             }
 
-            // Формируем полный SQL-запрос для пакетной вставки
+            // Формируем полный SQL-запрос для пакетной вставки с использованием таблицы с учетом схемы
             let sql = format!(
-                "INSERT INTO market_data.tinkoff_candles_1min 
-            (instrument_uid, time, open_units, open_nano, high_units, high_nano, 
-             low_units, low_nano, close_units, close_nano, volume) 
-             VALUES {}",
+                "INSERT INTO {} 
+                (instrument_uid, time, open_units, open_nano, high_units, high_nano, 
+                 low_units, low_nano, close_units, close_nano, volume) 
+                 VALUES {}",
+                table_name,
                 values_parts.join(",")
             );
 

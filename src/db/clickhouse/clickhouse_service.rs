@@ -1,4 +1,4 @@
-use crate::db::clickhouse::repository::share_repository::ClickhouseShareRepository;
+
 use crate::db::clickhouse::{
     connection::ClickhouseConnection, repository::candle_repository::ClickhouseCandleRepository,
 };
@@ -8,7 +8,8 @@ use crate::env_config::models::app_setting::AppSettings;
 use std::sync::Arc;
 use tracing::{error, info};
 
-use super::repository::{candle_repository::CandleRepository, share_repository::ShareRepository};
+use super::repository::share_repository::ShareRepository;
+use super::repository::candle_repository::CandleRepository;
 
 pub struct ClickhouseService {
     // Connections
@@ -17,7 +18,7 @@ pub struct ClickhouseService {
     // Analytical repositories (ClickHouse)
     pub repository_candle: Arc<dyn CandleRepository + Send + Sync>,
 
-    pub share_repository: Arc<dyn ShareRepository + Send + Sync>,
+    pub share_repository: Arc<ShareRepository>,
 }
 
 impl ClickhouseService {
@@ -43,9 +44,8 @@ impl ClickhouseService {
             clickhouse_connection.clone(),
         )) as Arc<dyn CandleRepository + Send + Sync>;
 
-        let analytics_share_repository = Arc::new(ClickhouseShareRepository::new(
-            clickhouse_connection.clone(),
-        )) as Arc<dyn ShareRepository + Send + Sync>;
+        let analytics_share_repository =
+            Arc::new(ShareRepository::new(clickhouse_connection.clone()));
 
         // Initialize operational repositories (PostgreSQL)
         info!("Initialize repositories (PostgreSQL)");
@@ -58,5 +58,10 @@ impl ClickhouseService {
 
             share_repository: analytics_share_repository,
         })
+    }
+
+    /// Форматирует полное имя таблицы с учетом схемы из конфигурации
+    pub fn format_table_name(&self, table: &str) -> String {
+        format!("{}.{}", self.connection.get_database(), table)
     }
 }

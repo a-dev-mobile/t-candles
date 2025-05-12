@@ -46,7 +46,7 @@ impl InstrumentsUpdater {
             .app_state
             .clickhouse_service
             .share_repository
-            .insert_shares(&shares_response.instruments)
+            .insert_shares(&shares_response.instruments, true) // Set clean_first to true
             .await
         {
             Ok(count) => {
