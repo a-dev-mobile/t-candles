@@ -7,8 +7,6 @@ use toml;
 
 impl AppConfig {
     pub fn new(env: &Env) -> Self {
-        
-
         Self::load_config(env).expect("Failed to load configuration")
     }
 
@@ -21,5 +19,4 @@ impl AppConfig {
 
         Ok(config)
     }
-
 }

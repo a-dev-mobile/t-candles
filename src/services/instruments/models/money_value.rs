@@ -1,8 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-
 use crate::generate::tinkoff_public_invest_api_contract_v1::MoneyValue;
-
 
 /// Human-readable MoneyValue model
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -44,9 +42,9 @@ impl From<Option<&MoneyValue>> for TinkoffMoneyValueModel {
 
 // Helper function to extract money value fields safely
 pub fn extract_money_value(money: &Option<MoneyValue>) -> (String, i64, i32) {
-    money
-        .as_ref()
-        .map_or((String::new(), 0, 0), |m| (m.currency.clone(), m.units, m.nano))
+    money.as_ref().map_or((String::new(), 0, 0), |m| {
+        (m.currency.clone(), m.units, m.nano)
+    })
 }
 
 // Helper function to convert money value to float

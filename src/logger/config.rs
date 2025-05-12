@@ -1,7 +1,7 @@
 use std::fmt;
 
 use std::io::{Error, ErrorKind};
-use tracing_subscriber::{fmt::format::FmtSpan, EnvFilter};
+use tracing_subscriber::{EnvFilter, fmt::format::FmtSpan};
 /// Supported log format types
 #[derive(Debug, Clone, PartialEq)]
 pub enum LogFormat {
@@ -31,9 +31,9 @@ pub fn init_logger(log_level: &str, log_format: &str) -> Result<(), Error> {
     // Parse and validate the log level, falling back to "info" if invalid
     let filter = EnvFilter::try_new(log_level)
         .map_err(|_| Error::new(ErrorKind::InvalidInput, "Invalid log level"))?;
-        // Get environment type to customize logging behavior
-        let env = crate::env_config::models::app_env::AppEnv::new();
-        let is_production = !env.is_local();
+    // Get environment type to customize logging behavior
+    let env = crate::env_config::models::app_env::AppEnv::new();
+    let is_production = !env.is_local();
 
     // Create builders with appropriate time settings
     if is_production {
@@ -43,7 +43,7 @@ pub fn init_logger(log_level: &str, log_format: &str) -> Result<(), Error> {
             .with_target(false)
             .with_span_events(FmtSpan::NEW | FmtSpan::CLOSE)
             .without_time();
-            
+
         // Initialize with the specified format
         let format = LogFormat::from(log_format);
         match format {
@@ -56,7 +56,7 @@ pub fn init_logger(log_level: &str, log_format: &str) -> Result<(), Error> {
             .with_env_filter(filter)
             .with_target(false)
             .with_span_events(FmtSpan::NEW | FmtSpan::CLOSE);
-            
+
         // Initialize with the specified format
         let format = LogFormat::from(log_format);
         match format {
@@ -64,8 +64,7 @@ pub fn init_logger(log_level: &str, log_format: &str) -> Result<(), Error> {
             LogFormat::Plain => builder.init(),
         }
     }
-    
-    
+
     Ok(())
     // Err(())
 }

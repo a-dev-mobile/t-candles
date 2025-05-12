@@ -16,7 +16,8 @@ pub struct PostgresService {
 
     // Operational repositories (PostgreSQL)
     pub repository_health_check: Arc<dyn TraitHealthCheckRepository + Send + Sync>,
-    pub repository_tinkoff_candles_status: Arc<dyn TraitTinkoffCandlesStatusRepository + Send + Sync>,
+    pub repository_tinkoff_candles_status:
+        Arc<dyn TraitTinkoffCandlesStatusRepository + Send + Sync>,
     // Add other PostgreSQL repositories here as needed
     // Example: pub user_repository: Arc<dyn UserRepository + Send + Sync>,
     // Example: pub order_repository: Arc<dyn OrderRepository + Send + Sync>,
@@ -43,11 +44,13 @@ impl PostgresService {
         info!("Initializing repositories");
         let health_check_repository = Arc::new(StructHealthCheckRepository::new(
             postgres_connection.clone(),
-        )) as Arc<dyn TraitHealthCheckRepository + Send + Sync>;
+        ))
+            as Arc<dyn TraitHealthCheckRepository + Send + Sync>;
 
         let tinkoff_candles_status_repository = Arc::new(StructTinkoffCandlesStatusRepository::new(
             postgres_connection.clone(),
-        )) as Arc<dyn TraitTinkoffCandlesStatusRepository + Send + Sync>;
+        ))
+            as Arc<dyn TraitTinkoffCandlesStatusRepository + Send + Sync>;
 
         // Initialize any other repositories here
         // Example:
@@ -66,6 +69,4 @@ impl PostgresService {
     }
 
     // Add any service-level methods here that might coordinate between repositories
-
-  
 }

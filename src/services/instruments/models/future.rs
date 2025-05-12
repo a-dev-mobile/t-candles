@@ -1,9 +1,10 @@
 use serde::{Deserialize, Serialize};
 
-
-
-
-use super::{money_value::TinkoffMoneyValueModel, quotation::TinkoffQuotationModel, real_exchange::TinkoffRealExchangeModel, time_stamp::TinkoffTimestampModel, trading_status::TinkoffTradingStatusModel};
+use super::{
+    money_value::TinkoffMoneyValueModel, quotation::TinkoffQuotationModel,
+    real_exchange::TinkoffRealExchangeModel, time_stamp::TinkoffTimestampModel,
+    trading_status::TinkoffTradingStatusModel,
+};
 use crate::generate::tinkoff_public_invest_api_contract_v1::Future;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TinkoffFutureModel {

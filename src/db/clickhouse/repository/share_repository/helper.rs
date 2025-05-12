@@ -40,7 +40,7 @@ pub(crate) fn format_share_values(share: &Share) -> String {
             None => "NULL".to_string(),
         }
     }
-    
+
     fn quotation_nano(
         quotation: &Option<crate::generate::tinkoff_public_invest_api_contract_v1::Quotation>,
     ) -> String {
@@ -49,7 +49,7 @@ pub(crate) fn format_share_values(share: &Share) -> String {
             None => "NULL".to_string(),
         }
     }
-    
+
     // Timestamp -> Int64 (хранение timestamp в секундах)
     fn timestamp_to_sql(ts: &Option<prost_types::Timestamp>) -> String {
         match ts {
@@ -60,7 +60,7 @@ pub(crate) fn format_share_values(share: &Share) -> String {
             None => "NULL".to_string(),
         }
     }
-    
+
     // Обработка опционального MoneyValue
     let (nominal_currency, nominal_units, nominal_nano) = match &share.nominal {
         Some(n) => (
@@ -70,7 +70,7 @@ pub(crate) fn format_share_values(share: &Share) -> String {
         ),
         None => ("NULL".to_string(), "NULL".to_string(), "NULL".to_string()),
     };
-    
+
     // Return the VALUES part of the SQL query for this share
     format!(
         "(

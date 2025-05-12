@@ -8,13 +8,13 @@ use crate::{
 };
 
 // Mark the struct as pub(super) to make it visible only within the parent module
-pub(super) struct TinkoffInstrumentsUpdater {
+pub(super) struct InstrumentsUpdater {
     app_state: Arc<AppState>,
 }
 
-impl TinkoffInstrumentsUpdater {
+impl InstrumentsUpdater {
     pub(super) async fn new(app_state: Arc<AppState>) -> Self {
-        TinkoffInstrumentsUpdater { app_state }
+        InstrumentsUpdater { app_state }
     }
 
     // This method is now pub(super) and can be called only by code in the parent module

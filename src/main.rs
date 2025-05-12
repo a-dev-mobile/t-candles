@@ -10,19 +10,15 @@ mod utils;
 
 use app_state::models::AppState;
 use axum::{Router, routing::get};
-use chrono::DateTime;
 use db::{
-    clickhouse::clickhouse_service::{self, ClickhouseService},
+    clickhouse::clickhouse_service::ClickhouseService,
     postgres::postgres_service::PostgresService,
 };
 use env_config::models::{app_config::AppConfig, app_env::AppEnv, app_setting::AppSettings};
 use layers::{create_cors, create_trace};
-use services::{
-    tinkoff_candles::{client::TinkoffCandleClient, scheduler::TinkoffCandlesScheduler}, tinkoff_client_grpc::TinkoffClient,
-    tinkoff_instruments::scheduler::TinkoffInstrumentsScheduler,
-};
+use services::{candles::candles_scheduler::CandlesScheduler, instruments::instruments_scheduler::InstrumentsScheduler, tinkoff_client_grpc::TinkoffClient};
 use std::{net::SocketAddr, sync::Arc};
-use tokio::{net::TcpListener, signal};
+use tokio::net::TcpListener;
 use tracing::{debug, error, info};
 
 /// Initializes the application's configuration and logging system
@@ -61,12 +57,6 @@ async fn initialize_application() -> AppSettings {
 }
 
 /// Establishes connections to databases
-///
-/// # Arguments
-/// * `settings` - Application settings containing database configuration
-///
-/// # Returns
-/// A tuple containing initialized Clickhouse and Postgres service instances
 async fn initialize_database_connections(
     settings: Arc<AppSettings>,
 ) -> (ClickhouseService, PostgresService) {
@@ -100,12 +90,6 @@ async fn initialize_database_connections(
 }
 
 /// Creates the application router with all API endpoints and middleware
-///
-/// # Arguments
-/// * `app_state` - Shared application state containing all services
-///
-/// # Returns
-/// Configured Axum router with all routes and middleware
 fn create_application_router(app_state: Arc<AppState>) -> Router {
     Router::new()
         .layer(create_cors())
@@ -116,10 +100,6 @@ fn create_application_router(app_state: Arc<AppState>) -> Router {
 }
 
 /// Starts the HTTP server on the specified address
-///
-/// # Arguments
-/// * `app` - Configured Axum router
-/// * `addr` - Socket address to bind the server to
 async fn start_http_server(app: Router, addr: SocketAddr) {
     info!("Starting HTTP server on {}", addr);
 
@@ -140,33 +120,21 @@ async fn start_http_server(app: Router, addr: SocketAddr) {
 }
 
 /// Initializes and starts all background services
-///
-/// # Arguments
-/// * `app_state` - Shared application state containing all services
 async fn initialize_background_services(app_state: Arc<AppState>) {
     // Initialize the instruments scheduler for fetching market data
-    let instruments_scheduler = TinkoffInstrumentsScheduler::new(app_state.clone()).await;
+    let instruments_scheduler = InstrumentsScheduler::new(app_state.clone()).await;
 
-    // Perform initial instruments update before starting scheduler
-    match instruments_scheduler.trigger_update().await {
-        Ok(count) => info!(
-            "Initial market instruments update completed: {} instruments updated",
-            count
-        ),
-        Err(err) => error!("Failed to perform initial instruments update: {}", err),
-    }
 
     // Start the periodic scheduler for regular updates
     instruments_scheduler.start().await;
-    
+
     // Initialize the candles scheduler for fetching historical candle data
-    let candles_scheduler = TinkoffCandlesScheduler::new(app_state.clone());
-    
+    let candles_scheduler = CandlesScheduler::new(app_state.clone());
+
     // Start the periodic scheduler for candle data updates
-    // We don't do an initial update here as it will be handled by the scheduler
-    // after the appropriate delay
-    // candles_scheduler.start().await;
-    candles_scheduler.trigger_update().await;
+    if let Err(err) = candles_scheduler.trigger_update().await {
+        error!("Failed to trigger candles update: {}", err);
+    }
 
     info!("Background services initialized successfully");
 }

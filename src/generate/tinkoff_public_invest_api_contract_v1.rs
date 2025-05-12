@@ -132,9 +132,7 @@ impl SecurityTradingStatus {
     pub fn as_str_name(&self) -> &'static str {
         match self {
             Self::Unspecified => "SECURITY_TRADING_STATUS_UNSPECIFIED",
-            Self::NotAvailableForTrading => {
-                "SECURITY_TRADING_STATUS_NOT_AVAILABLE_FOR_TRADING"
-            }
+            Self::NotAvailableForTrading => "SECURITY_TRADING_STATUS_NOT_AVAILABLE_FOR_TRADING",
             Self::OpeningPeriod => "SECURITY_TRADING_STATUS_OPENING_PERIOD",
             Self::ClosingPeriod => "SECURITY_TRADING_STATUS_CLOSING_PERIOD",
             Self::BreakInTrading => "SECURITY_TRADING_STATUS_BREAK_IN_TRADING",
@@ -142,9 +140,7 @@ impl SecurityTradingStatus {
             Self::ClosingAuction => "SECURITY_TRADING_STATUS_CLOSING_AUCTION",
             Self::DarkPoolAuction => "SECURITY_TRADING_STATUS_DARK_POOL_AUCTION",
             Self::DiscreteAuction => "SECURITY_TRADING_STATUS_DISCRETE_AUCTION",
-            Self::OpeningAuctionPeriod => {
-                "SECURITY_TRADING_STATUS_OPENING_AUCTION_PERIOD"
-            }
+            Self::OpeningAuctionPeriod => "SECURITY_TRADING_STATUS_OPENING_AUCTION_PERIOD",
             Self::TradingAtClosingAuctionPrice => {
                 "SECURITY_TRADING_STATUS_TRADING_AT_CLOSING_AUCTION_PRICE"
             }
@@ -152,9 +148,7 @@ impl SecurityTradingStatus {
             Self::SessionClose => "SECURITY_TRADING_STATUS_SESSION_CLOSE",
             Self::SessionOpen => "SECURITY_TRADING_STATUS_SESSION_OPEN",
             Self::DealerNormalTrading => "SECURITY_TRADING_STATUS_DEALER_NORMAL_TRADING",
-            Self::DealerBreakInTrading => {
-                "SECURITY_TRADING_STATUS_DEALER_BREAK_IN_TRADING"
-            }
+            Self::DealerBreakInTrading => "SECURITY_TRADING_STATUS_DEALER_BREAK_IN_TRADING",
             Self::DealerNotAvailableForTrading => {
                 "SECURITY_TRADING_STATUS_DEALER_NOT_AVAILABLE_FOR_TRADING"
             }
@@ -174,21 +168,15 @@ impl SecurityTradingStatus {
             "SECURITY_TRADING_STATUS_CLOSING_AUCTION" => Some(Self::ClosingAuction),
             "SECURITY_TRADING_STATUS_DARK_POOL_AUCTION" => Some(Self::DarkPoolAuction),
             "SECURITY_TRADING_STATUS_DISCRETE_AUCTION" => Some(Self::DiscreteAuction),
-            "SECURITY_TRADING_STATUS_OPENING_AUCTION_PERIOD" => {
-                Some(Self::OpeningAuctionPeriod)
-            }
+            "SECURITY_TRADING_STATUS_OPENING_AUCTION_PERIOD" => Some(Self::OpeningAuctionPeriod),
             "SECURITY_TRADING_STATUS_TRADING_AT_CLOSING_AUCTION_PRICE" => {
                 Some(Self::TradingAtClosingAuctionPrice)
             }
             "SECURITY_TRADING_STATUS_SESSION_ASSIGNED" => Some(Self::SessionAssigned),
             "SECURITY_TRADING_STATUS_SESSION_CLOSE" => Some(Self::SessionClose),
             "SECURITY_TRADING_STATUS_SESSION_OPEN" => Some(Self::SessionOpen),
-            "SECURITY_TRADING_STATUS_DEALER_NORMAL_TRADING" => {
-                Some(Self::DealerNormalTrading)
-            }
-            "SECURITY_TRADING_STATUS_DEALER_BREAK_IN_TRADING" => {
-                Some(Self::DealerBreakInTrading)
-            }
+            "SECURITY_TRADING_STATUS_DEALER_NORMAL_TRADING" => Some(Self::DealerNormalTrading),
+            "SECURITY_TRADING_STATUS_DEALER_BREAK_IN_TRADING" => Some(Self::DealerBreakInTrading),
             "SECURITY_TRADING_STATUS_DEALER_NOT_AVAILABLE_FOR_TRADING" => {
                 Some(Self::DealerNotAvailableForTrading)
             }
@@ -249,9 +237,7 @@ pub struct TradingDay {
     pub closing_auction_end_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Время начала аукциона открытия вечерней сессии в часовом поясе UTC.
     #[prost(message, optional, tag = "9")]
-    pub evening_opening_auction_start_time: ::core::option::Option<
-        ::prost_types::Timestamp,
-    >,
+    pub evening_opening_auction_start_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Время начала вечерней сессии в часовом поясе UTC.
     #[prost(message, optional, tag = "10")]
     pub evening_start_time: ::core::option::Option<::prost_types::Timestamp>,
@@ -2262,20 +2248,14 @@ impl OptionSettlementType {
     pub fn as_str_name(&self) -> &'static str {
         match self {
             Self::OptionExecutionTypeUnspecified => "OPTION_EXECUTION_TYPE_UNSPECIFIED",
-            Self::OptionExecutionTypePhysicalDelivery => {
-                "OPTION_EXECUTION_TYPE_PHYSICAL_DELIVERY"
-            }
-            Self::OptionExecutionTypeCashSettlement => {
-                "OPTION_EXECUTION_TYPE_CASH_SETTLEMENT"
-            }
+            Self::OptionExecutionTypePhysicalDelivery => "OPTION_EXECUTION_TYPE_PHYSICAL_DELIVERY",
+            Self::OptionExecutionTypeCashSettlement => "OPTION_EXECUTION_TYPE_CASH_SETTLEMENT",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "OPTION_EXECUTION_TYPE_UNSPECIFIED" => {
-                Some(Self::OptionExecutionTypeUnspecified)
-            }
+            "OPTION_EXECUTION_TYPE_UNSPECIFIED" => Some(Self::OptionExecutionTypeUnspecified),
             "OPTION_EXECUTION_TYPE_PHYSICAL_DELIVERY" => {
                 Some(Self::OptionExecutionTypePhysicalDelivery)
             }
@@ -2601,10 +2581,10 @@ pub mod instruments_service_client {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
-    use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    use tonic::codegen::*;
     #[derive(Debug, Clone)]
     pub struct InstrumentsServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -2643,14 +2623,13 @@ pub mod instruments_service_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    http::Request<tonic::body::BoxBody>,
+                    Response = http::Response<
+                        <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    >,
                 >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+            <T as tonic::codegen::Service<http::Request<tonic::body::BoxBody>>>::Error:
+                Into<StdError> + std::marker::Send + std::marker::Sync,
         {
             InstrumentsServiceClient::new(InterceptedService::new(inner, interceptor))
         }
@@ -2689,30 +2668,20 @@ pub mod instruments_service_client {
         pub async fn trading_schedules(
             &mut self,
             request: impl tonic::IntoRequest<super::TradingSchedulesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::TradingSchedulesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::TradingSchedulesResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/TradingSchedules",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "TradingSchedules",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "TradingSchedules",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения облигации по её идентификатору.
@@ -2720,26 +2689,18 @@ pub mod instruments_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentRequest>,
         ) -> std::result::Result<tonic::Response<super::BondResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/BondBy",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "BondBy",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "BondBy",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения списка облигаций.
@@ -2747,116 +2708,77 @@ pub mod instruments_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentsRequest>,
         ) -> std::result::Result<tonic::Response<super::BondsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/Bonds",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "Bonds",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "Bonds",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения графика выплат купонов по облигации.
         pub async fn get_bond_coupons(
             &mut self,
             request: impl tonic::IntoRequest<super::GetBondCouponsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetBondCouponsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetBondCouponsResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetBondCoupons",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "GetBondCoupons",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "GetBondCoupons",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения валюты по её идентификатору.
         pub async fn currency_by(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CurrencyResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::CurrencyResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/CurrencyBy",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "CurrencyBy",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "CurrencyBy",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения списка валют.
         pub async fn currencies(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CurrenciesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::CurrenciesResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/Currencies",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "Currencies",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "Currencies",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения инвестиционного фонда по его идентификатору.
@@ -2864,26 +2786,18 @@ pub mod instruments_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentRequest>,
         ) -> std::result::Result<tonic::Response<super::EtfResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/EtfBy",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "EtfBy",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "EtfBy",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения списка инвестиционных фондов.
@@ -2891,26 +2805,18 @@ pub mod instruments_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentsRequest>,
         ) -> std::result::Result<tonic::Response<super::EtfsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/Etfs",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "Etfs",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "Etfs",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения фьючерса по его идентификатору.
@@ -2918,56 +2824,37 @@ pub mod instruments_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentRequest>,
         ) -> std::result::Result<tonic::Response<super::FutureResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/FutureBy",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "FutureBy",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "FutureBy",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения списка фьючерсов.
         pub async fn futures(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::FuturesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::FuturesResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/Futures",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "Futures",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "Futures",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения опциона по его идентификатору.
@@ -2975,26 +2862,18 @@ pub mod instruments_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentRequest>,
         ) -> std::result::Result<tonic::Response<super::OptionResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/OptionBy",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "OptionBy",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "OptionBy",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Deprecated Метод получения списка опционов.
@@ -3002,60 +2881,38 @@ pub mod instruments_service_client {
         pub async fn options(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::OptionsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::OptionsResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/Options",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "Options",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "Options",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения списка опционов.
         pub async fn options_by(
             &mut self,
             request: impl tonic::IntoRequest<super::FilterOptionsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::OptionsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::OptionsResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/OptionsBy",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "OptionsBy",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "OptionsBy",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения акции по её идентификатору.
@@ -3063,26 +2920,18 @@ pub mod instruments_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentRequest>,
         ) -> std::result::Result<tonic::Response<super::ShareResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/ShareBy",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "ShareBy",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "ShareBy",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения списка акций.
@@ -3090,146 +2939,98 @@ pub mod instruments_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentsRequest>,
         ) -> std::result::Result<tonic::Response<super::SharesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/Shares",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "Shares",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "Shares",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения накопленного купонного дохода по облигации.
         pub async fn get_accrued_interests(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAccruedInterestsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetAccruedInterestsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetAccruedInterestsResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetAccruedInterests",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "GetAccruedInterests",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "GetAccruedInterests",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения размера гарантийного обеспечения по фьючерсам.
         pub async fn get_futures_margin(
             &mut self,
             request: impl tonic::IntoRequest<super::GetFuturesMarginRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetFuturesMarginResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetFuturesMarginResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetFuturesMargin",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "GetFuturesMargin",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "GetFuturesMargin",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения основной информации об инструменте.
         pub async fn get_instrument_by(
             &mut self,
             request: impl tonic::IntoRequest<super::InstrumentRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::InstrumentResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::InstrumentResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetInstrumentBy",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "GetInstrumentBy",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "GetInstrumentBy",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод для получения событий выплаты дивидендов по инструменту.
         pub async fn get_dividends(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDividendsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetDividendsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetDividendsResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetDividends",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "GetDividends",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "GetDividends",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения актива по его идентификатору.
@@ -3237,26 +3038,18 @@ pub mod instruments_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::AssetRequest>,
         ) -> std::result::Result<tonic::Response<super::AssetResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetAssetBy",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "GetAssetBy",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "GetAssetBy",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения списка активов. Метод работает для всех инструментов, за исключением срочных - опционов и фьючерсов.
@@ -3264,176 +3057,117 @@ pub mod instruments_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::AssetsRequest>,
         ) -> std::result::Result<tonic::Response<super::AssetsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetAssets",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "GetAssets",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "GetAssets",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения списка избранных инструментов.
         pub async fn get_favorites(
             &mut self,
             request: impl tonic::IntoRequest<super::GetFavoritesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetFavoritesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetFavoritesResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetFavorites",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "GetFavorites",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "GetFavorites",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод редактирования списка избранных инструментов.
         pub async fn edit_favorites(
             &mut self,
             request: impl tonic::IntoRequest<super::EditFavoritesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::EditFavoritesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::EditFavoritesResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/EditFavorites",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "EditFavorites",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "EditFavorites",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения списка стран.
         pub async fn get_countries(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCountriesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetCountriesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetCountriesResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetCountries",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "GetCountries",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "GetCountries",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод поиска инструмента.
         pub async fn find_instrument(
             &mut self,
             request: impl tonic::IntoRequest<super::FindInstrumentRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::FindInstrumentResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::FindInstrumentResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/FindInstrument",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "FindInstrument",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "FindInstrument",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения списка брендов.
         pub async fn get_brands(
             &mut self,
             request: impl tonic::IntoRequest<super::GetBrandsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetBrandsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetBrandsResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetBrands",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "GetBrands",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "GetBrands",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения бренда по его идентификатору.
@@ -3441,26 +3175,18 @@ pub mod instruments_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::GetBrandRequest>,
         ) -> std::result::Result<tonic::Response<super::Brand>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetBrandBy",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.InstrumentsService",
-                        "GetBrandBy",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.InstrumentsService",
+                "GetBrandBy",
+            ));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -3472,7 +3198,7 @@ pub mod instruments_service_server {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
     use tonic::codegen::*;
     /// Generated trait containing gRPC methods that should be implemented for use with InstrumentsServiceServer.
@@ -3482,10 +3208,7 @@ pub mod instruments_service_server {
         async fn trading_schedules(
             &self,
             request: tonic::Request<super::TradingSchedulesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::TradingSchedulesResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::TradingSchedulesResponse>, tonic::Status>;
         /// Метод получения облигации по её идентификатору.
         async fn bond_by(
             &self,
@@ -3500,26 +3223,17 @@ pub mod instruments_service_server {
         async fn get_bond_coupons(
             &self,
             request: tonic::Request<super::GetBondCouponsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetBondCouponsResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetBondCouponsResponse>, tonic::Status>;
         /// Метод получения валюты по её идентификатору.
         async fn currency_by(
             &self,
             request: tonic::Request<super::InstrumentRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CurrencyResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::CurrencyResponse>, tonic::Status>;
         /// Метод получения списка валют.
         async fn currencies(
             &self,
             request: tonic::Request<super::InstrumentsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CurrenciesResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::CurrenciesResponse>, tonic::Status>;
         /// Метод получения инвестиционного фонда по его идентификатору.
         async fn etf_by(
             &self,
@@ -3569,34 +3283,22 @@ pub mod instruments_service_server {
         async fn get_accrued_interests(
             &self,
             request: tonic::Request<super::GetAccruedInterestsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetAccruedInterestsResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetAccruedInterestsResponse>, tonic::Status>;
         /// Метод получения размера гарантийного обеспечения по фьючерсам.
         async fn get_futures_margin(
             &self,
             request: tonic::Request<super::GetFuturesMarginRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetFuturesMarginResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetFuturesMarginResponse>, tonic::Status>;
         /// Метод получения основной информации об инструменте.
         async fn get_instrument_by(
             &self,
             request: tonic::Request<super::InstrumentRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::InstrumentResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::InstrumentResponse>, tonic::Status>;
         /// Метод для получения событий выплаты дивидендов по инструменту.
         async fn get_dividends(
             &self,
             request: tonic::Request<super::GetDividendsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetDividendsResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetDividendsResponse>, tonic::Status>;
         /// Метод получения актива по его идентификатору.
         async fn get_asset_by(
             &self,
@@ -3611,42 +3313,27 @@ pub mod instruments_service_server {
         async fn get_favorites(
             &self,
             request: tonic::Request<super::GetFavoritesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetFavoritesResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetFavoritesResponse>, tonic::Status>;
         /// Метод редактирования списка избранных инструментов.
         async fn edit_favorites(
             &self,
             request: tonic::Request<super::EditFavoritesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::EditFavoritesResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::EditFavoritesResponse>, tonic::Status>;
         /// Метод получения списка стран.
         async fn get_countries(
             &self,
             request: tonic::Request<super::GetCountriesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetCountriesResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetCountriesResponse>, tonic::Status>;
         /// Метод поиска инструмента.
         async fn find_instrument(
             &self,
             request: tonic::Request<super::FindInstrumentRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::FindInstrumentResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::FindInstrumentResponse>, tonic::Status>;
         /// Метод получения списка брендов.
         async fn get_brands(
             &self,
             request: tonic::Request<super::GetBrandsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetBrandsResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetBrandsResponse>, tonic::Status>;
         /// Метод получения бренда по его идентификатору.
         async fn get_brand_by(
             &self,
@@ -3674,10 +3361,7 @@ pub mod instruments_service_server {
                 max_encoding_message_size: None,
             }
         }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> InterceptedService<Self, F>
+        pub fn with_interceptor<F>(inner: T, interceptor: F) -> InterceptedService<Self, F>
         where
             F: tonic::service::Interceptor,
         {
@@ -3732,26 +3416,19 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/TradingSchedules" => {
                     #[allow(non_camel_case_types)]
                     struct TradingSchedulesSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::TradingSchedulesRequest>
-                    for TradingSchedulesSvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::TradingSchedulesRequest>
+                        for TradingSchedulesSvc<T>
+                    {
                         type Response = super::TradingSchedulesResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::TradingSchedulesRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as InstrumentsService>::trading_schedules(
-                                        &inner,
-                                        request,
-                                    )
-                                    .await
+                                <T as InstrumentsService>::trading_schedules(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -3781,15 +3458,11 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/BondBy" => {
                     #[allow(non_camel_case_types)]
                     struct BondBySvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::InstrumentRequest>
-                    for BondBySvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::InstrumentRequest> for BondBySvc<T>
+                    {
                         type Response = super::BondResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::InstrumentRequest>,
@@ -3826,15 +3499,11 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/Bonds" => {
                     #[allow(non_camel_case_types)]
                     struct BondsSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::InstrumentsRequest>
-                    for BondsSvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::InstrumentsRequest> for BondsSvc<T>
+                    {
                         type Response = super::BondsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::InstrumentsRequest>,
@@ -3871,23 +3540,19 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetBondCoupons" => {
                     #[allow(non_camel_case_types)]
                     struct GetBondCouponsSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::GetBondCouponsRequest>
-                    for GetBondCouponsSvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::GetBondCouponsRequest>
+                        for GetBondCouponsSvc<T>
+                    {
                         type Response = super::GetBondCouponsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetBondCouponsRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as InstrumentsService>::get_bond_coupons(&inner, request)
-                                    .await
+                                <T as InstrumentsService>::get_bond_coupons(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -3917,23 +3582,18 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/CurrencyBy" => {
                     #[allow(non_camel_case_types)]
                     struct CurrencyBySvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::InstrumentRequest>
-                    for CurrencyBySvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::InstrumentRequest> for CurrencyBySvc<T>
+                    {
                         type Response = super::CurrencyResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::InstrumentRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as InstrumentsService>::currency_by(&inner, request)
-                                    .await
+                                <T as InstrumentsService>::currency_by(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -3963,15 +3623,12 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/Currencies" => {
                     #[allow(non_camel_case_types)]
                     struct CurrenciesSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::InstrumentsRequest>
-                    for CurrenciesSvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::InstrumentsRequest>
+                        for CurrenciesSvc<T>
+                    {
                         type Response = super::CurrenciesResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::InstrumentsRequest>,
@@ -4008,15 +3665,11 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/EtfBy" => {
                     #[allow(non_camel_case_types)]
                     struct EtfBySvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::InstrumentRequest>
-                    for EtfBySvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::InstrumentRequest> for EtfBySvc<T>
+                    {
                         type Response = super::EtfResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::InstrumentRequest>,
@@ -4053,15 +3706,11 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/Etfs" => {
                     #[allow(non_camel_case_types)]
                     struct EtfsSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::InstrumentsRequest>
-                    for EtfsSvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::InstrumentsRequest> for EtfsSvc<T>
+                    {
                         type Response = super::EtfsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::InstrumentsRequest>,
@@ -4098,15 +3747,11 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/FutureBy" => {
                     #[allow(non_camel_case_types)]
                     struct FutureBySvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::InstrumentRequest>
-                    for FutureBySvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::InstrumentRequest> for FutureBySvc<T>
+                    {
                         type Response = super::FutureResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::InstrumentRequest>,
@@ -4143,15 +3788,11 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/Futures" => {
                     #[allow(non_camel_case_types)]
                     struct FuturesSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::InstrumentsRequest>
-                    for FuturesSvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::InstrumentsRequest> for FuturesSvc<T>
+                    {
                         type Response = super::FuturesResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::InstrumentsRequest>,
@@ -4188,15 +3829,11 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/OptionBy" => {
                     #[allow(non_camel_case_types)]
                     struct OptionBySvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::InstrumentRequest>
-                    for OptionBySvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::InstrumentRequest> for OptionBySvc<T>
+                    {
                         type Response = super::OptionResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::InstrumentRequest>,
@@ -4233,15 +3870,11 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/Options" => {
                     #[allow(non_camel_case_types)]
                     struct OptionsSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::InstrumentsRequest>
-                    for OptionsSvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::InstrumentsRequest> for OptionsSvc<T>
+                    {
                         type Response = super::OptionsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::InstrumentsRequest>,
@@ -4278,15 +3911,12 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/OptionsBy" => {
                     #[allow(non_camel_case_types)]
                     struct OptionsBySvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::FilterOptionsRequest>
-                    for OptionsBySvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::FilterOptionsRequest>
+                        for OptionsBySvc<T>
+                    {
                         type Response = super::OptionsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::FilterOptionsRequest>,
@@ -4323,15 +3953,11 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/ShareBy" => {
                     #[allow(non_camel_case_types)]
                     struct ShareBySvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::InstrumentRequest>
-                    for ShareBySvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::InstrumentRequest> for ShareBySvc<T>
+                    {
                         type Response = super::ShareResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::InstrumentRequest>,
@@ -4368,15 +3994,11 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/Shares" => {
                     #[allow(non_camel_case_types)]
                     struct SharesSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::InstrumentsRequest>
-                    for SharesSvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::InstrumentsRequest> for SharesSvc<T>
+                    {
                         type Response = super::SharesResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::InstrumentsRequest>,
@@ -4413,25 +4035,19 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetAccruedInterests" => {
                     #[allow(non_camel_case_types)]
                     struct GetAccruedInterestsSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::GetAccruedInterestsRequest>
-                    for GetAccruedInterestsSvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::GetAccruedInterestsRequest>
+                        for GetAccruedInterestsSvc<T>
+                    {
                         type Response = super::GetAccruedInterestsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetAccruedInterestsRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as InstrumentsService>::get_accrued_interests(
-                                        &inner,
-                                        request,
-                                    )
+                                <T as InstrumentsService>::get_accrued_interests(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -4462,26 +4078,19 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetFuturesMargin" => {
                     #[allow(non_camel_case_types)]
                     struct GetFuturesMarginSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::GetFuturesMarginRequest>
-                    for GetFuturesMarginSvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::GetFuturesMarginRequest>
+                        for GetFuturesMarginSvc<T>
+                    {
                         type Response = super::GetFuturesMarginResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetFuturesMarginRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as InstrumentsService>::get_futures_margin(
-                                        &inner,
-                                        request,
-                                    )
-                                    .await
+                                <T as InstrumentsService>::get_futures_margin(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4511,26 +4120,19 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetInstrumentBy" => {
                     #[allow(non_camel_case_types)]
                     struct GetInstrumentBySvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::InstrumentRequest>
-                    for GetInstrumentBySvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::InstrumentRequest>
+                        for GetInstrumentBySvc<T>
+                    {
                         type Response = super::InstrumentResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::InstrumentRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as InstrumentsService>::get_instrument_by(
-                                        &inner,
-                                        request,
-                                    )
-                                    .await
+                                <T as InstrumentsService>::get_instrument_by(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4560,23 +4162,19 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetDividends" => {
                     #[allow(non_camel_case_types)]
                     struct GetDividendsSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::GetDividendsRequest>
-                    for GetDividendsSvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::GetDividendsRequest>
+                        for GetDividendsSvc<T>
+                    {
                         type Response = super::GetDividendsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetDividendsRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as InstrumentsService>::get_dividends(&inner, request)
-                                    .await
+                                <T as InstrumentsService>::get_dividends(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4606,23 +4204,16 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetAssetBy" => {
                     #[allow(non_camel_case_types)]
                     struct GetAssetBySvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::AssetRequest>
-                    for GetAssetBySvc<T> {
+                    impl<T: InstrumentsService> tonic::server::UnaryService<super::AssetRequest> for GetAssetBySvc<T> {
                         type Response = super::AssetResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::AssetRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as InstrumentsService>::get_asset_by(&inner, request)
-                                    .await
+                                <T as InstrumentsService>::get_asset_by(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4652,15 +4243,9 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetAssets" => {
                     #[allow(non_camel_case_types)]
                     struct GetAssetsSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::AssetsRequest>
-                    for GetAssetsSvc<T> {
+                    impl<T: InstrumentsService> tonic::server::UnaryService<super::AssetsRequest> for GetAssetsSvc<T> {
                         type Response = super::AssetsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::AssetsRequest>,
@@ -4697,23 +4282,19 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetFavorites" => {
                     #[allow(non_camel_case_types)]
                     struct GetFavoritesSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::GetFavoritesRequest>
-                    for GetFavoritesSvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::GetFavoritesRequest>
+                        for GetFavoritesSvc<T>
+                    {
                         type Response = super::GetFavoritesResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetFavoritesRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as InstrumentsService>::get_favorites(&inner, request)
-                                    .await
+                                <T as InstrumentsService>::get_favorites(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4743,23 +4324,19 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/EditFavorites" => {
                     #[allow(non_camel_case_types)]
                     struct EditFavoritesSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::EditFavoritesRequest>
-                    for EditFavoritesSvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::EditFavoritesRequest>
+                        for EditFavoritesSvc<T>
+                    {
                         type Response = super::EditFavoritesResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::EditFavoritesRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as InstrumentsService>::edit_favorites(&inner, request)
-                                    .await
+                                <T as InstrumentsService>::edit_favorites(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4789,23 +4366,19 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetCountries" => {
                     #[allow(non_camel_case_types)]
                     struct GetCountriesSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::GetCountriesRequest>
-                    for GetCountriesSvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::GetCountriesRequest>
+                        for GetCountriesSvc<T>
+                    {
                         type Response = super::GetCountriesResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetCountriesRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as InstrumentsService>::get_countries(&inner, request)
-                                    .await
+                                <T as InstrumentsService>::get_countries(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4835,23 +4408,19 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/FindInstrument" => {
                     #[allow(non_camel_case_types)]
                     struct FindInstrumentSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::FindInstrumentRequest>
-                    for FindInstrumentSvc<T> {
+                    impl<T: InstrumentsService>
+                        tonic::server::UnaryService<super::FindInstrumentRequest>
+                        for FindInstrumentSvc<T>
+                    {
                         type Response = super::FindInstrumentResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::FindInstrumentRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as InstrumentsService>::find_instrument(&inner, request)
-                                    .await
+                                <T as InstrumentsService>::find_instrument(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4881,15 +4450,11 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetBrands" => {
                     #[allow(non_camel_case_types)]
                     struct GetBrandsSvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::GetBrandsRequest>
-                    for GetBrandsSvc<T> {
+                    impl<T: InstrumentsService> tonic::server::UnaryService<super::GetBrandsRequest>
+                        for GetBrandsSvc<T>
+                    {
                         type Response = super::GetBrandsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetBrandsRequest>,
@@ -4926,23 +4491,18 @@ pub mod instruments_service_server {
                 "/tinkoff.public.invest.api.contract.v1.InstrumentsService/GetBrandBy" => {
                     #[allow(non_camel_case_types)]
                     struct GetBrandBySvc<T: InstrumentsService>(pub Arc<T>);
-                    impl<
-                        T: InstrumentsService,
-                    > tonic::server::UnaryService<super::GetBrandRequest>
-                    for GetBrandBySvc<T> {
+                    impl<T: InstrumentsService> tonic::server::UnaryService<super::GetBrandRequest>
+                        for GetBrandBySvc<T>
+                    {
                         type Response = super::Brand;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetBrandRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as InstrumentsService>::get_brand_by(&inner, request)
-                                    .await
+                                <T as InstrumentsService>::get_brand_by(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4969,23 +4529,19 @@ pub mod instruments_service_server {
                     };
                     Box::pin(fut)
                 }
-                _ => {
-                    Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
-                        let headers = response.headers_mut();
-                        headers
-                            .insert(
-                                tonic::Status::GRPC_STATUS,
-                                (tonic::Code::Unimplemented as i32).into(),
-                            );
-                        headers
-                            .insert(
-                                http::header::CONTENT_TYPE,
-                                tonic::metadata::GRPC_CONTENT_TYPE,
-                            );
-                        Ok(response)
-                    })
-                }
+                _ => Box::pin(async move {
+                    let mut response = http::Response::new(empty_body());
+                    let headers = response.headers_mut();
+                    headers.insert(
+                        tonic::Status::GRPC_STATUS,
+                        (tonic::Code::Unimplemented as i32).into(),
+                    );
+                    headers.insert(
+                        http::header::CONTENT_TYPE,
+                        tonic::metadata::GRPC_CONTENT_TYPE,
+                    );
+                    Ok(response)
+                }),
             }
         }
     }
@@ -5834,9 +5390,7 @@ impl SubscriptionStatus {
             "SUBSCRIPTION_STATUS_LIMIT_IS_EXCEEDED" => Some(Self::LimitIsExceeded),
             "SUBSCRIPTION_STATUS_INTERNAL_ERROR" => Some(Self::InternalError),
             "SUBSCRIPTION_STATUS_TOO_MANY_REQUESTS" => Some(Self::TooManyRequests),
-            "SUBSCRIPTION_STATUS_SUBSCRIPTION_NOT_FOUND" => {
-                Some(Self::SubscriptionNotFound)
-            }
+            "SUBSCRIPTION_STATUS_SUBSCRIPTION_NOT_FOUND" => Some(Self::SubscriptionNotFound),
             _ => None,
         }
     }
@@ -5958,10 +5512,10 @@ pub mod market_data_service_client {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
-    use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    use tonic::codegen::*;
     #[derive(Debug, Clone)]
     pub struct MarketDataServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -6000,14 +5554,13 @@ pub mod market_data_service_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    http::Request<tonic::body::BoxBody>,
+                    Response = http::Response<
+                        <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    >,
                 >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+            <T as tonic::codegen::Service<http::Request<tonic::body::BoxBody>>>::Error:
+                Into<StdError> + std::marker::Send + std::marker::Sync,
         {
             MarketDataServiceClient::new(InterceptedService::new(inner, interceptor))
         }
@@ -6046,210 +5599,140 @@ pub mod market_data_service_client {
         pub async fn get_candles(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCandlesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetCandlesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetCandlesResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetCandles",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.MarketDataService",
-                        "GetCandles",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.MarketDataService",
+                "GetCandles",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод запроса цен последних сделок по инструментам.
         pub async fn get_last_prices(
             &mut self,
             request: impl tonic::IntoRequest<super::GetLastPricesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetLastPricesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetLastPricesResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetLastPrices",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.MarketDataService",
-                        "GetLastPrices",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.MarketDataService",
+                "GetLastPrices",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения стакана по инструменту.
         pub async fn get_order_book(
             &mut self,
             request: impl tonic::IntoRequest<super::GetOrderBookRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetOrderBookResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetOrderBookResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetOrderBook",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.MarketDataService",
-                        "GetOrderBook",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.MarketDataService",
+                "GetOrderBook",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод запроса статуса торгов по инструментам.
         pub async fn get_trading_status(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTradingStatusRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetTradingStatusResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetTradingStatusResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetTradingStatus",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.MarketDataService",
-                        "GetTradingStatus",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.MarketDataService",
+                "GetTradingStatus",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод запроса статуса торгов по инструментам.
         pub async fn get_trading_statuses(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTradingStatusesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetTradingStatusesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetTradingStatusesResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetTradingStatuses",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.MarketDataService",
-                        "GetTradingStatuses",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.MarketDataService",
+                "GetTradingStatuses",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод запроса обезличенных сделок за последний час.
         pub async fn get_last_trades(
             &mut self,
             request: impl tonic::IntoRequest<super::GetLastTradesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetLastTradesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetLastTradesResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetLastTrades",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.MarketDataService",
-                        "GetLastTrades",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.MarketDataService",
+                "GetLastTrades",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод запроса цен закрытия торговой сессии по инструментам.
         pub async fn get_close_prices(
             &mut self,
             request: impl tonic::IntoRequest<super::GetClosePricesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetClosePricesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetClosePricesResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetClosePrices",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.MarketDataService",
-                        "GetClosePrices",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.MarketDataService",
+                "GetClosePrices",
+            ));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -6261,10 +5744,10 @@ pub mod market_data_stream_service_client {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
-    use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    use tonic::codegen::*;
     #[derive(Debug, Clone)]
     pub struct MarketDataStreamServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -6303,18 +5786,15 @@ pub mod market_data_stream_service_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    http::Request<tonic::body::BoxBody>,
+                    Response = http::Response<
+                        <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    >,
                 >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+            <T as tonic::codegen::Service<http::Request<tonic::body::BoxBody>>>::Error:
+                Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            MarketDataStreamServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
+            MarketDataStreamServiceClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -6355,26 +5835,18 @@ pub mod market_data_stream_service_client {
             tonic::Response<tonic::codec::Streaming<super::MarketDataResponse>>,
             tonic::Status,
         > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.MarketDataStreamService/MarketDataStream",
             );
             let mut req = request.into_streaming_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.MarketDataStreamService",
-                        "MarketDataStream",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.MarketDataStreamService",
+                "MarketDataStream",
+            ));
             self.inner.streaming(req, path, codec).await
         }
         /// Server-side стрим предоставления биржевой информации.
@@ -6385,26 +5857,18 @@ pub mod market_data_stream_service_client {
             tonic::Response<tonic::codec::Streaming<super::MarketDataResponse>>,
             tonic::Status,
         > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.MarketDataStreamService/MarketDataServerSideStream",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.MarketDataStreamService",
-                        "MarketDataServerSideStream",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.MarketDataStreamService",
+                "MarketDataServerSideStream",
+            ));
             self.inner.server_streaming(req, path, codec).await
         }
     }
@@ -6416,7 +5880,7 @@ pub mod market_data_service_server {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
     use tonic::codegen::*;
     /// Generated trait containing gRPC methods that should be implemented for use with MarketDataServiceServer.
@@ -6426,58 +5890,37 @@ pub mod market_data_service_server {
         async fn get_candles(
             &self,
             request: tonic::Request<super::GetCandlesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetCandlesResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetCandlesResponse>, tonic::Status>;
         /// Метод запроса цен последних сделок по инструментам.
         async fn get_last_prices(
             &self,
             request: tonic::Request<super::GetLastPricesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetLastPricesResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetLastPricesResponse>, tonic::Status>;
         /// Метод получения стакана по инструменту.
         async fn get_order_book(
             &self,
             request: tonic::Request<super::GetOrderBookRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetOrderBookResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetOrderBookResponse>, tonic::Status>;
         /// Метод запроса статуса торгов по инструментам.
         async fn get_trading_status(
             &self,
             request: tonic::Request<super::GetTradingStatusRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetTradingStatusResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetTradingStatusResponse>, tonic::Status>;
         /// Метод запроса статуса торгов по инструментам.
         async fn get_trading_statuses(
             &self,
             request: tonic::Request<super::GetTradingStatusesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetTradingStatusesResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetTradingStatusesResponse>, tonic::Status>;
         /// Метод запроса обезличенных сделок за последний час.
         async fn get_last_trades(
             &self,
             request: tonic::Request<super::GetLastTradesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetLastTradesResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetLastTradesResponse>, tonic::Status>;
         /// Метод запроса цен закрытия торговой сессии по инструментам.
         async fn get_close_prices(
             &self,
             request: tonic::Request<super::GetClosePricesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetClosePricesResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetClosePricesResponse>, tonic::Status>;
     }
     #[derive(Debug)]
     pub struct MarketDataServiceServer<T> {
@@ -6500,10 +5943,7 @@ pub mod market_data_service_server {
                 max_encoding_message_size: None,
             }
         }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> InterceptedService<Self, F>
+        pub fn with_interceptor<F>(inner: T, interceptor: F) -> InterceptedService<Self, F>
         where
             F: tonic::service::Interceptor,
         {
@@ -6558,15 +5998,11 @@ pub mod market_data_service_server {
                 "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetCandles" => {
                     #[allow(non_camel_case_types)]
                     struct GetCandlesSvc<T: MarketDataService>(pub Arc<T>);
-                    impl<
-                        T: MarketDataService,
-                    > tonic::server::UnaryService<super::GetCandlesRequest>
-                    for GetCandlesSvc<T> {
+                    impl<T: MarketDataService> tonic::server::UnaryService<super::GetCandlesRequest>
+                        for GetCandlesSvc<T>
+                    {
                         type Response = super::GetCandlesResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetCandlesRequest>,
@@ -6603,23 +6039,19 @@ pub mod market_data_service_server {
                 "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetLastPrices" => {
                     #[allow(non_camel_case_types)]
                     struct GetLastPricesSvc<T: MarketDataService>(pub Arc<T>);
-                    impl<
-                        T: MarketDataService,
-                    > tonic::server::UnaryService<super::GetLastPricesRequest>
-                    for GetLastPricesSvc<T> {
+                    impl<T: MarketDataService>
+                        tonic::server::UnaryService<super::GetLastPricesRequest>
+                        for GetLastPricesSvc<T>
+                    {
                         type Response = super::GetLastPricesResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetLastPricesRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as MarketDataService>::get_last_prices(&inner, request)
-                                    .await
+                                <T as MarketDataService>::get_last_prices(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -6649,23 +6081,19 @@ pub mod market_data_service_server {
                 "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetOrderBook" => {
                     #[allow(non_camel_case_types)]
                     struct GetOrderBookSvc<T: MarketDataService>(pub Arc<T>);
-                    impl<
-                        T: MarketDataService,
-                    > tonic::server::UnaryService<super::GetOrderBookRequest>
-                    for GetOrderBookSvc<T> {
+                    impl<T: MarketDataService>
+                        tonic::server::UnaryService<super::GetOrderBookRequest>
+                        for GetOrderBookSvc<T>
+                    {
                         type Response = super::GetOrderBookResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetOrderBookRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as MarketDataService>::get_order_book(&inner, request)
-                                    .await
+                                <T as MarketDataService>::get_order_book(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -6695,26 +6123,19 @@ pub mod market_data_service_server {
                 "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetTradingStatus" => {
                     #[allow(non_camel_case_types)]
                     struct GetTradingStatusSvc<T: MarketDataService>(pub Arc<T>);
-                    impl<
-                        T: MarketDataService,
-                    > tonic::server::UnaryService<super::GetTradingStatusRequest>
-                    for GetTradingStatusSvc<T> {
+                    impl<T: MarketDataService>
+                        tonic::server::UnaryService<super::GetTradingStatusRequest>
+                        for GetTradingStatusSvc<T>
+                    {
                         type Response = super::GetTradingStatusResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetTradingStatusRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as MarketDataService>::get_trading_status(
-                                        &inner,
-                                        request,
-                                    )
-                                    .await
+                                <T as MarketDataService>::get_trading_status(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -6744,25 +6165,19 @@ pub mod market_data_service_server {
                 "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetTradingStatuses" => {
                     #[allow(non_camel_case_types)]
                     struct GetTradingStatusesSvc<T: MarketDataService>(pub Arc<T>);
-                    impl<
-                        T: MarketDataService,
-                    > tonic::server::UnaryService<super::GetTradingStatusesRequest>
-                    for GetTradingStatusesSvc<T> {
+                    impl<T: MarketDataService>
+                        tonic::server::UnaryService<super::GetTradingStatusesRequest>
+                        for GetTradingStatusesSvc<T>
+                    {
                         type Response = super::GetTradingStatusesResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetTradingStatusesRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as MarketDataService>::get_trading_statuses(
-                                        &inner,
-                                        request,
-                                    )
+                                <T as MarketDataService>::get_trading_statuses(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -6793,23 +6208,19 @@ pub mod market_data_service_server {
                 "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetLastTrades" => {
                     #[allow(non_camel_case_types)]
                     struct GetLastTradesSvc<T: MarketDataService>(pub Arc<T>);
-                    impl<
-                        T: MarketDataService,
-                    > tonic::server::UnaryService<super::GetLastTradesRequest>
-                    for GetLastTradesSvc<T> {
+                    impl<T: MarketDataService>
+                        tonic::server::UnaryService<super::GetLastTradesRequest>
+                        for GetLastTradesSvc<T>
+                    {
                         type Response = super::GetLastTradesResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetLastTradesRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as MarketDataService>::get_last_trades(&inner, request)
-                                    .await
+                                <T as MarketDataService>::get_last_trades(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -6839,23 +6250,19 @@ pub mod market_data_service_server {
                 "/tinkoff.public.invest.api.contract.v1.MarketDataService/GetClosePrices" => {
                     #[allow(non_camel_case_types)]
                     struct GetClosePricesSvc<T: MarketDataService>(pub Arc<T>);
-                    impl<
-                        T: MarketDataService,
-                    > tonic::server::UnaryService<super::GetClosePricesRequest>
-                    for GetClosePricesSvc<T> {
+                    impl<T: MarketDataService>
+                        tonic::server::UnaryService<super::GetClosePricesRequest>
+                        for GetClosePricesSvc<T>
+                    {
                         type Response = super::GetClosePricesResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetClosePricesRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as MarketDataService>::get_close_prices(&inner, request)
-                                    .await
+                                <T as MarketDataService>::get_close_prices(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -6882,23 +6289,19 @@ pub mod market_data_service_server {
                     };
                     Box::pin(fut)
                 }
-                _ => {
-                    Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
-                        let headers = response.headers_mut();
-                        headers
-                            .insert(
-                                tonic::Status::GRPC_STATUS,
-                                (tonic::Code::Unimplemented as i32).into(),
-                            );
-                        headers
-                            .insert(
-                                http::header::CONTENT_TYPE,
-                                tonic::metadata::GRPC_CONTENT_TYPE,
-                            );
-                        Ok(response)
-                    })
-                }
+                _ => Box::pin(async move {
+                    let mut response = http::Response::new(empty_body());
+                    let headers = response.headers_mut();
+                    headers.insert(
+                        tonic::Status::GRPC_STATUS,
+                        (tonic::Code::Unimplemented as i32).into(),
+                    );
+                    headers.insert(
+                        http::header::CONTENT_TYPE,
+                        tonic::metadata::GRPC_CONTENT_TYPE,
+                    );
+                    Ok(response)
+                }),
             }
         }
     }
@@ -6927,7 +6330,7 @@ pub mod market_data_stream_service_server {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
     use tonic::codegen::*;
     /// Generated trait containing gRPC methods that should be implemented for use with MarketDataStreamServiceServer.
@@ -6936,22 +6339,17 @@ pub mod market_data_stream_service_server {
         /// Server streaming response type for the MarketDataStream method.
         type MarketDataStreamStream: tonic::codegen::tokio_stream::Stream<
                 Item = std::result::Result<super::MarketDataResponse, tonic::Status>,
-            >
-            + std::marker::Send
+            > + std::marker::Send
             + 'static;
         /// Bi-directional стрим предоставления биржевой информации.
         async fn market_data_stream(
             &self,
             request: tonic::Request<tonic::Streaming<super::MarketDataRequest>>,
-        ) -> std::result::Result<
-            tonic::Response<Self::MarketDataStreamStream>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<Self::MarketDataStreamStream>, tonic::Status>;
         /// Server streaming response type for the MarketDataServerSideStream method.
         type MarketDataServerSideStreamStream: tonic::codegen::tokio_stream::Stream<
                 Item = std::result::Result<super::MarketDataResponse, tonic::Status>,
-            >
-            + std::marker::Send
+            > + std::marker::Send
             + 'static;
         /// Server-side стрим предоставления биржевой информации.
         async fn market_data_server_side_stream(
@@ -6983,10 +6381,7 @@ pub mod market_data_stream_service_server {
                 max_encoding_message_size: None,
             }
         }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> InterceptedService<Self, F>
+        pub fn with_interceptor<F>(inner: T, interceptor: F) -> InterceptedService<Self, F>
         where
             F: tonic::service::Interceptor,
         {
@@ -7021,8 +6416,7 @@ pub mod market_data_stream_service_server {
             self
         }
     }
-    impl<T, B> tonic::codegen::Service<http::Request<B>>
-    for MarketDataStreamServiceServer<T>
+    impl<T, B> tonic::codegen::Service<http::Request<B>> for MarketDataStreamServiceServer<T>
     where
         T: MarketDataStreamService,
         B: Body + std::marker::Send + 'static,
@@ -7039,31 +6433,25 @@ pub mod market_data_stream_service_server {
         }
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             match req.uri().path() {
-                "/tinkoff.public.invest.api.contract.v1.MarketDataStreamService/MarketDataStream" => {
+                "/tinkoff.public.invest.api.contract.v1.MarketDataStreamService/MarketDataStream" =>
+                {
                     #[allow(non_camel_case_types)]
                     struct MarketDataStreamSvc<T: MarketDataStreamService>(pub Arc<T>);
-                    impl<
-                        T: MarketDataStreamService,
-                    > tonic::server::StreamingService<super::MarketDataRequest>
-                    for MarketDataStreamSvc<T> {
+                    impl<T: MarketDataStreamService>
+                        tonic::server::StreamingService<super::MarketDataRequest>
+                        for MarketDataStreamSvc<T>
+                    {
                         type Response = super::MarketDataResponse;
                         type ResponseStream = T::MarketDataStreamStream;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::ResponseStream>,
-                            tonic::Status,
-                        >;
+                        type Future =
+                            BoxFuture<tonic::Response<Self::ResponseStream>, tonic::Status>;
                         fn call(
                             &mut self,
-                            request: tonic::Request<
-                                tonic::Streaming<super::MarketDataRequest>,
-                            >,
+                            request: tonic::Request<tonic::Streaming<super::MarketDataRequest>>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as MarketDataStreamService>::market_data_stream(
-                                        &inner,
-                                        request,
-                                    )
+                                <T as MarketDataStreamService>::market_data_stream(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -7091,35 +6479,29 @@ pub mod market_data_stream_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/tinkoff.public.invest.api.contract.v1.MarketDataStreamService/MarketDataServerSideStream" => {
+                "/tinkoff.public.invest.api.contract.v1.MarketDataStreamService/MarketDataServerSideStream" =>
+                {
                     #[allow(non_camel_case_types)]
-                    struct MarketDataServerSideStreamSvc<T: MarketDataStreamService>(
-                        pub Arc<T>,
-                    );
-                    impl<
-                        T: MarketDataStreamService,
-                    > tonic::server::ServerStreamingService<
-                        super::MarketDataServerSideStreamRequest,
-                    > for MarketDataServerSideStreamSvc<T> {
+                    struct MarketDataServerSideStreamSvc<T: MarketDataStreamService>(pub Arc<T>);
+                    impl<T: MarketDataStreamService>
+                        tonic::server::ServerStreamingService<
+                            super::MarketDataServerSideStreamRequest,
+                        > for MarketDataServerSideStreamSvc<T>
+                    {
                         type Response = super::MarketDataResponse;
                         type ResponseStream = T::MarketDataServerSideStreamStream;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::ResponseStream>,
-                            tonic::Status,
-                        >;
+                        type Future =
+                            BoxFuture<tonic::Response<Self::ResponseStream>, tonic::Status>;
                         fn call(
                             &mut self,
-                            request: tonic::Request<
-                                super::MarketDataServerSideStreamRequest,
-                            >,
+                            request: tonic::Request<super::MarketDataServerSideStreamRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
                                 <T as MarketDataStreamService>::market_data_server_side_stream(
-                                        &inner,
-                                        request,
-                                    )
-                                    .await
+                                    &inner, request,
+                                )
+                                .await
                             };
                             Box::pin(fut)
                         }
@@ -7146,23 +6528,19 @@ pub mod market_data_stream_service_server {
                     };
                     Box::pin(fut)
                 }
-                _ => {
-                    Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
-                        let headers = response.headers_mut();
-                        headers
-                            .insert(
-                                tonic::Status::GRPC_STATUS,
-                                (tonic::Code::Unimplemented as i32).into(),
-                            );
-                        headers
-                            .insert(
-                                http::header::CONTENT_TYPE,
-                                tonic::metadata::GRPC_CONTENT_TYPE,
-                            );
-                        Ok(response)
-                    })
-                }
+                _ => Box::pin(async move {
+                    let mut response = http::Response::new(empty_body());
+                    let headers = response.headers_mut();
+                    headers.insert(
+                        tonic::Status::GRPC_STATUS,
+                        (tonic::Code::Unimplemented as i32).into(),
+                    );
+                    headers.insert(
+                        http::header::CONTENT_TYPE,
+                        tonic::metadata::GRPC_CONTENT_TYPE,
+                    );
+                    Ok(response)
+                }),
             }
         }
     }
@@ -7293,17 +6671,7 @@ pub struct PortfolioRequest {
 }
 /// Nested message and enum types in `PortfolioRequest`.
 pub mod portfolio_request {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum CurrencyRequest {
         /// Рубли
@@ -7741,9 +7109,7 @@ pub mod get_dividends_foreign_issuer_request {
     pub enum Payload {
         /// Объект запроса формирования отчёта.
         #[prost(message, tag = "1")]
-        GenerateDivForeignIssuerReport(
-            super::GenerateDividendsForeignIssuerReportRequest,
-        ),
+        GenerateDivForeignIssuerReport(super::GenerateDividendsForeignIssuerReportRequest),
         /// Объект запроса сформированного отчёта.
         #[prost(message, tag = "2")]
         GetDivForeignIssuerReport(super::GetDividendsForeignIssuerReportRequest),
@@ -7751,7 +7117,10 @@ pub mod get_dividends_foreign_issuer_request {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetDividendsForeignIssuerResponse {
-    #[prost(oneof = "get_dividends_foreign_issuer_response::Payload", tags = "1, 2")]
+    #[prost(
+        oneof = "get_dividends_foreign_issuer_response::Payload",
+        tags = "1, 2"
+    )]
     pub payload: ::core::option::Option<get_dividends_foreign_issuer_response::Payload>,
 }
 /// Nested message and enum types in `GetDividendsForeignIssuerResponse`.
@@ -7760,9 +7129,7 @@ pub mod get_dividends_foreign_issuer_response {
     pub enum Payload {
         /// Объект результата задачи запуска формирования отчёта.
         #[prost(message, tag = "1")]
-        GenerateDivForeignIssuerReportResponse(
-            super::GenerateDividendsForeignIssuerReportResponse,
-        ),
+        GenerateDivForeignIssuerReportResponse(super::GenerateDividendsForeignIssuerReportResponse),
         /// Отчёт "Справка о доходах за пределами РФ".
         #[prost(message, tag = "2")]
         DivForeignIssuerReport(super::GetDividendsForeignIssuerReportResponse),
@@ -7801,9 +7168,7 @@ pub struct GenerateDividendsForeignIssuerReportResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetDividendsForeignIssuerReportResponse {
     #[prost(message, repeated, tag = "1")]
-    pub dividends_foreign_issuer_report: ::prost::alloc::vec::Vec<
-        DividendsForeignIssuerReport,
-    >,
+    pub dividends_foreign_issuer_report: ::prost::alloc::vec::Vec<DividendsForeignIssuerReport>,
     /// Количество записей в отчете.
     #[prost(int32, tag = "2")]
     pub items_count: i32,
@@ -8354,9 +7719,7 @@ impl OperationType {
             Self::TaxRepoHold => "OPERATION_TYPE_TAX_REPO_HOLD",
             Self::TaxRepoRefund => "OPERATION_TYPE_TAX_REPO_REFUND",
             Self::TaxRepoHoldProgressive => "OPERATION_TYPE_TAX_REPO_HOLD_PROGRESSIVE",
-            Self::TaxRepoRefundProgressive => {
-                "OPERATION_TYPE_TAX_REPO_REFUND_PROGRESSIVE"
-            }
+            Self::TaxRepoRefundProgressive => "OPERATION_TYPE_TAX_REPO_REFUND_PROGRESSIVE",
             Self::DivExt => "OPERATION_TYPE_DIV_EXT",
             Self::TaxCorrectionCoupon => "OPERATION_TYPE_TAX_CORRECTION_COUPON",
             Self::CashFee => "OPERATION_TYPE_CASH_FEE",
@@ -8415,23 +7778,15 @@ impl OperationType {
             "OPERATION_TYPE_TRACK_PFEE" => Some(Self::TrackPfee),
             "OPERATION_TYPE_TAX_PROGRESSIVE" => Some(Self::TaxProgressive),
             "OPERATION_TYPE_BOND_TAX_PROGRESSIVE" => Some(Self::BondTaxProgressive),
-            "OPERATION_TYPE_DIVIDEND_TAX_PROGRESSIVE" => {
-                Some(Self::DividendTaxProgressive)
-            }
+            "OPERATION_TYPE_DIVIDEND_TAX_PROGRESSIVE" => Some(Self::DividendTaxProgressive),
             "OPERATION_TYPE_BENEFIT_TAX_PROGRESSIVE" => Some(Self::BenefitTaxProgressive),
-            "OPERATION_TYPE_TAX_CORRECTION_PROGRESSIVE" => {
-                Some(Self::TaxCorrectionProgressive)
-            }
+            "OPERATION_TYPE_TAX_CORRECTION_PROGRESSIVE" => Some(Self::TaxCorrectionProgressive),
             "OPERATION_TYPE_TAX_REPO_PROGRESSIVE" => Some(Self::TaxRepoProgressive),
             "OPERATION_TYPE_TAX_REPO" => Some(Self::TaxRepo),
             "OPERATION_TYPE_TAX_REPO_HOLD" => Some(Self::TaxRepoHold),
             "OPERATION_TYPE_TAX_REPO_REFUND" => Some(Self::TaxRepoRefund),
-            "OPERATION_TYPE_TAX_REPO_HOLD_PROGRESSIVE" => {
-                Some(Self::TaxRepoHoldProgressive)
-            }
-            "OPERATION_TYPE_TAX_REPO_REFUND_PROGRESSIVE" => {
-                Some(Self::TaxRepoRefundProgressive)
-            }
+            "OPERATION_TYPE_TAX_REPO_HOLD_PROGRESSIVE" => Some(Self::TaxRepoHoldProgressive),
+            "OPERATION_TYPE_TAX_REPO_REFUND_PROGRESSIVE" => Some(Self::TaxRepoRefundProgressive),
             "OPERATION_TYPE_DIV_EXT" => Some(Self::DivExt),
             "OPERATION_TYPE_TAX_CORRECTION_COUPON" => Some(Self::TaxCorrectionCoupon),
             "OPERATION_TYPE_CASH_FEE" => Some(Self::CashFee),
@@ -8486,9 +7841,7 @@ impl PortfolioSubscriptionStatus {
         match value {
             "PORTFOLIO_SUBSCRIPTION_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
             "PORTFOLIO_SUBSCRIPTION_STATUS_SUCCESS" => Some(Self::Success),
-            "PORTFOLIO_SUBSCRIPTION_STATUS_ACCOUNT_NOT_FOUND" => {
-                Some(Self::AccountNotFound)
-            }
+            "PORTFOLIO_SUBSCRIPTION_STATUS_ACCOUNT_NOT_FOUND" => Some(Self::AccountNotFound),
             "PORTFOLIO_SUBSCRIPTION_STATUS_INTERNAL_ERROR" => Some(Self::InternalError),
             _ => None,
         }
@@ -8517,9 +7870,7 @@ impl PositionsAccountSubscriptionStatus {
             Self::PositionsSubscriptionStatusUnspecified => {
                 "POSITIONS_SUBSCRIPTION_STATUS_UNSPECIFIED"
             }
-            Self::PositionsSubscriptionStatusSuccess => {
-                "POSITIONS_SUBSCRIPTION_STATUS_SUCCESS"
-            }
+            Self::PositionsSubscriptionStatusSuccess => "POSITIONS_SUBSCRIPTION_STATUS_SUCCESS",
             Self::PositionsSubscriptionStatusAccountNotFound => {
                 "POSITIONS_SUBSCRIPTION_STATUS_ACCOUNT_NOT_FOUND"
             }
@@ -8554,10 +7905,10 @@ pub mod operations_service_client {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
-    use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    use tonic::codegen::*;
     #[derive(Debug, Clone)]
     pub struct OperationsServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -8596,14 +7947,13 @@ pub mod operations_service_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    http::Request<tonic::body::BoxBody>,
+                    Response = http::Response<
+                        <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    >,
                 >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+            <T as tonic::codegen::Service<http::Request<tonic::body::BoxBody>>>::Error:
+                Into<StdError> + std::marker::Send + std::marker::Sync,
         {
             OperationsServiceClient::new(InterceptedService::new(inner, interceptor))
         }
@@ -8643,150 +7993,98 @@ pub mod operations_service_client {
         pub async fn get_operations(
             &mut self,
             request: impl tonic::IntoRequest<super::OperationsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::OperationsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::OperationsResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.OperationsService/GetOperations",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.OperationsService",
-                        "GetOperations",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.OperationsService",
+                "GetOperations",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения портфеля по счёту.
         pub async fn get_portfolio(
             &mut self,
             request: impl tonic::IntoRequest<super::PortfolioRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PortfolioResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::PortfolioResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.OperationsService/GetPortfolio",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.OperationsService",
-                        "GetPortfolio",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.OperationsService",
+                "GetPortfolio",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения списка позиций по счёту.
         pub async fn get_positions(
             &mut self,
             request: impl tonic::IntoRequest<super::PositionsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PositionsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::PositionsResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.OperationsService/GetPositions",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.OperationsService",
-                        "GetPositions",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.OperationsService",
+                "GetPositions",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения доступного остатка для вывода средств.
         pub async fn get_withdraw_limits(
             &mut self,
             request: impl tonic::IntoRequest<super::WithdrawLimitsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::WithdrawLimitsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::WithdrawLimitsResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.OperationsService/GetWithdrawLimits",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.OperationsService",
-                        "GetWithdrawLimits",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.OperationsService",
+                "GetWithdrawLimits",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения брокерского отчёта.
         pub async fn get_broker_report(
             &mut self,
             request: impl tonic::IntoRequest<super::BrokerReportRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::BrokerReportResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::BrokerReportResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.OperationsService/GetBrokerReport",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.OperationsService",
-                        "GetBrokerReport",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.OperationsService",
+                "GetBrokerReport",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения отчёта "Справка о доходах за пределами РФ".
@@ -8797,26 +8095,18 @@ pub mod operations_service_client {
             tonic::Response<super::GetDividendsForeignIssuerResponse>,
             tonic::Status,
         > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.OperationsService/GetDividendsForeignIssuer",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.OperationsService",
-                        "GetDividendsForeignIssuer",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.OperationsService",
+                "GetDividendsForeignIssuer",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения списка операций по счёту с пагинацией. При работе с данным методом необходимо учитывать
@@ -8824,30 +8114,20 @@ pub mod operations_service_client {
         pub async fn get_operations_by_cursor(
             &mut self,
             request: impl tonic::IntoRequest<super::GetOperationsByCursorRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetOperationsByCursorResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetOperationsByCursorResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.OperationsService/GetOperationsByCursor",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.OperationsService",
-                        "GetOperationsByCursor",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.OperationsService",
+                "GetOperationsByCursor",
+            ));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -8859,10 +8139,10 @@ pub mod operations_stream_service_client {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
-    use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    use tonic::codegen::*;
     #[derive(Debug, Clone)]
     pub struct OperationsStreamServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -8901,18 +8181,15 @@ pub mod operations_stream_service_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    http::Request<tonic::body::BoxBody>,
+                    Response = http::Response<
+                        <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    >,
                 >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+            <T as tonic::codegen::Service<http::Request<tonic::body::BoxBody>>>::Error:
+                Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            OperationsStreamServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
+            OperationsStreamServiceClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -8953,26 +8230,18 @@ pub mod operations_stream_service_client {
             tonic::Response<tonic::codec::Streaming<super::PortfolioStreamResponse>>,
             tonic::Status,
         > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.OperationsStreamService/PortfolioStream",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.OperationsStreamService",
-                        "PortfolioStream",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.OperationsStreamService",
+                "PortfolioStream",
+            ));
             self.inner.server_streaming(req, path, codec).await
         }
         /// Server-side stream обновлений информации по изменению позиций портфеля
@@ -8983,26 +8252,18 @@ pub mod operations_stream_service_client {
             tonic::Response<tonic::codec::Streaming<super::PositionsStreamResponse>>,
             tonic::Status,
         > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.OperationsStreamService/PositionsStream",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.OperationsStreamService",
-                        "PositionsStream",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.OperationsStreamService",
+                "PositionsStream",
+            ));
             self.inner.server_streaming(req, path, codec).await
         }
     }
@@ -9014,7 +8275,7 @@ pub mod operations_service_server {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
     use tonic::codegen::*;
     /// Generated trait containing gRPC methods that should be implemented for use with OperationsServiceServer.
@@ -9025,42 +8286,27 @@ pub mod operations_service_server {
         async fn get_operations(
             &self,
             request: tonic::Request<super::OperationsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::OperationsResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::OperationsResponse>, tonic::Status>;
         /// Метод получения портфеля по счёту.
         async fn get_portfolio(
             &self,
             request: tonic::Request<super::PortfolioRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PortfolioResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::PortfolioResponse>, tonic::Status>;
         /// Метод получения списка позиций по счёту.
         async fn get_positions(
             &self,
             request: tonic::Request<super::PositionsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PositionsResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::PositionsResponse>, tonic::Status>;
         /// Метод получения доступного остатка для вывода средств.
         async fn get_withdraw_limits(
             &self,
             request: tonic::Request<super::WithdrawLimitsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::WithdrawLimitsResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::WithdrawLimitsResponse>, tonic::Status>;
         /// Метод получения брокерского отчёта.
         async fn get_broker_report(
             &self,
             request: tonic::Request<super::BrokerReportRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::BrokerReportResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::BrokerReportResponse>, tonic::Status>;
         /// Метод получения отчёта "Справка о доходах за пределами РФ".
         async fn get_dividends_foreign_issuer(
             &self,
@@ -9074,10 +8320,7 @@ pub mod operations_service_server {
         async fn get_operations_by_cursor(
             &self,
             request: tonic::Request<super::GetOperationsByCursorRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetOperationsByCursorResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetOperationsByCursorResponse>, tonic::Status>;
     }
     #[derive(Debug)]
     pub struct OperationsServiceServer<T> {
@@ -9100,10 +8343,7 @@ pub mod operations_service_server {
                 max_encoding_message_size: None,
             }
         }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> InterceptedService<Self, F>
+        pub fn with_interceptor<F>(inner: T, interceptor: F) -> InterceptedService<Self, F>
         where
             F: tonic::service::Interceptor,
         {
@@ -9158,23 +8398,18 @@ pub mod operations_service_server {
                 "/tinkoff.public.invest.api.contract.v1.OperationsService/GetOperations" => {
                     #[allow(non_camel_case_types)]
                     struct GetOperationsSvc<T: OperationsService>(pub Arc<T>);
-                    impl<
-                        T: OperationsService,
-                    > tonic::server::UnaryService<super::OperationsRequest>
-                    for GetOperationsSvc<T> {
+                    impl<T: OperationsService> tonic::server::UnaryService<super::OperationsRequest>
+                        for GetOperationsSvc<T>
+                    {
                         type Response = super::OperationsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::OperationsRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as OperationsService>::get_operations(&inner, request)
-                                    .await
+                                <T as OperationsService>::get_operations(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -9204,23 +8439,18 @@ pub mod operations_service_server {
                 "/tinkoff.public.invest.api.contract.v1.OperationsService/GetPortfolio" => {
                     #[allow(non_camel_case_types)]
                     struct GetPortfolioSvc<T: OperationsService>(pub Arc<T>);
-                    impl<
-                        T: OperationsService,
-                    > tonic::server::UnaryService<super::PortfolioRequest>
-                    for GetPortfolioSvc<T> {
+                    impl<T: OperationsService> tonic::server::UnaryService<super::PortfolioRequest>
+                        for GetPortfolioSvc<T>
+                    {
                         type Response = super::PortfolioResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::PortfolioRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as OperationsService>::get_portfolio(&inner, request)
-                                    .await
+                                <T as OperationsService>::get_portfolio(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -9250,23 +8480,18 @@ pub mod operations_service_server {
                 "/tinkoff.public.invest.api.contract.v1.OperationsService/GetPositions" => {
                     #[allow(non_camel_case_types)]
                     struct GetPositionsSvc<T: OperationsService>(pub Arc<T>);
-                    impl<
-                        T: OperationsService,
-                    > tonic::server::UnaryService<super::PositionsRequest>
-                    for GetPositionsSvc<T> {
+                    impl<T: OperationsService> tonic::server::UnaryService<super::PositionsRequest>
+                        for GetPositionsSvc<T>
+                    {
                         type Response = super::PositionsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::PositionsRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as OperationsService>::get_positions(&inner, request)
-                                    .await
+                                <T as OperationsService>::get_positions(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -9296,26 +8521,19 @@ pub mod operations_service_server {
                 "/tinkoff.public.invest.api.contract.v1.OperationsService/GetWithdrawLimits" => {
                     #[allow(non_camel_case_types)]
                     struct GetWithdrawLimitsSvc<T: OperationsService>(pub Arc<T>);
-                    impl<
-                        T: OperationsService,
-                    > tonic::server::UnaryService<super::WithdrawLimitsRequest>
-                    for GetWithdrawLimitsSvc<T> {
+                    impl<T: OperationsService>
+                        tonic::server::UnaryService<super::WithdrawLimitsRequest>
+                        for GetWithdrawLimitsSvc<T>
+                    {
                         type Response = super::WithdrawLimitsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::WithdrawLimitsRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as OperationsService>::get_withdraw_limits(
-                                        &inner,
-                                        request,
-                                    )
-                                    .await
+                                <T as OperationsService>::get_withdraw_limits(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -9345,23 +8563,19 @@ pub mod operations_service_server {
                 "/tinkoff.public.invest.api.contract.v1.OperationsService/GetBrokerReport" => {
                     #[allow(non_camel_case_types)]
                     struct GetBrokerReportSvc<T: OperationsService>(pub Arc<T>);
-                    impl<
-                        T: OperationsService,
-                    > tonic::server::UnaryService<super::BrokerReportRequest>
-                    for GetBrokerReportSvc<T> {
+                    impl<T: OperationsService>
+                        tonic::server::UnaryService<super::BrokerReportRequest>
+                        for GetBrokerReportSvc<T>
+                    {
                         type Response = super::BrokerReportResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::BrokerReportRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as OperationsService>::get_broker_report(&inner, request)
-                                    .await
+                                <T as OperationsService>::get_broker_report(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -9388,34 +8602,26 @@ pub mod operations_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/tinkoff.public.invest.api.contract.v1.OperationsService/GetDividendsForeignIssuer" => {
+                "/tinkoff.public.invest.api.contract.v1.OperationsService/GetDividendsForeignIssuer" =>
+                {
                     #[allow(non_camel_case_types)]
-                    struct GetDividendsForeignIssuerSvc<T: OperationsService>(
-                        pub Arc<T>,
-                    );
-                    impl<
-                        T: OperationsService,
-                    > tonic::server::UnaryService<
-                        super::GetDividendsForeignIssuerRequest,
-                    > for GetDividendsForeignIssuerSvc<T> {
+                    struct GetDividendsForeignIssuerSvc<T: OperationsService>(pub Arc<T>);
+                    impl<T: OperationsService>
+                        tonic::server::UnaryService<super::GetDividendsForeignIssuerRequest>
+                        for GetDividendsForeignIssuerSvc<T>
+                    {
                         type Response = super::GetDividendsForeignIssuerResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
-                            request: tonic::Request<
-                                super::GetDividendsForeignIssuerRequest,
-                            >,
+                            request: tonic::Request<super::GetDividendsForeignIssuerRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
                                 <T as OperationsService>::get_dividends_foreign_issuer(
-                                        &inner,
-                                        request,
-                                    )
-                                    .await
+                                    &inner, request,
+                                )
+                                .await
                             };
                             Box::pin(fut)
                         }
@@ -9445,25 +8651,19 @@ pub mod operations_service_server {
                 "/tinkoff.public.invest.api.contract.v1.OperationsService/GetOperationsByCursor" => {
                     #[allow(non_camel_case_types)]
                     struct GetOperationsByCursorSvc<T: OperationsService>(pub Arc<T>);
-                    impl<
-                        T: OperationsService,
-                    > tonic::server::UnaryService<super::GetOperationsByCursorRequest>
-                    for GetOperationsByCursorSvc<T> {
+                    impl<T: OperationsService>
+                        tonic::server::UnaryService<super::GetOperationsByCursorRequest>
+                        for GetOperationsByCursorSvc<T>
+                    {
                         type Response = super::GetOperationsByCursorResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetOperationsByCursorRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as OperationsService>::get_operations_by_cursor(
-                                        &inner,
-                                        request,
-                                    )
+                                <T as OperationsService>::get_operations_by_cursor(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -9491,23 +8691,19 @@ pub mod operations_service_server {
                     };
                     Box::pin(fut)
                 }
-                _ => {
-                    Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
-                        let headers = response.headers_mut();
-                        headers
-                            .insert(
-                                tonic::Status::GRPC_STATUS,
-                                (tonic::Code::Unimplemented as i32).into(),
-                            );
-                        headers
-                            .insert(
-                                http::header::CONTENT_TYPE,
-                                tonic::metadata::GRPC_CONTENT_TYPE,
-                            );
-                        Ok(response)
-                    })
-                }
+                _ => Box::pin(async move {
+                    let mut response = http::Response::new(empty_body());
+                    let headers = response.headers_mut();
+                    headers.insert(
+                        tonic::Status::GRPC_STATUS,
+                        (tonic::Code::Unimplemented as i32).into(),
+                    );
+                    headers.insert(
+                        http::header::CONTENT_TYPE,
+                        tonic::metadata::GRPC_CONTENT_TYPE,
+                    );
+                    Ok(response)
+                }),
             }
         }
     }
@@ -9536,7 +8732,7 @@ pub mod operations_stream_service_server {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
     use tonic::codegen::*;
     /// Generated trait containing gRPC methods that should be implemented for use with OperationsStreamServiceServer.
@@ -9545,31 +8741,23 @@ pub mod operations_stream_service_server {
         /// Server streaming response type for the PortfolioStream method.
         type PortfolioStreamStream: tonic::codegen::tokio_stream::Stream<
                 Item = std::result::Result<super::PortfolioStreamResponse, tonic::Status>,
-            >
-            + std::marker::Send
+            > + std::marker::Send
             + 'static;
         /// Server-side stream обновлений портфеля
         async fn portfolio_stream(
             &self,
             request: tonic::Request<super::PortfolioStreamRequest>,
-        ) -> std::result::Result<
-            tonic::Response<Self::PortfolioStreamStream>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<Self::PortfolioStreamStream>, tonic::Status>;
         /// Server streaming response type for the PositionsStream method.
         type PositionsStreamStream: tonic::codegen::tokio_stream::Stream<
                 Item = std::result::Result<super::PositionsStreamResponse, tonic::Status>,
-            >
-            + std::marker::Send
+            > + std::marker::Send
             + 'static;
         /// Server-side stream обновлений информации по изменению позиций портфеля
         async fn positions_stream(
             &self,
             request: tonic::Request<super::PositionsStreamRequest>,
-        ) -> std::result::Result<
-            tonic::Response<Self::PositionsStreamStream>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<Self::PositionsStreamStream>, tonic::Status>;
     }
     #[derive(Debug)]
     pub struct OperationsStreamServiceServer<T> {
@@ -9592,10 +8780,7 @@ pub mod operations_stream_service_server {
                 max_encoding_message_size: None,
             }
         }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> InterceptedService<Self, F>
+        pub fn with_interceptor<F>(inner: T, interceptor: F) -> InterceptedService<Self, F>
         where
             F: tonic::service::Interceptor,
         {
@@ -9630,8 +8815,7 @@ pub mod operations_stream_service_server {
             self
         }
     }
-    impl<T, B> tonic::codegen::Service<http::Request<B>>
-    for OperationsStreamServiceServer<T>
+    impl<T, B> tonic::codegen::Service<http::Request<B>> for OperationsStreamServiceServer<T>
     where
         T: OperationsStreamService,
         B: Body + std::marker::Send + 'static,
@@ -9651,27 +8835,21 @@ pub mod operations_stream_service_server {
                 "/tinkoff.public.invest.api.contract.v1.OperationsStreamService/PortfolioStream" => {
                     #[allow(non_camel_case_types)]
                     struct PortfolioStreamSvc<T: OperationsStreamService>(pub Arc<T>);
-                    impl<
-                        T: OperationsStreamService,
-                    > tonic::server::ServerStreamingService<
-                        super::PortfolioStreamRequest,
-                    > for PortfolioStreamSvc<T> {
+                    impl<T: OperationsStreamService>
+                        tonic::server::ServerStreamingService<super::PortfolioStreamRequest>
+                        for PortfolioStreamSvc<T>
+                    {
                         type Response = super::PortfolioStreamResponse;
                         type ResponseStream = T::PortfolioStreamStream;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::ResponseStream>,
-                            tonic::Status,
-                        >;
+                        type Future =
+                            BoxFuture<tonic::Response<Self::ResponseStream>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::PortfolioStreamRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as OperationsStreamService>::portfolio_stream(
-                                        &inner,
-                                        request,
-                                    )
+                                <T as OperationsStreamService>::portfolio_stream(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -9702,27 +8880,21 @@ pub mod operations_stream_service_server {
                 "/tinkoff.public.invest.api.contract.v1.OperationsStreamService/PositionsStream" => {
                     #[allow(non_camel_case_types)]
                     struct PositionsStreamSvc<T: OperationsStreamService>(pub Arc<T>);
-                    impl<
-                        T: OperationsStreamService,
-                    > tonic::server::ServerStreamingService<
-                        super::PositionsStreamRequest,
-                    > for PositionsStreamSvc<T> {
+                    impl<T: OperationsStreamService>
+                        tonic::server::ServerStreamingService<super::PositionsStreamRequest>
+                        for PositionsStreamSvc<T>
+                    {
                         type Response = super::PositionsStreamResponse;
                         type ResponseStream = T::PositionsStreamStream;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::ResponseStream>,
-                            tonic::Status,
-                        >;
+                        type Future =
+                            BoxFuture<tonic::Response<Self::ResponseStream>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::PositionsStreamRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as OperationsStreamService>::positions_stream(
-                                        &inner,
-                                        request,
-                                    )
+                                <T as OperationsStreamService>::positions_stream(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -9750,23 +8922,19 @@ pub mod operations_stream_service_server {
                     };
                     Box::pin(fut)
                 }
-                _ => {
-                    Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
-                        let headers = response.headers_mut();
-                        headers
-                            .insert(
-                                tonic::Status::GRPC_STATUS,
-                                (tonic::Code::Unimplemented as i32).into(),
-                            );
-                        headers
-                            .insert(
-                                http::header::CONTENT_TYPE,
-                                tonic::metadata::GRPC_CONTENT_TYPE,
-                            );
-                        Ok(response)
-                    })
-                }
+                _ => Box::pin(async move {
+                    let mut response = http::Response::new(empty_body());
+                    let headers = response.headers_mut();
+                    headers.insert(
+                        tonic::Status::GRPC_STATUS,
+                        (tonic::Code::Unimplemented as i32).into(),
+                    );
+                    headers.insert(
+                        http::header::CONTENT_TYPE,
+                        tonic::metadata::GRPC_CONTENT_TYPE,
+                    );
+                    Ok(response)
+                }),
             }
         }
     }
@@ -10171,31 +9339,21 @@ impl OrderExecutionReportStatus {
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            Self::ExecutionReportStatusUnspecified => {
-                "EXECUTION_REPORT_STATUS_UNSPECIFIED"
-            }
+            Self::ExecutionReportStatusUnspecified => "EXECUTION_REPORT_STATUS_UNSPECIFIED",
             Self::ExecutionReportStatusFill => "EXECUTION_REPORT_STATUS_FILL",
             Self::ExecutionReportStatusRejected => "EXECUTION_REPORT_STATUS_REJECTED",
             Self::ExecutionReportStatusCancelled => "EXECUTION_REPORT_STATUS_CANCELLED",
             Self::ExecutionReportStatusNew => "EXECUTION_REPORT_STATUS_NEW",
-            Self::ExecutionReportStatusPartiallyfill => {
-                "EXECUTION_REPORT_STATUS_PARTIALLYFILL"
-            }
+            Self::ExecutionReportStatusPartiallyfill => "EXECUTION_REPORT_STATUS_PARTIALLYFILL",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "EXECUTION_REPORT_STATUS_UNSPECIFIED" => {
-                Some(Self::ExecutionReportStatusUnspecified)
-            }
+            "EXECUTION_REPORT_STATUS_UNSPECIFIED" => Some(Self::ExecutionReportStatusUnspecified),
             "EXECUTION_REPORT_STATUS_FILL" => Some(Self::ExecutionReportStatusFill),
-            "EXECUTION_REPORT_STATUS_REJECTED" => {
-                Some(Self::ExecutionReportStatusRejected)
-            }
-            "EXECUTION_REPORT_STATUS_CANCELLED" => {
-                Some(Self::ExecutionReportStatusCancelled)
-            }
+            "EXECUTION_REPORT_STATUS_REJECTED" => Some(Self::ExecutionReportStatusRejected),
+            "EXECUTION_REPORT_STATUS_CANCELLED" => Some(Self::ExecutionReportStatusCancelled),
             "EXECUTION_REPORT_STATUS_NEW" => Some(Self::ExecutionReportStatusNew),
             "EXECUTION_REPORT_STATUS_PARTIALLYFILL" => {
                 Some(Self::ExecutionReportStatusPartiallyfill)
@@ -10244,10 +9402,10 @@ pub mod orders_stream_service_client {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
-    use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    use tonic::codegen::*;
     #[derive(Debug, Clone)]
     pub struct OrdersStreamServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -10286,14 +9444,13 @@ pub mod orders_stream_service_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    http::Request<tonic::body::BoxBody>,
+                    Response = http::Response<
+                        <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    >,
                 >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+            <T as tonic::codegen::Service<http::Request<tonic::body::BoxBody>>>::Error:
+                Into<StdError> + std::marker::Send + std::marker::Sync,
         {
             OrdersStreamServiceClient::new(InterceptedService::new(inner, interceptor))
         }
@@ -10336,26 +9493,18 @@ pub mod orders_stream_service_client {
             tonic::Response<tonic::codec::Streaming<super::TradesStreamResponse>>,
             tonic::Status,
         > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.OrdersStreamService/TradesStream",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.OrdersStreamService",
-                        "TradesStream",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.OrdersStreamService",
+                "TradesStream",
+            ));
             self.inner.server_streaming(req, path, codec).await
         }
     }
@@ -10367,10 +9516,10 @@ pub mod orders_service_client {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
-    use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    use tonic::codegen::*;
     #[derive(Debug, Clone)]
     pub struct OrdersServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -10409,14 +9558,13 @@ pub mod orders_service_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    http::Request<tonic::body::BoxBody>,
+                    Response = http::Response<
+                        <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    >,
                 >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+            <T as tonic::codegen::Service<http::Request<tonic::body::BoxBody>>>::Error:
+                Into<StdError> + std::marker::Send + std::marker::Sync,
         {
             OrdersServiceClient::new(InterceptedService::new(inner, interceptor))
         }
@@ -10455,60 +9603,39 @@ pub mod orders_service_client {
         pub async fn post_order(
             &mut self,
             request: impl tonic::IntoRequest<super::PostOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PostOrderResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::PostOrderResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.OrdersService/PostOrder",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.OrdersService",
-                        "PostOrder",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.OrdersService",
+                "PostOrder",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод отмены биржевой заявки.
         pub async fn cancel_order(
             &mut self,
             request: impl tonic::IntoRequest<super::CancelOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CancelOrderResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::CancelOrderResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.OrdersService/CancelOrder",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.OrdersService",
-                        "CancelOrder",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.OrdersService",
+                "CancelOrder",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения статуса торгового поручения.
@@ -10516,86 +9643,56 @@ pub mod orders_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::GetOrderStateRequest>,
         ) -> std::result::Result<tonic::Response<super::OrderState>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.OrdersService/GetOrderState",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.OrdersService",
-                        "GetOrderState",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.OrdersService",
+                "GetOrderState",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения списка активных заявок по счёту.
         pub async fn get_orders(
             &mut self,
             request: impl tonic::IntoRequest<super::GetOrdersRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetOrdersResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetOrdersResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.OrdersService/GetOrders",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.OrdersService",
-                        "GetOrders",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.OrdersService",
+                "GetOrders",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод изменения выставленной заявки.
         pub async fn replace_order(
             &mut self,
             request: impl tonic::IntoRequest<super::ReplaceOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PostOrderResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::PostOrderResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.OrdersService/ReplaceOrder",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.OrdersService",
-                        "ReplaceOrder",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.OrdersService",
+                "ReplaceOrder",
+            ));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -10607,7 +9704,7 @@ pub mod orders_stream_service_server {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
     use tonic::codegen::*;
     /// Generated trait containing gRPC methods that should be implemented for use with OrdersStreamServiceServer.
@@ -10616,17 +9713,13 @@ pub mod orders_stream_service_server {
         /// Server streaming response type for the TradesStream method.
         type TradesStreamStream: tonic::codegen::tokio_stream::Stream<
                 Item = std::result::Result<super::TradesStreamResponse, tonic::Status>,
-            >
-            + std::marker::Send
+            > + std::marker::Send
             + 'static;
         /// Stream сделок пользователя
         async fn trades_stream(
             &self,
             request: tonic::Request<super::TradesStreamRequest>,
-        ) -> std::result::Result<
-            tonic::Response<Self::TradesStreamStream>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<Self::TradesStreamStream>, tonic::Status>;
     }
     #[derive(Debug)]
     pub struct OrdersStreamServiceServer<T> {
@@ -10649,10 +9742,7 @@ pub mod orders_stream_service_server {
                 max_encoding_message_size: None,
             }
         }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> InterceptedService<Self, F>
+        pub fn with_interceptor<F>(inner: T, interceptor: F) -> InterceptedService<Self, F>
         where
             F: tonic::service::Interceptor,
         {
@@ -10707,24 +9797,21 @@ pub mod orders_stream_service_server {
                 "/tinkoff.public.invest.api.contract.v1.OrdersStreamService/TradesStream" => {
                     #[allow(non_camel_case_types)]
                     struct TradesStreamSvc<T: OrdersStreamService>(pub Arc<T>);
-                    impl<
-                        T: OrdersStreamService,
-                    > tonic::server::ServerStreamingService<super::TradesStreamRequest>
-                    for TradesStreamSvc<T> {
+                    impl<T: OrdersStreamService>
+                        tonic::server::ServerStreamingService<super::TradesStreamRequest>
+                        for TradesStreamSvc<T>
+                    {
                         type Response = super::TradesStreamResponse;
                         type ResponseStream = T::TradesStreamStream;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::ResponseStream>,
-                            tonic::Status,
-                        >;
+                        type Future =
+                            BoxFuture<tonic::Response<Self::ResponseStream>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::TradesStreamRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as OrdersStreamService>::trades_stream(&inner, request)
-                                    .await
+                                <T as OrdersStreamService>::trades_stream(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -10751,23 +9838,19 @@ pub mod orders_stream_service_server {
                     };
                     Box::pin(fut)
                 }
-                _ => {
-                    Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
-                        let headers = response.headers_mut();
-                        headers
-                            .insert(
-                                tonic::Status::GRPC_STATUS,
-                                (tonic::Code::Unimplemented as i32).into(),
-                            );
-                        headers
-                            .insert(
-                                http::header::CONTENT_TYPE,
-                                tonic::metadata::GRPC_CONTENT_TYPE,
-                            );
-                        Ok(response)
-                    })
-                }
+                _ => Box::pin(async move {
+                    let mut response = http::Response::new(empty_body());
+                    let headers = response.headers_mut();
+                    headers.insert(
+                        tonic::Status::GRPC_STATUS,
+                        (tonic::Code::Unimplemented as i32).into(),
+                    );
+                    headers.insert(
+                        http::header::CONTENT_TYPE,
+                        tonic::metadata::GRPC_CONTENT_TYPE,
+                    );
+                    Ok(response)
+                }),
             }
         }
     }
@@ -10796,7 +9879,7 @@ pub mod orders_service_server {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
     use tonic::codegen::*;
     /// Generated trait containing gRPC methods that should be implemented for use with OrdersServiceServer.
@@ -10806,18 +9889,12 @@ pub mod orders_service_server {
         async fn post_order(
             &self,
             request: tonic::Request<super::PostOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PostOrderResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::PostOrderResponse>, tonic::Status>;
         /// Метод отмены биржевой заявки.
         async fn cancel_order(
             &self,
             request: tonic::Request<super::CancelOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CancelOrderResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::CancelOrderResponse>, tonic::Status>;
         /// Метод получения статуса торгового поручения.
         async fn get_order_state(
             &self,
@@ -10827,18 +9904,12 @@ pub mod orders_service_server {
         async fn get_orders(
             &self,
             request: tonic::Request<super::GetOrdersRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetOrdersResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetOrdersResponse>, tonic::Status>;
         /// Метод изменения выставленной заявки.
         async fn replace_order(
             &self,
             request: tonic::Request<super::ReplaceOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PostOrderResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::PostOrderResponse>, tonic::Status>;
     }
     #[derive(Debug)]
     pub struct OrdersServiceServer<T> {
@@ -10861,10 +9932,7 @@ pub mod orders_service_server {
                 max_encoding_message_size: None,
             }
         }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> InterceptedService<Self, F>
+        pub fn with_interceptor<F>(inner: T, interceptor: F) -> InterceptedService<Self, F>
         where
             F: tonic::service::Interceptor,
         {
@@ -10919,15 +9987,9 @@ pub mod orders_service_server {
                 "/tinkoff.public.invest.api.contract.v1.OrdersService/PostOrder" => {
                     #[allow(non_camel_case_types)]
                     struct PostOrderSvc<T: OrdersService>(pub Arc<T>);
-                    impl<
-                        T: OrdersService,
-                    > tonic::server::UnaryService<super::PostOrderRequest>
-                    for PostOrderSvc<T> {
+                    impl<T: OrdersService> tonic::server::UnaryService<super::PostOrderRequest> for PostOrderSvc<T> {
                         type Response = super::PostOrderResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::PostOrderRequest>,
@@ -10964,15 +10026,11 @@ pub mod orders_service_server {
                 "/tinkoff.public.invest.api.contract.v1.OrdersService/CancelOrder" => {
                     #[allow(non_camel_case_types)]
                     struct CancelOrderSvc<T: OrdersService>(pub Arc<T>);
-                    impl<
-                        T: OrdersService,
-                    > tonic::server::UnaryService<super::CancelOrderRequest>
-                    for CancelOrderSvc<T> {
+                    impl<T: OrdersService> tonic::server::UnaryService<super::CancelOrderRequest>
+                        for CancelOrderSvc<T>
+                    {
                         type Response = super::CancelOrderResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::CancelOrderRequest>,
@@ -11009,15 +10067,11 @@ pub mod orders_service_server {
                 "/tinkoff.public.invest.api.contract.v1.OrdersService/GetOrderState" => {
                     #[allow(non_camel_case_types)]
                     struct GetOrderStateSvc<T: OrdersService>(pub Arc<T>);
-                    impl<
-                        T: OrdersService,
-                    > tonic::server::UnaryService<super::GetOrderStateRequest>
-                    for GetOrderStateSvc<T> {
+                    impl<T: OrdersService> tonic::server::UnaryService<super::GetOrderStateRequest>
+                        for GetOrderStateSvc<T>
+                    {
                         type Response = super::OrderState;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetOrderStateRequest>,
@@ -11054,15 +10108,9 @@ pub mod orders_service_server {
                 "/tinkoff.public.invest.api.contract.v1.OrdersService/GetOrders" => {
                     #[allow(non_camel_case_types)]
                     struct GetOrdersSvc<T: OrdersService>(pub Arc<T>);
-                    impl<
-                        T: OrdersService,
-                    > tonic::server::UnaryService<super::GetOrdersRequest>
-                    for GetOrdersSvc<T> {
+                    impl<T: OrdersService> tonic::server::UnaryService<super::GetOrdersRequest> for GetOrdersSvc<T> {
                         type Response = super::GetOrdersResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetOrdersRequest>,
@@ -11099,15 +10147,11 @@ pub mod orders_service_server {
                 "/tinkoff.public.invest.api.contract.v1.OrdersService/ReplaceOrder" => {
                     #[allow(non_camel_case_types)]
                     struct ReplaceOrderSvc<T: OrdersService>(pub Arc<T>);
-                    impl<
-                        T: OrdersService,
-                    > tonic::server::UnaryService<super::ReplaceOrderRequest>
-                    for ReplaceOrderSvc<T> {
+                    impl<T: OrdersService> tonic::server::UnaryService<super::ReplaceOrderRequest>
+                        for ReplaceOrderSvc<T>
+                    {
                         type Response = super::PostOrderResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::ReplaceOrderRequest>,
@@ -11141,23 +10185,19 @@ pub mod orders_service_server {
                     };
                     Box::pin(fut)
                 }
-                _ => {
-                    Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
-                        let headers = response.headers_mut();
-                        headers
-                            .insert(
-                                tonic::Status::GRPC_STATUS,
-                                (tonic::Code::Unimplemented as i32).into(),
-                            );
-                        headers
-                            .insert(
-                                http::header::CONTENT_TYPE,
-                                tonic::metadata::GRPC_CONTENT_TYPE,
-                            );
-                        Ok(response)
-                    })
-                }
+                _ => Box::pin(async move {
+                    let mut response = http::Response::new(empty_body());
+                    let headers = response.headers_mut();
+                    headers.insert(
+                        tonic::Status::GRPC_STATUS,
+                        (tonic::Code::Unimplemented as i32).into(),
+                    );
+                    headers.insert(
+                        http::header::CONTENT_TYPE,
+                        tonic::metadata::GRPC_CONTENT_TYPE,
+                    );
+                    Ok(response)
+                }),
             }
         }
     }
@@ -11293,9 +10333,7 @@ pub struct GetInfoResponse {
     pub qual_status: bool,
     /// Набор требующих тестирования инструментов и возможностей, с которыми может работать пользователь. [Подробнее](<https://tinkoff.github.io/investAPI/faq_users/>).
     #[prost(string, repeated, tag = "3")]
-    pub qualified_for_work_with: ::prost::alloc::vec::Vec<
-        ::prost::alloc::string::String,
-    >,
+    pub qualified_for_work_with: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// Наименование тарифа пользователя.
     #[prost(string, tag = "4")]
     pub tariff: ::prost::alloc::string::String,
@@ -11403,12 +10441,8 @@ impl AccessLevel {
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "ACCOUNT_ACCESS_LEVEL_UNSPECIFIED" => {
-                Some(Self::AccountAccessLevelUnspecified)
-            }
-            "ACCOUNT_ACCESS_LEVEL_FULL_ACCESS" => {
-                Some(Self::AccountAccessLevelFullAccess)
-            }
+            "ACCOUNT_ACCESS_LEVEL_UNSPECIFIED" => Some(Self::AccountAccessLevelUnspecified),
+            "ACCOUNT_ACCESS_LEVEL_FULL_ACCESS" => Some(Self::AccountAccessLevelFullAccess),
             "ACCOUNT_ACCESS_LEVEL_READ_ONLY" => Some(Self::AccountAccessLevelReadOnly),
             "ACCOUNT_ACCESS_LEVEL_NO_ACCESS" => Some(Self::AccountAccessLevelNoAccess),
             _ => None,
@@ -11422,10 +10456,10 @@ pub mod users_service_client {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
-    use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    use tonic::codegen::*;
     #[derive(Debug, Clone)]
     pub struct UsersServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -11464,14 +10498,13 @@ pub mod users_service_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    http::Request<tonic::body::BoxBody>,
+                    Response = http::Response<
+                        <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    >,
                 >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+            <T as tonic::codegen::Service<http::Request<tonic::body::BoxBody>>>::Error:
+                Into<StdError> + std::marker::Send + std::marker::Sync,
         {
             UsersServiceClient::new(InterceptedService::new(inner, interceptor))
         }
@@ -11510,120 +10543,79 @@ pub mod users_service_client {
         pub async fn get_accounts(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAccountsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetAccountsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetAccountsResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.UsersService/GetAccounts",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.UsersService",
-                        "GetAccounts",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.UsersService",
+                "GetAccounts",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Расчёт маржинальных показателей по счёту.
         pub async fn get_margin_attributes(
             &mut self,
             request: impl tonic::IntoRequest<super::GetMarginAttributesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetMarginAttributesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetMarginAttributesResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.UsersService/GetMarginAttributes",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.UsersService",
-                        "GetMarginAttributes",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.UsersService",
+                "GetMarginAttributes",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Запрос тарифа пользователя.
         pub async fn get_user_tariff(
             &mut self,
             request: impl tonic::IntoRequest<super::GetUserTariffRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetUserTariffResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetUserTariffResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.UsersService/GetUserTariff",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.UsersService",
-                        "GetUserTariff",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.UsersService",
+                "GetUserTariff",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения информации о пользователе.
         pub async fn get_info(
             &mut self,
             request: impl tonic::IntoRequest<super::GetInfoRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetInfoResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetInfoResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.UsersService/GetInfo",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.UsersService",
-                        "GetInfo",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.UsersService",
+                "GetInfo",
+            ));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -11635,7 +10627,7 @@ pub mod users_service_server {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
     use tonic::codegen::*;
     /// Generated trait containing gRPC methods that should be implemented for use with UsersServiceServer.
@@ -11645,26 +10637,17 @@ pub mod users_service_server {
         async fn get_accounts(
             &self,
             request: tonic::Request<super::GetAccountsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetAccountsResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetAccountsResponse>, tonic::Status>;
         /// Расчёт маржинальных показателей по счёту.
         async fn get_margin_attributes(
             &self,
             request: tonic::Request<super::GetMarginAttributesRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetMarginAttributesResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetMarginAttributesResponse>, tonic::Status>;
         /// Запрос тарифа пользователя.
         async fn get_user_tariff(
             &self,
             request: tonic::Request<super::GetUserTariffRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetUserTariffResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetUserTariffResponse>, tonic::Status>;
         /// Метод получения информации о пользователе.
         async fn get_info(
             &self,
@@ -11692,10 +10675,7 @@ pub mod users_service_server {
                 max_encoding_message_size: None,
             }
         }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> InterceptedService<Self, F>
+        pub fn with_interceptor<F>(inner: T, interceptor: F) -> InterceptedService<Self, F>
         where
             F: tonic::service::Interceptor,
         {
@@ -11750,15 +10730,9 @@ pub mod users_service_server {
                 "/tinkoff.public.invest.api.contract.v1.UsersService/GetAccounts" => {
                     #[allow(non_camel_case_types)]
                     struct GetAccountsSvc<T: UsersService>(pub Arc<T>);
-                    impl<
-                        T: UsersService,
-                    > tonic::server::UnaryService<super::GetAccountsRequest>
-                    for GetAccountsSvc<T> {
+                    impl<T: UsersService> tonic::server::UnaryService<super::GetAccountsRequest> for GetAccountsSvc<T> {
                         type Response = super::GetAccountsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetAccountsRequest>,
@@ -11795,23 +10769,19 @@ pub mod users_service_server {
                 "/tinkoff.public.invest.api.contract.v1.UsersService/GetMarginAttributes" => {
                     #[allow(non_camel_case_types)]
                     struct GetMarginAttributesSvc<T: UsersService>(pub Arc<T>);
-                    impl<
-                        T: UsersService,
-                    > tonic::server::UnaryService<super::GetMarginAttributesRequest>
-                    for GetMarginAttributesSvc<T> {
+                    impl<T: UsersService>
+                        tonic::server::UnaryService<super::GetMarginAttributesRequest>
+                        for GetMarginAttributesSvc<T>
+                    {
                         type Response = super::GetMarginAttributesResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetMarginAttributesRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as UsersService>::get_margin_attributes(&inner, request)
-                                    .await
+                                <T as UsersService>::get_margin_attributes(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -11841,15 +10811,11 @@ pub mod users_service_server {
                 "/tinkoff.public.invest.api.contract.v1.UsersService/GetUserTariff" => {
                     #[allow(non_camel_case_types)]
                     struct GetUserTariffSvc<T: UsersService>(pub Arc<T>);
-                    impl<
-                        T: UsersService,
-                    > tonic::server::UnaryService<super::GetUserTariffRequest>
-                    for GetUserTariffSvc<T> {
+                    impl<T: UsersService> tonic::server::UnaryService<super::GetUserTariffRequest>
+                        for GetUserTariffSvc<T>
+                    {
                         type Response = super::GetUserTariffResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetUserTariffRequest>,
@@ -11886,23 +10852,16 @@ pub mod users_service_server {
                 "/tinkoff.public.invest.api.contract.v1.UsersService/GetInfo" => {
                     #[allow(non_camel_case_types)]
                     struct GetInfoSvc<T: UsersService>(pub Arc<T>);
-                    impl<
-                        T: UsersService,
-                    > tonic::server::UnaryService<super::GetInfoRequest>
-                    for GetInfoSvc<T> {
+                    impl<T: UsersService> tonic::server::UnaryService<super::GetInfoRequest> for GetInfoSvc<T> {
                         type Response = super::GetInfoResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetInfoRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
-                            let fut = async move {
-                                <T as UsersService>::get_info(&inner, request).await
-                            };
+                            let fut =
+                                async move { <T as UsersService>::get_info(&inner, request).await };
                             Box::pin(fut)
                         }
                     }
@@ -11928,23 +10887,19 @@ pub mod users_service_server {
                     };
                     Box::pin(fut)
                 }
-                _ => {
-                    Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
-                        let headers = response.headers_mut();
-                        headers
-                            .insert(
-                                tonic::Status::GRPC_STATUS,
-                                (tonic::Code::Unimplemented as i32).into(),
-                            );
-                        headers
-                            .insert(
-                                http::header::CONTENT_TYPE,
-                                tonic::metadata::GRPC_CONTENT_TYPE,
-                            );
-                        Ok(response)
-                    })
-                }
+                _ => Box::pin(async move {
+                    let mut response = http::Response::new(empty_body());
+                    let headers = response.headers_mut();
+                    headers.insert(
+                        tonic::Status::GRPC_STATUS,
+                        (tonic::Code::Unimplemented as i32).into(),
+                    );
+                    headers.insert(
+                        http::header::CONTENT_TYPE,
+                        tonic::metadata::GRPC_CONTENT_TYPE,
+                    );
+                    Ok(response)
+                }),
             }
         }
     }
@@ -12014,10 +10969,10 @@ pub mod sandbox_service_client {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
-    use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    use tonic::codegen::*;
     #[derive(Debug, Clone)]
     pub struct SandboxServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -12056,14 +11011,13 @@ pub mod sandbox_service_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    http::Request<tonic::body::BoxBody>,
+                    Response = http::Response<
+                        <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    >,
                 >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+            <T as tonic::codegen::Service<http::Request<tonic::body::BoxBody>>>::Error:
+                Into<StdError> + std::marker::Send + std::marker::Sync,
         {
             SandboxServiceClient::new(InterceptedService::new(inner, interceptor))
         }
@@ -12102,210 +11056,137 @@ pub mod sandbox_service_client {
         pub async fn open_sandbox_account(
             &mut self,
             request: impl tonic::IntoRequest<super::OpenSandboxAccountRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::OpenSandboxAccountResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::OpenSandboxAccountResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/OpenSandboxAccount",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "OpenSandboxAccount",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.SandboxService",
+                "OpenSandboxAccount",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения счетов в песочнице.
         pub async fn get_sandbox_accounts(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAccountsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetAccountsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetAccountsResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxAccounts",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxAccounts",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.SandboxService",
+                "GetSandboxAccounts",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод закрытия счёта в песочнице.
         pub async fn close_sandbox_account(
             &mut self,
             request: impl tonic::IntoRequest<super::CloseSandboxAccountRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CloseSandboxAccountResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::CloseSandboxAccountResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/CloseSandboxAccount",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "CloseSandboxAccount",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.SandboxService",
+                "CloseSandboxAccount",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод выставления торгового поручения в песочнице.
         pub async fn post_sandbox_order(
             &mut self,
             request: impl tonic::IntoRequest<super::PostOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PostOrderResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::PostOrderResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/PostSandboxOrder",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "PostSandboxOrder",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.SandboxService",
+                "PostSandboxOrder",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод изменения выставленной заявки.
         pub async fn replace_sandbox_order(
             &mut self,
             request: impl tonic::IntoRequest<super::ReplaceOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PostOrderResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::PostOrderResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/ReplaceSandboxOrder",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "ReplaceSandboxOrder",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.SandboxService",
+                "ReplaceSandboxOrder",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения списка активных заявок по счёту в песочнице.
         pub async fn get_sandbox_orders(
             &mut self,
             request: impl tonic::IntoRequest<super::GetOrdersRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetOrdersResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetOrdersResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOrders",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxOrders",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.SandboxService",
+                "GetSandboxOrders",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод отмены торгового поручения в песочнице.
         pub async fn cancel_sandbox_order(
             &mut self,
             request: impl tonic::IntoRequest<super::CancelOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CancelOrderResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::CancelOrderResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/CancelSandboxOrder",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "CancelSandboxOrder",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.SandboxService",
+                "CancelSandboxOrder",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения статуса заявки в песочнице. Заявки хранятся в таблице 7 дней.
@@ -12313,206 +11194,136 @@ pub mod sandbox_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::GetOrderStateRequest>,
         ) -> std::result::Result<tonic::Response<super::OrderState>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOrderState",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxOrderState",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.SandboxService",
+                "GetSandboxOrderState",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения позиций по виртуальному счёту песочницы.
         pub async fn get_sandbox_positions(
             &mut self,
             request: impl tonic::IntoRequest<super::PositionsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PositionsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::PositionsResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxPositions",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxPositions",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.SandboxService",
+                "GetSandboxPositions",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения операций в песочнице по номеру счёта.
         pub async fn get_sandbox_operations(
             &mut self,
             request: impl tonic::IntoRequest<super::OperationsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::OperationsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::OperationsResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOperations",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxOperations",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.SandboxService",
+                "GetSandboxOperations",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения операций в песочнице по номеру счета с пагинацией.
         pub async fn get_sandbox_operations_by_cursor(
             &mut self,
             request: impl tonic::IntoRequest<super::GetOperationsByCursorRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetOperationsByCursorResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetOperationsByCursorResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOperationsByCursor",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxOperationsByCursor",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.SandboxService",
+                "GetSandboxOperationsByCursor",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения портфолио в песочнице.
         pub async fn get_sandbox_portfolio(
             &mut self,
             request: impl tonic::IntoRequest<super::PortfolioRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PortfolioResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::PortfolioResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxPortfolio",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxPortfolio",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.SandboxService",
+                "GetSandboxPortfolio",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод пополнения счёта в песочнице.
         pub async fn sandbox_pay_in(
             &mut self,
             request: impl tonic::IntoRequest<super::SandboxPayInRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::SandboxPayInResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::SandboxPayInResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/SandboxPayIn",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "SandboxPayIn",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.SandboxService",
+                "SandboxPayIn",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения доступного остатка для вывода средств в песочнице.
         pub async fn get_sandbox_withdraw_limits(
             &mut self,
             request: impl tonic::IntoRequest<super::WithdrawLimitsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::WithdrawLimitsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::WithdrawLimitsResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxWithdrawLimits",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.SandboxService",
-                        "GetSandboxWithdrawLimits",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.SandboxService",
+                "GetSandboxWithdrawLimits",
+            ));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -12524,7 +11335,7 @@ pub mod sandbox_service_server {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
     use tonic::codegen::*;
     /// Generated trait containing gRPC methods that should be implemented for use with SandboxServiceServer.
@@ -12534,58 +11345,37 @@ pub mod sandbox_service_server {
         async fn open_sandbox_account(
             &self,
             request: tonic::Request<super::OpenSandboxAccountRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::OpenSandboxAccountResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::OpenSandboxAccountResponse>, tonic::Status>;
         /// Метод получения счетов в песочнице.
         async fn get_sandbox_accounts(
             &self,
             request: tonic::Request<super::GetAccountsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetAccountsResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetAccountsResponse>, tonic::Status>;
         /// Метод закрытия счёта в песочнице.
         async fn close_sandbox_account(
             &self,
             request: tonic::Request<super::CloseSandboxAccountRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CloseSandboxAccountResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::CloseSandboxAccountResponse>, tonic::Status>;
         /// Метод выставления торгового поручения в песочнице.
         async fn post_sandbox_order(
             &self,
             request: tonic::Request<super::PostOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PostOrderResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::PostOrderResponse>, tonic::Status>;
         /// Метод изменения выставленной заявки.
         async fn replace_sandbox_order(
             &self,
             request: tonic::Request<super::ReplaceOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PostOrderResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::PostOrderResponse>, tonic::Status>;
         /// Метод получения списка активных заявок по счёту в песочнице.
         async fn get_sandbox_orders(
             &self,
             request: tonic::Request<super::GetOrdersRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetOrdersResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetOrdersResponse>, tonic::Status>;
         /// Метод отмены торгового поручения в песочнице.
         async fn cancel_sandbox_order(
             &self,
             request: tonic::Request<super::CancelOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CancelOrderResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::CancelOrderResponse>, tonic::Status>;
         /// Метод получения статуса заявки в песочнице. Заявки хранятся в таблице 7 дней.
         async fn get_sandbox_order_state(
             &self,
@@ -12595,50 +11385,32 @@ pub mod sandbox_service_server {
         async fn get_sandbox_positions(
             &self,
             request: tonic::Request<super::PositionsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PositionsResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::PositionsResponse>, tonic::Status>;
         /// Метод получения операций в песочнице по номеру счёта.
         async fn get_sandbox_operations(
             &self,
             request: tonic::Request<super::OperationsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::OperationsResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::OperationsResponse>, tonic::Status>;
         /// Метод получения операций в песочнице по номеру счета с пагинацией.
         async fn get_sandbox_operations_by_cursor(
             &self,
             request: tonic::Request<super::GetOperationsByCursorRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetOperationsByCursorResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetOperationsByCursorResponse>, tonic::Status>;
         /// Метод получения портфолио в песочнице.
         async fn get_sandbox_portfolio(
             &self,
             request: tonic::Request<super::PortfolioRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PortfolioResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::PortfolioResponse>, tonic::Status>;
         /// Метод пополнения счёта в песочнице.
         async fn sandbox_pay_in(
             &self,
             request: tonic::Request<super::SandboxPayInRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::SandboxPayInResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::SandboxPayInResponse>, tonic::Status>;
         /// Метод получения доступного остатка для вывода средств в песочнице.
         async fn get_sandbox_withdraw_limits(
             &self,
             request: tonic::Request<super::WithdrawLimitsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::WithdrawLimitsResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::WithdrawLimitsResponse>, tonic::Status>;
     }
     #[derive(Debug)]
     pub struct SandboxServiceServer<T> {
@@ -12661,10 +11433,7 @@ pub mod sandbox_service_server {
                 max_encoding_message_size: None,
             }
         }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> InterceptedService<Self, F>
+        pub fn with_interceptor<F>(inner: T, interceptor: F) -> InterceptedService<Self, F>
         where
             F: tonic::service::Interceptor,
         {
@@ -12719,23 +11488,19 @@ pub mod sandbox_service_server {
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/OpenSandboxAccount" => {
                     #[allow(non_camel_case_types)]
                     struct OpenSandboxAccountSvc<T: SandboxService>(pub Arc<T>);
-                    impl<
-                        T: SandboxService,
-                    > tonic::server::UnaryService<super::OpenSandboxAccountRequest>
-                    for OpenSandboxAccountSvc<T> {
+                    impl<T: SandboxService>
+                        tonic::server::UnaryService<super::OpenSandboxAccountRequest>
+                        for OpenSandboxAccountSvc<T>
+                    {
                         type Response = super::OpenSandboxAccountResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::OpenSandboxAccountRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as SandboxService>::open_sandbox_account(&inner, request)
-                                    .await
+                                <T as SandboxService>::open_sandbox_account(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -12765,23 +11530,18 @@ pub mod sandbox_service_server {
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxAccounts" => {
                     #[allow(non_camel_case_types)]
                     struct GetSandboxAccountsSvc<T: SandboxService>(pub Arc<T>);
-                    impl<
-                        T: SandboxService,
-                    > tonic::server::UnaryService<super::GetAccountsRequest>
-                    for GetSandboxAccountsSvc<T> {
+                    impl<T: SandboxService> tonic::server::UnaryService<super::GetAccountsRequest>
+                        for GetSandboxAccountsSvc<T>
+                    {
                         type Response = super::GetAccountsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetAccountsRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as SandboxService>::get_sandbox_accounts(&inner, request)
-                                    .await
+                                <T as SandboxService>::get_sandbox_accounts(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -12811,26 +11571,19 @@ pub mod sandbox_service_server {
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/CloseSandboxAccount" => {
                     #[allow(non_camel_case_types)]
                     struct CloseSandboxAccountSvc<T: SandboxService>(pub Arc<T>);
-                    impl<
-                        T: SandboxService,
-                    > tonic::server::UnaryService<super::CloseSandboxAccountRequest>
-                    for CloseSandboxAccountSvc<T> {
+                    impl<T: SandboxService>
+                        tonic::server::UnaryService<super::CloseSandboxAccountRequest>
+                        for CloseSandboxAccountSvc<T>
+                    {
                         type Response = super::CloseSandboxAccountResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::CloseSandboxAccountRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as SandboxService>::close_sandbox_account(
-                                        &inner,
-                                        request,
-                                    )
-                                    .await
+                                <T as SandboxService>::close_sandbox_account(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -12860,23 +11613,18 @@ pub mod sandbox_service_server {
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/PostSandboxOrder" => {
                     #[allow(non_camel_case_types)]
                     struct PostSandboxOrderSvc<T: SandboxService>(pub Arc<T>);
-                    impl<
-                        T: SandboxService,
-                    > tonic::server::UnaryService<super::PostOrderRequest>
-                    for PostSandboxOrderSvc<T> {
+                    impl<T: SandboxService> tonic::server::UnaryService<super::PostOrderRequest>
+                        for PostSandboxOrderSvc<T>
+                    {
                         type Response = super::PostOrderResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::PostOrderRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as SandboxService>::post_sandbox_order(&inner, request)
-                                    .await
+                                <T as SandboxService>::post_sandbox_order(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -12906,26 +11654,18 @@ pub mod sandbox_service_server {
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/ReplaceSandboxOrder" => {
                     #[allow(non_camel_case_types)]
                     struct ReplaceSandboxOrderSvc<T: SandboxService>(pub Arc<T>);
-                    impl<
-                        T: SandboxService,
-                    > tonic::server::UnaryService<super::ReplaceOrderRequest>
-                    for ReplaceSandboxOrderSvc<T> {
+                    impl<T: SandboxService> tonic::server::UnaryService<super::ReplaceOrderRequest>
+                        for ReplaceSandboxOrderSvc<T>
+                    {
                         type Response = super::PostOrderResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::ReplaceOrderRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as SandboxService>::replace_sandbox_order(
-                                        &inner,
-                                        request,
-                                    )
-                                    .await
+                                <T as SandboxService>::replace_sandbox_order(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -12955,23 +11695,18 @@ pub mod sandbox_service_server {
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOrders" => {
                     #[allow(non_camel_case_types)]
                     struct GetSandboxOrdersSvc<T: SandboxService>(pub Arc<T>);
-                    impl<
-                        T: SandboxService,
-                    > tonic::server::UnaryService<super::GetOrdersRequest>
-                    for GetSandboxOrdersSvc<T> {
+                    impl<T: SandboxService> tonic::server::UnaryService<super::GetOrdersRequest>
+                        for GetSandboxOrdersSvc<T>
+                    {
                         type Response = super::GetOrdersResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetOrdersRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as SandboxService>::get_sandbox_orders(&inner, request)
-                                    .await
+                                <T as SandboxService>::get_sandbox_orders(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -13001,23 +11736,18 @@ pub mod sandbox_service_server {
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/CancelSandboxOrder" => {
                     #[allow(non_camel_case_types)]
                     struct CancelSandboxOrderSvc<T: SandboxService>(pub Arc<T>);
-                    impl<
-                        T: SandboxService,
-                    > tonic::server::UnaryService<super::CancelOrderRequest>
-                    for CancelSandboxOrderSvc<T> {
+                    impl<T: SandboxService> tonic::server::UnaryService<super::CancelOrderRequest>
+                        for CancelSandboxOrderSvc<T>
+                    {
                         type Response = super::CancelOrderResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::CancelOrderRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as SandboxService>::cancel_sandbox_order(&inner, request)
-                                    .await
+                                <T as SandboxService>::cancel_sandbox_order(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -13047,25 +11777,18 @@ pub mod sandbox_service_server {
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOrderState" => {
                     #[allow(non_camel_case_types)]
                     struct GetSandboxOrderStateSvc<T: SandboxService>(pub Arc<T>);
-                    impl<
-                        T: SandboxService,
-                    > tonic::server::UnaryService<super::GetOrderStateRequest>
-                    for GetSandboxOrderStateSvc<T> {
+                    impl<T: SandboxService> tonic::server::UnaryService<super::GetOrderStateRequest>
+                        for GetSandboxOrderStateSvc<T>
+                    {
                         type Response = super::OrderState;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetOrderStateRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as SandboxService>::get_sandbox_order_state(
-                                        &inner,
-                                        request,
-                                    )
+                                <T as SandboxService>::get_sandbox_order_state(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -13096,26 +11819,18 @@ pub mod sandbox_service_server {
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxPositions" => {
                     #[allow(non_camel_case_types)]
                     struct GetSandboxPositionsSvc<T: SandboxService>(pub Arc<T>);
-                    impl<
-                        T: SandboxService,
-                    > tonic::server::UnaryService<super::PositionsRequest>
-                    for GetSandboxPositionsSvc<T> {
+                    impl<T: SandboxService> tonic::server::UnaryService<super::PositionsRequest>
+                        for GetSandboxPositionsSvc<T>
+                    {
                         type Response = super::PositionsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::PositionsRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as SandboxService>::get_sandbox_positions(
-                                        &inner,
-                                        request,
-                                    )
-                                    .await
+                                <T as SandboxService>::get_sandbox_positions(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -13145,26 +11860,18 @@ pub mod sandbox_service_server {
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOperations" => {
                     #[allow(non_camel_case_types)]
                     struct GetSandboxOperationsSvc<T: SandboxService>(pub Arc<T>);
-                    impl<
-                        T: SandboxService,
-                    > tonic::server::UnaryService<super::OperationsRequest>
-                    for GetSandboxOperationsSvc<T> {
+                    impl<T: SandboxService> tonic::server::UnaryService<super::OperationsRequest>
+                        for GetSandboxOperationsSvc<T>
+                    {
                         type Response = super::OperationsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::OperationsRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as SandboxService>::get_sandbox_operations(
-                                        &inner,
-                                        request,
-                                    )
-                                    .await
+                                <T as SandboxService>::get_sandbox_operations(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -13191,20 +11898,16 @@ pub mod sandbox_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOperationsByCursor" => {
+                "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxOperationsByCursor" =>
+                {
                     #[allow(non_camel_case_types)]
-                    struct GetSandboxOperationsByCursorSvc<T: SandboxService>(
-                        pub Arc<T>,
-                    );
-                    impl<
-                        T: SandboxService,
-                    > tonic::server::UnaryService<super::GetOperationsByCursorRequest>
-                    for GetSandboxOperationsByCursorSvc<T> {
+                    struct GetSandboxOperationsByCursorSvc<T: SandboxService>(pub Arc<T>);
+                    impl<T: SandboxService>
+                        tonic::server::UnaryService<super::GetOperationsByCursorRequest>
+                        for GetSandboxOperationsByCursorSvc<T>
+                    {
                         type Response = super::GetOperationsByCursorResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetOperationsByCursorRequest>,
@@ -13212,10 +11915,9 @@ pub mod sandbox_service_server {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
                                 <T as SandboxService>::get_sandbox_operations_by_cursor(
-                                        &inner,
-                                        request,
-                                    )
-                                    .await
+                                    &inner, request,
+                                )
+                                .await
                             };
                             Box::pin(fut)
                         }
@@ -13245,26 +11947,18 @@ pub mod sandbox_service_server {
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxPortfolio" => {
                     #[allow(non_camel_case_types)]
                     struct GetSandboxPortfolioSvc<T: SandboxService>(pub Arc<T>);
-                    impl<
-                        T: SandboxService,
-                    > tonic::server::UnaryService<super::PortfolioRequest>
-                    for GetSandboxPortfolioSvc<T> {
+                    impl<T: SandboxService> tonic::server::UnaryService<super::PortfolioRequest>
+                        for GetSandboxPortfolioSvc<T>
+                    {
                         type Response = super::PortfolioResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::PortfolioRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as SandboxService>::get_sandbox_portfolio(
-                                        &inner,
-                                        request,
-                                    )
-                                    .await
+                                <T as SandboxService>::get_sandbox_portfolio(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -13294,15 +11988,11 @@ pub mod sandbox_service_server {
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/SandboxPayIn" => {
                     #[allow(non_camel_case_types)]
                     struct SandboxPayInSvc<T: SandboxService>(pub Arc<T>);
-                    impl<
-                        T: SandboxService,
-                    > tonic::server::UnaryService<super::SandboxPayInRequest>
-                    for SandboxPayInSvc<T> {
+                    impl<T: SandboxService> tonic::server::UnaryService<super::SandboxPayInRequest>
+                        for SandboxPayInSvc<T>
+                    {
                         type Response = super::SandboxPayInResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::SandboxPayInRequest>,
@@ -13339,25 +12029,19 @@ pub mod sandbox_service_server {
                 "/tinkoff.public.invest.api.contract.v1.SandboxService/GetSandboxWithdrawLimits" => {
                     #[allow(non_camel_case_types)]
                     struct GetSandboxWithdrawLimitsSvc<T: SandboxService>(pub Arc<T>);
-                    impl<
-                        T: SandboxService,
-                    > tonic::server::UnaryService<super::WithdrawLimitsRequest>
-                    for GetSandboxWithdrawLimitsSvc<T> {
+                    impl<T: SandboxService>
+                        tonic::server::UnaryService<super::WithdrawLimitsRequest>
+                        for GetSandboxWithdrawLimitsSvc<T>
+                    {
                         type Response = super::WithdrawLimitsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::WithdrawLimitsRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as SandboxService>::get_sandbox_withdraw_limits(
-                                        &inner,
-                                        request,
-                                    )
+                                <T as SandboxService>::get_sandbox_withdraw_limits(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -13385,23 +12069,19 @@ pub mod sandbox_service_server {
                     };
                     Box::pin(fut)
                 }
-                _ => {
-                    Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
-                        let headers = response.headers_mut();
-                        headers
-                            .insert(
-                                tonic::Status::GRPC_STATUS,
-                                (tonic::Code::Unimplemented as i32).into(),
-                            );
-                        headers
-                            .insert(
-                                http::header::CONTENT_TYPE,
-                                tonic::metadata::GRPC_CONTENT_TYPE,
-                            );
-                        Ok(response)
-                    })
-                }
+                _ => Box::pin(async move {
+                    let mut response = http::Response::new(empty_body());
+                    let headers = response.headers_mut();
+                    headers.insert(
+                        tonic::Status::GRPC_STATUS,
+                        (tonic::Code::Unimplemented as i32).into(),
+                    );
+                    headers.insert(
+                        http::header::CONTENT_TYPE,
+                        tonic::metadata::GRPC_CONTENT_TYPE,
+                    );
+                    Ok(response)
+                }),
             }
         }
     }
@@ -13646,10 +12326,10 @@ pub mod stop_orders_service_client {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
-    use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    use tonic::codegen::*;
     #[derive(Debug, Clone)]
     pub struct StopOrdersServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -13688,14 +12368,13 @@ pub mod stop_orders_service_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    http::Request<tonic::body::BoxBody>,
+                    Response = http::Response<
+                        <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    >,
                 >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+            <T as tonic::codegen::Service<http::Request<tonic::body::BoxBody>>>::Error:
+                Into<StdError> + std::marker::Send + std::marker::Sync,
         {
             StopOrdersServiceClient::new(InterceptedService::new(inner, interceptor))
         }
@@ -13734,90 +12413,60 @@ pub mod stop_orders_service_client {
         pub async fn post_stop_order(
             &mut self,
             request: impl tonic::IntoRequest<super::PostStopOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PostStopOrderResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::PostStopOrderResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.StopOrdersService/PostStopOrder",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.StopOrdersService",
-                        "PostStopOrder",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.StopOrdersService",
+                "PostStopOrder",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод получения списка активных стоп заявок по счёту.
         pub async fn get_stop_orders(
             &mut self,
             request: impl tonic::IntoRequest<super::GetStopOrdersRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetStopOrdersResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::GetStopOrdersResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.StopOrdersService/GetStopOrders",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.StopOrdersService",
-                        "GetStopOrders",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.StopOrdersService",
+                "GetStopOrders",
+            ));
             self.inner.unary(req, path, codec).await
         }
         /// Метод отмены стоп-заявки.
         pub async fn cancel_stop_order(
             &mut self,
             request: impl tonic::IntoRequest<super::CancelStopOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CancelStopOrderResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::CancelStopOrderResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/tinkoff.public.invest.api.contract.v1.StopOrdersService/CancelStopOrder",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "tinkoff.public.invest.api.contract.v1.StopOrdersService",
-                        "CancelStopOrder",
-                    ),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "tinkoff.public.invest.api.contract.v1.StopOrdersService",
+                "CancelStopOrder",
+            ));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -13829,7 +12478,7 @@ pub mod stop_orders_service_server {
         dead_code,
         missing_docs,
         clippy::wildcard_imports,
-        clippy::let_unit_value,
+        clippy::let_unit_value
     )]
     use tonic::codegen::*;
     /// Generated trait containing gRPC methods that should be implemented for use with StopOrdersServiceServer.
@@ -13839,26 +12488,17 @@ pub mod stop_orders_service_server {
         async fn post_stop_order(
             &self,
             request: tonic::Request<super::PostStopOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PostStopOrderResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::PostStopOrderResponse>, tonic::Status>;
         /// Метод получения списка активных стоп заявок по счёту.
         async fn get_stop_orders(
             &self,
             request: tonic::Request<super::GetStopOrdersRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetStopOrdersResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::GetStopOrdersResponse>, tonic::Status>;
         /// Метод отмены стоп-заявки.
         async fn cancel_stop_order(
             &self,
             request: tonic::Request<super::CancelStopOrderRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CancelStopOrderResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::CancelStopOrderResponse>, tonic::Status>;
     }
     #[derive(Debug)]
     pub struct StopOrdersServiceServer<T> {
@@ -13881,10 +12521,7 @@ pub mod stop_orders_service_server {
                 max_encoding_message_size: None,
             }
         }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> InterceptedService<Self, F>
+        pub fn with_interceptor<F>(inner: T, interceptor: F) -> InterceptedService<Self, F>
         where
             F: tonic::service::Interceptor,
         {
@@ -13939,23 +12576,19 @@ pub mod stop_orders_service_server {
                 "/tinkoff.public.invest.api.contract.v1.StopOrdersService/PostStopOrder" => {
                     #[allow(non_camel_case_types)]
                     struct PostStopOrderSvc<T: StopOrdersService>(pub Arc<T>);
-                    impl<
-                        T: StopOrdersService,
-                    > tonic::server::UnaryService<super::PostStopOrderRequest>
-                    for PostStopOrderSvc<T> {
+                    impl<T: StopOrdersService>
+                        tonic::server::UnaryService<super::PostStopOrderRequest>
+                        for PostStopOrderSvc<T>
+                    {
                         type Response = super::PostStopOrderResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::PostStopOrderRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as StopOrdersService>::post_stop_order(&inner, request)
-                                    .await
+                                <T as StopOrdersService>::post_stop_order(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -13985,23 +12618,19 @@ pub mod stop_orders_service_server {
                 "/tinkoff.public.invest.api.contract.v1.StopOrdersService/GetStopOrders" => {
                     #[allow(non_camel_case_types)]
                     struct GetStopOrdersSvc<T: StopOrdersService>(pub Arc<T>);
-                    impl<
-                        T: StopOrdersService,
-                    > tonic::server::UnaryService<super::GetStopOrdersRequest>
-                    for GetStopOrdersSvc<T> {
+                    impl<T: StopOrdersService>
+                        tonic::server::UnaryService<super::GetStopOrdersRequest>
+                        for GetStopOrdersSvc<T>
+                    {
                         type Response = super::GetStopOrdersResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::GetStopOrdersRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as StopOrdersService>::get_stop_orders(&inner, request)
-                                    .await
+                                <T as StopOrdersService>::get_stop_orders(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -14031,23 +12660,19 @@ pub mod stop_orders_service_server {
                 "/tinkoff.public.invest.api.contract.v1.StopOrdersService/CancelStopOrder" => {
                     #[allow(non_camel_case_types)]
                     struct CancelStopOrderSvc<T: StopOrdersService>(pub Arc<T>);
-                    impl<
-                        T: StopOrdersService,
-                    > tonic::server::UnaryService<super::CancelStopOrderRequest>
-                    for CancelStopOrderSvc<T> {
+                    impl<T: StopOrdersService>
+                        tonic::server::UnaryService<super::CancelStopOrderRequest>
+                        for CancelStopOrderSvc<T>
+                    {
                         type Response = super::CancelStopOrderResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::CancelStopOrderRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as StopOrdersService>::cancel_stop_order(&inner, request)
-                                    .await
+                                <T as StopOrdersService>::cancel_stop_order(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -14074,23 +12699,19 @@ pub mod stop_orders_service_server {
                     };
                     Box::pin(fut)
                 }
-                _ => {
-                    Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
-                        let headers = response.headers_mut();
-                        headers
-                            .insert(
-                                tonic::Status::GRPC_STATUS,
-                                (tonic::Code::Unimplemented as i32).into(),
-                            );
-                        headers
-                            .insert(
-                                http::header::CONTENT_TYPE,
-                                tonic::metadata::GRPC_CONTENT_TYPE,
-                            );
-                        Ok(response)
-                    })
-                }
+                _ => Box::pin(async move {
+                    let mut response = http::Response::new(empty_body());
+                    let headers = response.headers_mut();
+                    headers.insert(
+                        tonic::Status::GRPC_STATUS,
+                        (tonic::Code::Unimplemented as i32).into(),
+                    );
+                    headers.insert(
+                        http::header::CONTENT_TYPE,
+                        tonic::metadata::GRPC_CONTENT_TYPE,
+                    );
+                    Ok(response)
+                }),
             }
         }
     }

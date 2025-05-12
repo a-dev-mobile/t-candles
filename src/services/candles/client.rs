@@ -22,12 +22,12 @@ impl TinkoffCandleClient {
     }
 
     /// Получение минутных свечей за указанный период
-    /// 
+    ///
     /// # Arguments
     /// * `instrument_id` - Идентификатор инструмента
     /// * `from` - Начало периода в Unix timestamp (секунды)
     /// * `to` - Конец периода в Unix timestamp (секунды)
-    /// 
+    ///
     /// # Returns
     /// Вектор исторических свечей или ошибку
     async fn get_minute_candles(
@@ -73,23 +73,28 @@ impl TinkoffCandleClient {
     }
 
     /// Загружает и сохраняет свечи для одного инструмента
-    /// 
+    ///
     /// # Arguments
     /// * `instrument_id` - Идентификатор инструмента
     /// * `first_candle_date` - Дата первой возможной свечи для инструмента
     /// * `index` - Индекс инструмента в общем списке
     /// * `total` - Общее количество инструментов в списке
-    /// 
+    ///
     /// # Returns
     /// Количество обработанных свечей или ошибку
     async fn process_instrument(
-        &self, 
-        instrument_id: &str, 
+        &self,
+        instrument_id: &str,
         first_candle_date: i64,
-        index: usize, 
-        total: usize
+        index: usize,
+        total: usize,
     ) -> Result<usize, Box<dyn std::error::Error>> {
-        info!("Processing instrument {}/{}: {}", index + 1, total, instrument_id);
+        info!(
+            "Processing instrument {}/{}: {}",
+            index + 1,
+            total,
+            instrument_id
+        );
 
         // Получаем статус загрузки свечей для этого инструмента
         let status_candle = self
@@ -108,37 +113,45 @@ impl TinkoffCandleClient {
             .timestamp();
 
         let mut candles_processed = 0;
-    
+
         if let Some(status) = status_candle {
             // Инструмент уже обрабатывался ранее
             let mut current_to_second = status.to_second;
-            
+
             // Проверяем, не достигли ли мы уже вчерашнего дня
             if current_to_second >= yesterday_end {
-                debug!("Already up to date for {}, last update to {}", instrument_id, current_to_second);
+                debug!(
+                    "Already up to date for {}, last update to {}",
+                    instrument_id, current_to_second
+                );
                 return Ok(0);
             }
-            
+
             // Последовательно обрабатываем все дни с последнего сохраненного до вчерашнего
             let mut total_day_candles = 0;
             let mut days_processed = 0;
-            
+
             while current_to_second < yesterday_end {
                 let (next_day_start, next_day_end) = get_next_day_range(current_to_second);
-                
+
                 // Проверяем, не выходит ли следующий день за пределы вчерашнего
                 let end_time = std::cmp::min(next_day_end, yesterday_end);
-                
-                debug!("Fetching day {}: {} to {} for {}", 
-                      days_processed + 1, next_day_start, end_time, instrument_id);
-                
+
+                debug!(
+                    "Fetching day {}: {} to {} for {}",
+                    days_processed + 1,
+                    next_day_start,
+                    end_time,
+                    instrument_id
+                );
+
                 let vec_candles: Vec<HistoricCandle> = self
                     .get_minute_candles(instrument_id, next_day_start, end_time)
                     .await?;
 
                 let day_candles = vec_candles.len();
                 total_day_candles += day_candles;
-                
+
                 // Сохраняем только если есть данные
                 if !vec_candles.is_empty() {
                     self.app_state
@@ -152,32 +165,40 @@ impl TinkoffCandleClient {
                         .repository_tinkoff_candles_status
                         .update_to_second(instrument_id, end_time)
                         .await?;
-                    
-                    info!("Processed day {}: {} candles for {} ({}/{})", 
-                         days_processed + 1, day_candles, instrument_id, index + 1, total);
+
+                    info!(
+                        "Processed day {}: {} candles for {} ({}/{})",
+                        days_processed + 1,
+                        day_candles,
+                        instrument_id,
+                        index + 1,
+                        total
+                    );
                 }
-                
+
                 // Обновляем текущую позицию для следующей итерации
                 current_to_second = end_time;
                 days_processed += 1;
-                
+
                 // Добавляем небольшую задержку между запросами к API
                 tokio::time::sleep(std::time::Duration::from_millis(250)).await;
             }
-            
+
             candles_processed = total_day_candles;
-            info!("Completed processing {} days with total {} candles for {} ({}/{})", 
-                 days_processed, total_day_candles, instrument_id, index + 1, total);
+            info!(
+                "Completed processing {} days with total {} candles for {} ({}/{})",
+                days_processed,
+                total_day_candles,
+                instrument_id,
+                index + 1,
+                total
+            );
         } else {
             // Первая загрузка для этого инструмента
             let end_of_day = get_end_of_day(first_candle_date);
-            
+
             let vec_candles: Vec<HistoricCandle> = self
-                .get_minute_candles(
-                    instrument_id,
-                    first_candle_date,
-                    end_of_day,
-                )
+                .get_minute_candles(instrument_id, first_candle_date, end_of_day)
                 .await?;
 
             candles_processed = vec_candles.len();
@@ -198,13 +219,18 @@ impl TinkoffCandleClient {
             }
         }
 
-        info!("Processed {} candles for instrument {}/{}: {}", 
-            candles_processed, index + 1, total, instrument_id);
+        info!(
+            "Processed {} candles for instrument {}/{}: {}",
+            candles_processed,
+            index + 1,
+            total,
+            instrument_id
+        );
         Ok(candles_processed)
     }
 
     /// Загрузка и сохранение свечей для всех ликвидных инструментов в БД
-    /// 
+    ///
     /// # Returns
     /// Общее количество обработанных инструментов или ошибку
     pub async fn load_and_save_candles(&self) -> Result<usize, Box<dyn std::error::Error>> {
@@ -222,35 +248,51 @@ impl TinkoffCandleClient {
         }
 
         info!("Starting to process {} liquid shares", liquid_shares.len());
-        
+
         let mut processed_count = 0;
-        
+
         // Перебираем все ликвидные акции
         for (index, share) in liquid_shares.iter().enumerate() {
-            match self.process_instrument(
-                &share.instrument_id, 
-                share.first_1min_candle_date,
-                index,
-                liquid_shares.len()
-            ).await {
+            match self
+                .process_instrument(
+                    &share.instrument_id,
+                    share.first_1min_candle_date,
+                    index,
+                    liquid_shares.len(),
+                )
+                .await
+            {
                 Ok(candles) => {
                     processed_count += 1;
-                    debug!("Successfully processed instrument {}/{}: {} with {} candles", 
-                          index + 1, liquid_shares.len(), share.instrument_id, candles);
-                },
+                    debug!(
+                        "Successfully processed instrument {}/{}: {} with {} candles",
+                        index + 1,
+                        liquid_shares.len(),
+                        share.instrument_id,
+                        candles
+                    );
+                }
                 Err(e) => {
-                    error!("Error processing instrument {}/{}: {}: {}",
-                          index + 1, liquid_shares.len(), share.instrument_id, e);
+                    error!(
+                        "Error processing instrument {}/{}: {}: {}",
+                        index + 1,
+                        liquid_shares.len(),
+                        share.instrument_id,
+                        e
+                    );
                     // Продолжаем с следующим инструментом
                 }
             }
-            
+
             // Добавляем небольшую задержку между инструментами, чтобы не перегружать API
             tokio::time::sleep(std::time::Duration::from_millis(500)).await;
         }
 
-        info!("Completed processing {} out of {} liquid shares", 
-             processed_count, liquid_shares.len());
+        info!(
+            "Completed processing {} out of {} liquid shares",
+            processed_count,
+            liquid_shares.len()
+        );
 
         Ok(processed_count)
     }
@@ -258,10 +300,10 @@ impl TinkoffCandleClient {
 
 /// Принимает время в секундах (Unix timestamp) и возвращает
 /// время 23:59:59 того же дня в секундах (Unix timestamp)
-/// 
+///
 /// # Arguments
 /// * `timestamp_seconds` - Unix timestamp в секундах
-/// 
+///
 /// # Returns
 /// Unix timestamp в секундах для конца дня (23:59:59)
 fn get_end_of_day(timestamp_seconds: i64) -> i64 {
@@ -287,10 +329,10 @@ fn get_end_of_day(timestamp_seconds: i64) -> i64 {
 /// два значения в секундах (Unix timestamp):
 /// 1. Начало следующего дня (00:00:00)
 /// 2. Конец следующего дня (23:59:59)
-/// 
+///
 /// # Arguments
 /// * `timestamp_seconds` - Unix timestamp в секундах
-/// 
+///
 /// # Returns
 /// Кортеж из двух Unix timestamp в секундах (начало и конец следующего дня)
 fn get_next_day_range(timestamp_seconds: i64) -> (i64, i64) {

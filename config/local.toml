@@ -20,16 +20,18 @@ domain = "invest-public-api.tinkoff.ru"
 timeout = 30   # seconds
 keepalive = 60 # seconds
 
-[tinkoff_market_data_updater]
+[market_instruments_updater]
 enabled = true
+initial_run = true        # Запускать ли обновление инструментов при старте приложения
 interval_seconds = 300  # секунды
 start_time = "21:00:00"     # 0:00 Moscow time (UTC+3)
 end_time = "04:00:00"       # 7:00 Moscow time (UTC+3)
 
 
 
-[tinkoff_historical_candle_updater]
-enabled = true                # Включить/выключить сервис загрузки исторических свечей
+[historical_candle_updater]
+enabled = false                # Включить/выключить сервис загрузки исторических свечей
+initial_run = false          # Запускать ли обновление исторических свечей при старте приложения
 request_delay_ms = 200        # Задержка между API запросами в мс (для избежания лимитов API)
 start_time = "04:00:00"     # 7:00 Moscow time (UTC+3)
 end_time = "21:00:00"       # 0:00 Moscow time (UTC+3)

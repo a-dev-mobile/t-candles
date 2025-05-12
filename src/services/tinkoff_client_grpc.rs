@@ -4,16 +4,15 @@ use crate::generate::tinkoff_public_invest_api_contract_v1::{
     instruments_service_client::InstrumentsServiceClient,
     market_data_service_client::MarketDataServiceClient,
     operations_service_client::OperationsServiceClient, users_service_client::UsersServiceClient,
- 
 };
 use rustls::crypto::aws_lc_rs;
 
 use std::io::Result;
 use std::{sync::Arc, time::Duration};
 use tonic::{
+    Request,
     metadata::MetadataValue,
     transport::{Channel, ClientTlsConfig},
-    Request, 
 };
 
 #[derive(Clone)]
@@ -39,15 +38,24 @@ impl TinkoffClient {
             .with_enabled_roots();
 
         // Создание канала с настроенной конфигурацией
-        let channel = Channel::from_shared(settings.app_config.tinkoff_api.base_url.clone().into_bytes())
-            .expect("Invalid URI format")
-            .tls_config(tls_config)
-            .expect("TLS configuration failed")
-            .tcp_keepalive(Some(Duration::from_secs(settings.app_config.tinkoff_api.keepalive)))
-            .timeout(Duration::from_secs(settings.app_config.tinkoff_api.timeout))
-            .connect()
-            .await
-            .expect("Failed to connect to gRPC server");
+        let channel = Channel::from_shared(
+            settings
+                .app_config
+                .tinkoff_api
+                .base_url
+                .clone()
+                .into_bytes(),
+        )
+        .expect("Invalid URI format")
+        .tls_config(tls_config)
+        .expect("TLS configuration failed")
+        .tcp_keepalive(Some(Duration::from_secs(
+            settings.app_config.tinkoff_api.keepalive,
+        )))
+        .timeout(Duration::from_secs(settings.app_config.tinkoff_api.timeout))
+        .connect()
+        .await
+        .expect("Failed to connect to gRPC server");
 
         Ok(Self {
             instruments: InstrumentsServiceClient::new(channel.clone()),
@@ -69,5 +77,4 @@ impl TinkoffClient {
             .insert("authorization", auth_header_value);
         Ok(request)
     }
-
 }

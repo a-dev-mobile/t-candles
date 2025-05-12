@@ -6,17 +6,16 @@ pub struct AppConfig {
     pub clickhouse: ClickhouseConfig,
     pub postgres: PostgresConfig,
     pub tinkoff_api: TinkoffApiConfig,
-    pub tinkoff_market_data_updater: TinkoffMarketDataUpdater,
-    pub tinkoff_historical_candle_updater: TinkoffHistoricalCandleDataConfig,
+    pub market_instruments_updater: MarketInstrumentsUpdater,
+    pub historical_candle_updater: HistoricalCandleDataConfig,
 }
 #[derive(Debug, Deserialize)]
-pub struct TinkoffMarketDataUpdater {
+pub struct MarketInstrumentsUpdater {
     pub enabled: bool,
+    pub initial_run: bool,
     pub interval_seconds: u64,
-    #[serde(default)]
-    pub start_time: Option<String>, // Start time in UTC, format: "HH:MM:SS"
-    #[serde(default)]
-    pub end_time: Option<String>, // End time in UTC, format: "HH:MM:SS"
+    pub start_time: String, // Start time in UTC, format: "HH:MM:SS"
+    pub end_time: String,   // End time in UTC, format: "HH:MM:SS"
 }
 
 #[derive(Debug, Deserialize)]
@@ -49,27 +48,23 @@ pub struct TinkoffApiConfig {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct TinkoffHistoricalCandleDataConfig {
+pub struct HistoricalCandleDataConfig {
     pub enabled: bool,
+    pub initial_run: bool,
     pub request_delay_ms: u64,
-    #[serde(default)]
-    pub start_time: Option<String>, // Start time in UTC, format: "HH:MM:SS"
-    #[serde(default)]
-    pub end_time: Option<String>, // End time in UTC, format: "HH:MM:SS"
+
+    pub start_time: String, // Start time in UTC, format: "HH:MM:SS"
+
+    pub end_time: String, // End time in UTC, format: "HH:MM:SS"
 }
-impl TinkoffMarketDataUpdater {
+impl MarketInstrumentsUpdater {
     /// Checks if the current time is within the allowed operation window
     pub fn is_operation_allowed(&self) -> bool {
-        // If no time window is configured, always allow operation
-        if self.start_time.is_none() || self.end_time.is_none() {
-            return true;
-        }
-
         // Get current UTC time
         let now = chrono::Utc::now().time();
 
         // Parse start and end times
-        if let (Some(start_str), Some(end_str)) = (&self.start_time, &self.end_time) {
+        if let (start_str, end_str) = (&self.start_time, &self.end_time) {
             if let (Ok(start), Ok(end)) = (
                 NaiveTime::parse_from_str(start_str, "%H:%M:%S"),
                 NaiveTime::parse_from_str(end_str, "%H:%M:%S"),

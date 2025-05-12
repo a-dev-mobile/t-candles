@@ -5,4 +5,3 @@ pub struct AppSettings {
     pub app_config: AppConfig,
     pub app_env: AppEnv,
 }
-

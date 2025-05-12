@@ -5,7 +5,7 @@
 .idea/
 
 rust_doc
-.vscode/scripts/*
+.vscode/*
 
 .vscode/tasks.json
 makefile

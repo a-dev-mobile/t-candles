@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 
-
 use crate::generate::tinkoff_public_invest_api_contract_v1::Quotation;
 /// Human-readable Quotation model
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24,7 +23,11 @@ impl From<Option<&Quotation>> for TinkoffQuotationModel {
     fn from(opt_quotation: Option<&Quotation>) -> Self {
         match opt_quotation {
             Some(q) => Self::from(q),
-            None => Self { units: 0, nano: 0, value: 0.0 },
+            None => Self {
+                units: 0,
+                nano: 0,
+                value: 0.0,
+            },
         }
     }
 }

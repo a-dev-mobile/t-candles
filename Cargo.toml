@@ -5,16 +5,16 @@ edition = "2024"
 
 [dependencies]
 # Web framework
-axum = { version = "0.8.1", features = ["macros"] }
-tower-http = { version = "0.6.2", features = ["trace", "cors"] }
+axum = { version = "0.8.4", features = ["macros"] }
+tower-http = { version = "0.6.4", features = ["trace", "cors"] }
 
 # Async runtime
-tokio = { version = "1.43.0", features = ["full", "test-util"] }
+tokio = { version = "1.43.1", features = ["full", "test-util"] }
 
 # Serialization
-serde = { version = "1.0.218", features = ["derive"] }
+serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.140"
-toml = "0.8.20"
+toml = "0.8.22"
 
 # Protocol Buffers
 prost = "0.13.5"
@@ -28,19 +28,19 @@ tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["fmt", "env-filter", "json"] }
 
 # TLS
-rustls = { version = "0.23.23", features = ["ring"] }
+rustls = { version = "0.23.27", features = ["ring"] }
 rustls-native-certs = "0.8.1"
 
 # Database
-clickhouse = { version = "0.13.1", features = ["time"] }
+clickhouse = { version = "0.13.2", features = ["time"] }
 clickhouse-derive = "0.2.0"
-sqlx = { version = "0.8.3", features = ["postgres", "runtime-tokio-native-tls", "macros", "time", "uuid", "chrono","runtime-tokio", "tls-rustls",  ] }
+sqlx = { version = "0.8.5", features = ["postgres", "runtime-tokio-native-tls", "macros", "time", "uuid", "chrono","runtime-tokio", "tls-rustls",  ] }
 
 
 # Misc utilities
-async-trait = "0.1.87"
-chrono = { version = "0.4.40", features = ["serde"] }
-uuid = { version = "1.15.1", features = ["v4", "serde"] }
+async-trait = "0.1.88"
+chrono = { version = "0.4.41", features = ["serde"] }
+uuid = { version = "1.16.0", features = ["v4", "serde"] }
 base64 = "0.22.1"
 
 # Optional for development

@@ -8,7 +8,7 @@ use tracing::warn;
 pub struct TinkoffTimestampModel {
     pub seconds: i64,
     pub nanos: i32,
-    pub timestamp_utc: String, 
+    pub timestamp_utc: String,
     pub datetime: Option<DateTime<Utc>>,
 }
 
@@ -16,7 +16,7 @@ impl From<&Timestamp> for TinkoffTimestampModel {
     fn from(ts: &Timestamp) -> Self {
         let seconds = ts.seconds;
         let nanos = ts.nanos;
-        
+
         // Convert to DateTime<Utc> with proper handling of edge cases
         let datetime = DateTime::from_timestamp(seconds, nanos as u32).or_else(|| {
             // For dates that can't be processed with the standard method
@@ -28,12 +28,12 @@ impl From<&Timestamp> for TinkoffTimestampModel {
                 }
             }
         });
-        
+
         // Format as ISO 8601/RFC 3339 string
         let timestamp_utc = datetime
             .map(|dt| dt.to_rfc3339())
             .unwrap_or_else(|| "Invalid date".to_string());
-            
+
         Self {
             seconds,
             nanos,
@@ -49,7 +49,7 @@ pub fn timestamp_to_datetime(ts: &Option<Timestamp>) -> Option<DateTime<Utc>> {
         Some(ts) => {
             let seconds = ts.seconds;
             let nanos = ts.nanos as u32;
-            
+
             DateTime::from_timestamp(seconds, nanos).or_else(|| {
                 match Utc.timestamp_opt(seconds, nanos) {
                     chrono::offset::LocalResult::Single(dt) => Some(dt),
@@ -59,7 +59,7 @@ pub fn timestamp_to_datetime(ts: &Option<Timestamp>) -> Option<DateTime<Utc>> {
                     }
                 }
             })
-        },
-        None => None
+        }
+        None => None,
     }
 }

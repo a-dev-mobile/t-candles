@@ -99,8 +99,8 @@ impl CandleRepository for ClickhouseCandleRepository {
                 let close_units = candle.close.as_ref().map_or(0, |q| q.units);
                 let close_nano = candle.close.as_ref().map_or(0, |q| q.nano);
 
-                  // Используем volume как есть, поскольку теперь тип таблицы совпадает с типом данных
-            let volume = candle.volume;
+                // Используем volume как есть, поскольку теперь тип таблицы совпадает с типом данных
+                let volume = candle.volume;
 
                 values_parts.push(format!(
                     "('{}', {}, {}, {}, {}, {}, {}, {}, {}, {}, {})",

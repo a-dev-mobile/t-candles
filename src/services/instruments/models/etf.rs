@@ -1,9 +1,12 @@
 use serde::{Deserialize, Serialize};
 
-
 use crate::generate::tinkoff_public_invest_api_contract_v1::{Bond, Etf};
 
-use super::{money_value::TinkoffMoneyValueModel, quotation::TinkoffQuotationModel, real_exchange::TinkoffRealExchangeModel, time_stamp::TinkoffTimestampModel, trading_status::TinkoffTradingStatusModel};
+use super::{
+    money_value::TinkoffMoneyValueModel, quotation::TinkoffQuotationModel,
+    real_exchange::TinkoffRealExchangeModel, time_stamp::TinkoffTimestampModel,
+    trading_status::TinkoffTradingStatusModel,
+};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TinkoffEtfModel {

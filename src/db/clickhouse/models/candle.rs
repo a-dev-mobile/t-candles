@@ -18,8 +18,6 @@ pub struct DbCandle {
     pub is_complete: bool,
 }
 
-
-
 #[derive(Debug, Clone, Serialize, Deserialize, Row)]
 pub struct DailyCandle {
     pub figi: String,
