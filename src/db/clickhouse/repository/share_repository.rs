@@ -9,6 +9,7 @@ use serde::Deserialize;
 use std::collections::HashSet;
 use std::sync::Arc;
 use tracing::{debug, error, info, warn};
+use chrono::{TimeZone, Utc, FixedOffset};
 
 pub struct ShareRepository {
     connection: Arc<ClickhouseConnection>,
@@ -140,25 +141,32 @@ impl ShareRepository {
         }
     }
 
-    // Updated method to ensure proper handling of shares that are no longer liquid
+    // Updated method to match the new table structure
     async fn update_liquid_shares(&self) -> Result<u64, ClickhouseError> {
         let client = self.connection.get_client();
         let database = self.connection.get_database();
         
+        // Get current timestamp for update_time field - using Moscow time zone (UTC+3)
+        let moscow_timezone = FixedOffset::east_opt(3 * 3600).unwrap(); // UTC+3 for Moscow
+        let current_time = Utc::now()
+            .with_timezone(&moscow_timezone)
+            .format("%Y-%m-%d %H:%M:%S")
+            .to_string();
+        
         // 1. Insert currently liquid shares with is_liquid_now=true
         let insert_query = format!(
             r#"
-            INSERT INTO {0}.liquid_shares (uid, first_1min_candle_date, is_liquid_now)
+            INSERT INTO {0}.liquid_shares (uid, update_time, is_liquid_now)
             SELECT 
                 uid,
-                first_1min_candle_date,
+                '{1}',
                 true
             FROM {0}.tinkoff_shares
             WHERE buy_available_flag = 1
               AND sell_available_flag = 1
               AND first_1min_candle_date IS NOT NULL
             "#,
-            database
+            database, current_time
         );
         
         info!("Inserting liquid shares (ReplacingMergeTree engine will handle duplicates)");
@@ -206,16 +214,10 @@ impl ShareRepository {
                 for uid_record in old_uids {
                     let update_query = format!(
                         r#"
-                        INSERT INTO {0}.liquid_shares (uid, first_1min_candle_date, is_liquid_now)
-                        SELECT 
-                            uid,
-                            first_1min_candle_date,
-                            false
-                        FROM {0}.liquid_shares
-                        WHERE uid = '{1}'
-                        LIMIT 1
+                        INSERT INTO {0}.liquid_shares (uid, update_time, is_liquid_now)
+                        VALUES ('{1}', '{2}', false)
                         "#,
-                        database, uid_record.uid
+                        database, uid_record.uid, current_time
                     );
                     
                     match client.query(&update_query).execute().await {
@@ -257,7 +259,9 @@ impl ShareRepository {
         // SQL запрос для получения ликвидных акций с таблицы liquid_shares
         let query = format!(
             "
-            SELECT uid as instrument_id, first_1min_candle_date
+            SELECT 
+                uid as instrument_id,
+                toUnixTimestamp(update_time) as update_timestamp
             FROM {}.liquid_shares
             WHERE is_liquid_now = true
             ",
@@ -266,12 +270,12 @@ impl ShareRepository {
 
         info!("Fetching liquid shares from liquid_shares table");
 
-        // Определяем временную версию структуры с Option<i64>
-        // Важно: Это не создает новый тип, а просто модифицирует шаблон для десериализации
+        // Since we're no longer using first_1min_candle_date, we need to update the DbSharesLiquid
+        // structure or modify how we process the query results
         #[derive(Debug, clickhouse::Row, Deserialize)]
         struct DbSharesLiquidTemp {
             instrument_id: String,
-            first_1min_candle_date: Option<i64>,
+            update_timestamp: i64,
         }
 
         // Получаем результаты запроса
@@ -280,14 +284,13 @@ impl ShareRepository {
             .fetch_all::<DbSharesLiquidTemp>()
             .await?;
 
-        // Преобразуем в окончательную структуру DbSharesLiquid
+        // Convert to DbSharesLiquid format - assuming we're repurposing first_1min_candle_date 
+        // to store the update timestamp instead
         let result = temp_rows
             .into_iter()
-            .filter_map(|row| {
-                row.first_1min_candle_date.map(|date| DbSharesLiquid {
-                    instrument_id: row.instrument_id,
-                    first_1min_candle_date: date,
-                })
+            .map(|row| DbSharesLiquid {
+                instrument_id: row.instrument_id,
+                first_1min_candle_date: row.update_timestamp,
             })
             .collect();
 
