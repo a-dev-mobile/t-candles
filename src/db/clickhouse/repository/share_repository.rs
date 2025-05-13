@@ -8,7 +8,7 @@ use clickhouse::error::Error as ClickhouseError;
 use serde::Deserialize;
 use std::collections::HashSet;
 use std::sync::Arc;
-use tracing::{debug, error, info};
+use tracing::{debug, error, info, warn};
 
 pub struct ShareRepository {
     connection: Arc<ClickhouseConnection>,
@@ -57,7 +57,7 @@ impl ShareRepository {
         self.problematic_figis.contains(figi)
     }
 
-     pub async fn insert_shares(&self, shares: &[Share], clean_first: bool) -> Result<u64, ClickhouseError> {
+    pub async fn insert_shares(&self, shares: &[Share], clean_first: bool) -> Result<u64, ClickhouseError> {
         if shares.is_empty() {
             debug!("No shares to insert");
             return Ok(0);
@@ -127,6 +127,10 @@ impl ShareRepository {
                     "Successfully inserted {} shares (out of {} total)",
                     filtered_count, total_count
                 );
+                
+                // After inserting shares, now update the liquid_shares table
+                self.update_liquid_shares().await?;
+                
                 Ok(filtered_count as u64)
             }
             Err(e) => {
@@ -136,30 +140,137 @@ impl ShareRepository {
         }
     }
 
+    // Updated method to ensure proper handling of shares that are no longer liquid
+    async fn update_liquid_shares(&self) -> Result<u64, ClickhouseError> {
+        let client = self.connection.get_client();
+        let database = self.connection.get_database();
+        
+        // 1. Insert currently liquid shares with is_liquid_now=true
+        let insert_query = format!(
+            r#"
+            INSERT INTO {0}.liquid_shares (uid, first_1min_candle_date, is_liquid_now)
+            SELECT 
+                uid,
+                first_1min_candle_date,
+                true
+            FROM {0}.tinkoff_shares
+            WHERE buy_available_flag = 1
+              AND sell_available_flag = 1
+              AND first_1min_candle_date IS NOT NULL
+            "#,
+            database
+        );
+        
+        info!("Inserting liquid shares (ReplacingMergeTree engine will handle duplicates)");
+        
+        match client.query(&insert_query).execute().await {
+            Ok(_) => {
+                info!("Successfully inserted currently liquid shares");
+                
+                // 2. Get a list of UIDs that are currently in liquid_shares table but are not in current liquid shares
+                let get_old_uids_query = format!(
+                    r#"
+                    SELECT uid 
+                    FROM {0}.liquid_shares
+                    WHERE uid NOT IN (
+                        SELECT uid
+                        FROM {0}.tinkoff_shares
+                        WHERE buy_available_flag = 1
+                          AND sell_available_flag = 1
+                          AND first_1min_candle_date IS NOT NULL
+                    )
+                    "#,
+                    database
+                );
+                
+                info!("Finding shares that are no longer liquid");
+                
+                // Execute the query to get a list of UIDs that need to be updated to is_liquid_now=false
+                #[derive(Debug, serde::Deserialize, clickhouse::Row)]
+                struct UidRecord {
+                    uid: String,
+                }
+                
+                let old_uids = match client.query(&get_old_uids_query).fetch_all::<UidRecord>().await {
+                    Ok(uids) => {
+                        info!("Found {} shares that are no longer liquid", uids.len());
+                        uids
+                    }
+                    Err(e) => {
+                        error!("Failed to find shares that are no longer liquid: {}", e);
+                        return Err(e);
+                    }
+                };
+                
+                // 3. For each UID that is no longer liquid, insert a record with is_liquid_now=false
+                for uid_record in old_uids {
+                    let update_query = format!(
+                        r#"
+                        INSERT INTO {0}.liquid_shares (uid, first_1min_candle_date, is_liquid_now)
+                        SELECT 
+                            uid,
+                            first_1min_candle_date,
+                            false
+                        FROM {0}.liquid_shares
+                        WHERE uid = '{1}'
+                        LIMIT 1
+                        "#,
+                        database, uid_record.uid
+                    );
+                    
+                    match client.query(&update_query).execute().await {
+                        Ok(_) => {
+                            debug!("Updated share {} to is_liquid_now=false", uid_record.uid);
+                        }
+                        Err(e) => {
+                            error!("Failed to update share {} to is_liquid_now=false: {}", uid_record.uid, e);
+                            // Continue with other UIDs instead of failing the entire process
+                        }
+                    }
+                }
+                
+                info!("Completed updating shares that are no longer liquid");
+                
+                // 4. Force a merge to ensure the latest versions are visible
+                let optimize_query = format!("OPTIMIZE TABLE {0}.liquid_shares FINAL", database);
+                info!("Optimizing table to ensure latest versions are visible");
+                
+                match client.query(&optimize_query).execute().await {
+                    Ok(_) => info!("Successfully optimized liquid_shares table"),
+                    Err(e) => warn!("Failed to optimize table: {}", e)
+                }
+                
+                Ok(1) // Return 1 to indicate success
+            }
+            Err(e) => {
+                error!("Failed to insert liquid shares: {}", e);
+                Err(e)
+            }
+        }
+    }
+
     pub async fn get_liquid_shares(&self) -> Result<Vec<DbSharesLiquid>, ClickhouseError> {
         let client = self.connection.get_client();
         // Получаем полное имя таблицы с использованием схемы из конфигурации
-        let table_name = format!("{}.{}", self.connection.get_database(), "tinkoff_shares");
+        let database = self.connection.get_database();
 
-        // SQL запрос для получения ликвидных акций с использованием таблицы с учетом схемы
+        // SQL запрос для получения ликвидных акций с таблицы liquid_shares
         let query = format!(
             "
-        SELECT uid, first_1min_candle_date
-        FROM {}
-        WHERE buy_available_flag = 1
-          AND sell_available_flag = 1
-          AND first_1min_candle_date IS NOT NULL
-    ",
-            table_name
+            SELECT uid as instrument_id, first_1min_candle_date
+            FROM {}.liquid_shares
+            WHERE is_liquid_now = true
+            ",
+            database
         );
 
-        info!("Fetching liquid shares available for trading");
+        info!("Fetching liquid shares from liquid_shares table");
 
         // Определяем временную версию структуры с Option<i64>
         // Важно: Это не создает новый тип, а просто модифицирует шаблон для десериализации
         #[derive(Debug, clickhouse::Row, Deserialize)]
         struct DbSharesLiquidTemp {
-            uid: String,
+            instrument_id: String,
             first_1min_candle_date: Option<i64>,
         }
 
@@ -174,7 +285,7 @@ impl ShareRepository {
             .into_iter()
             .filter_map(|row| {
                 row.first_1min_candle_date.map(|date| DbSharesLiquid {
-                    instrument_id: row.uid,
+                    instrument_id: row.instrument_id,
                     first_1min_candle_date: date,
                 })
             })
