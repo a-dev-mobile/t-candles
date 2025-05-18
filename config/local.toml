@@ -24,7 +24,7 @@ keepalive = 60 # seconds
 enabled = true
 initial_run = true        # Запускать ли обновление инструментов при старте приложения
 interval_seconds = 10  # секунды
-start_time = "04:00:00"     # 0:00 Moscow time (UTC+3)
+start_time = "01:00:00"     # 0:00 Moscow time (UTC+3)
 end_time = "21:00:00"       # 7:00 Moscow time (UTC+3)
 
 
