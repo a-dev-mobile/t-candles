@@ -11,8 +11,6 @@ idle_timeout = 600         # 10 minutes
 
 [clickhouse]
 timeout = 30   # seconds
-pool_min = 5
-pool_max = 20
 
 [tinkoff_api]
 base_url = "https://invest-public-api.tinkoff.ru:443"
@@ -20,19 +18,19 @@ domain = "invest-public-api.tinkoff.ru"
 timeout = 30   # seconds
 keepalive = 60 # seconds
 
-[instruments_scheduler]
+[shares_scheduler]
 enabled = true
 initial_run = true        # Запускать ли обновление инструментов при старте приложения
-interval_seconds = 900      # секунды
+interval_seconds = 300      # секунды
 start_time = "04:00:00"     # 7:00 Moscow time (UTC+3)
 end_time = "21:00:00"       # 00:00 Moscow time (UTC+3)
 
 
 
 [candles_scheduler]
-enabled = false                # Включить/выключить сервис загрузки исторических свечей
+enabled = true                # Включить/выключить сервис загрузки исторических свечей
 initial_run = false          # Запускать ли обновление исторических свечей при старте приложения
 request_delay_ms = 200        # Задержка между API запросами в мс (для избежания лимитов API)
-start_time = "21:00:00"     # 7:00 Moscow time (UTC+3)
-end_time = "04:00:00"       # 0:00 Moscow time (UTC+3)
+start_time = "21:00:00"     # 0:00 Moscow time (UTC+3)
+end_time = "04:00:00"       # 7:00 Moscow time (UTC+3)
 

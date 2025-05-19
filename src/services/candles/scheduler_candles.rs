@@ -1,16 +1,16 @@
 use std::{sync::Arc, time::Duration};
 use tracing::{debug, error, info};
 
-use super::client::TinkoffCandleClient;
-use crate::{env_config::models::app_config::OperationWindow, AppState};
+use super::client_candle::ClientCandle;
+use crate::{AppState, env_config::models::app_config::OperationWindow};
 
-pub struct CandlesScheduler {
+pub struct SchedulerCandles {
     app_state: Arc<AppState>,
 }
 
-impl CandlesScheduler {
+impl SchedulerCandles {
     pub fn new(app_state: Arc<AppState>) -> Self {
-        CandlesScheduler { app_state }
+        SchedulerCandles { app_state }
     }
 
     /// Trigger a manual update (respects enabled flag)
@@ -20,16 +20,18 @@ impl CandlesScheduler {
             info!("Candle updates are disabled in configuration");
             return Ok(0);
         }
-        
-        // Create the client and delegate to its implementation
-        let client = TinkoffCandleClient::new(self.app_state.clone());
-        client.load_and_save_candles().await
+
+        // Используем клиент напрямую из AppState
+        self.app_state
+            .client_tinkoff_candle
+            .load_and_save_candles()
+            .await
     }
 
     /// Start the scheduler with proper configuration checks
     pub async fn start(&self) {
         let config = &self.app_state.settings.app_config.candles_scheduler;
-        
+
         // Check if enabled
         if !config.enabled {
             info!("Historical candle data scheduler is disabled in configuration");
@@ -62,8 +64,8 @@ impl CandlesScheduler {
         );
 
         // Create the candle client
-        let candle_client = TinkoffCandleClient::new(self.app_state.clone());
-        
+        // let candle_client = ClientTinkoffCandle::new(self.app_state.clone());
+
         // Clone app_state for the task
         let app_state = self.app_state.clone();
 
@@ -88,8 +90,12 @@ impl CandlesScheduler {
 
                 info!("Candle scheduler: triggering update");
 
-                // Trigger candle update
-                match candle_client.load_and_save_candles().await {
+                // Trigger candle update using client from app_state
+                match app_state
+                    .client_tinkoff_candle
+                    .load_and_save_candles()
+                    .await
+                {
                     Ok(count) => info!(
                         "Candle scheduler: successfully processed {} instruments",
                         count

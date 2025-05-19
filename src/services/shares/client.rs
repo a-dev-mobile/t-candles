@@ -3,34 +3,39 @@ use tokio::time;
 use tracing::{debug, error, info};
 
 use crate::{
-    app_state::models::AppState,
-    generate::tinkoff_public_invest_api_contract_v1::{InstrumentStatus, InstrumentsRequest},
+    app_state::models::AppState, db::clickhouse::clickhouse_service::ClickhouseService, generate::tinkoff_public_invest_api_contract_v1::{InstrumentStatus, InstrumentsRequest}, services::tinkoff_client_grpc::TinkoffClient
 };
 
-// Mark the struct as pub(super) to make it visible only within the parent module
-pub(super) struct InstrumentsUpdater {
-    app_state: Arc<AppState>,
+// Mark the struct as pub to make it visible only within the parent module
+pub struct ClientShares {
+    clickhouse_service: Arc<ClickhouseService>,
+    grpc_tinkoff: Arc<TinkoffClient>,
 }
 
-impl InstrumentsUpdater {
-    pub(super) async fn new(app_state: Arc<AppState>) -> Self {
-        InstrumentsUpdater { app_state }
+impl ClientShares {
+    pub async fn new(
+        clickhouse_service: Arc<ClickhouseService>,
+        grpc_tinkoff: Arc<TinkoffClient>
+    ) -> Self {
+        Self { 
+            clickhouse_service, 
+            grpc_tinkoff 
+        }
     }
 
     // This method is now pub(super) and can be called only by code in the parent module
-    pub(super) async fn update_shares(&self) -> Result<u64, Box<dyn std::error::Error>> {
+    pub async fn update_shares(&self) -> Result<u64, Box<dyn std::error::Error>> {
         info!("Fetching updated instruments data");
 
         // Fetch shares from Tinkoff API
         let request = self
-            .app_state
             .grpc_tinkoff
             .create_request(InstrumentsRequest {
                 instrument_status: InstrumentStatus::All as i32,
             })
             .expect("Failed to create request");
 
-        let mut instruments_client = self.app_state.grpc_tinkoff.instruments.clone();
+        let mut instruments_client = self.grpc_tinkoff.instruments.clone();
 
         let shares_response = instruments_client
             .shares(request)
@@ -43,9 +48,8 @@ impl InstrumentsUpdater {
 
         // Insert directly from proto models
         match self
-            .app_state
             .clickhouse_service
-            .share_repository
+            .repository_share
             .insert_shares(&shares_response.instruments, true) // Set clean_first to true
             .await
         {

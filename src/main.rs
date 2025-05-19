@@ -10,13 +10,15 @@ mod utils;
 
 use app_state::models::AppState;
 use axum::{Router, routing::get};
-use db::{
-    clickhouse::clickhouse_service::ClickhouseService,
-
-};
+use db::clickhouse::clickhouse_service::ClickhouseService;
 use env_config::models::{app_config::AppConfig, app_env::AppEnv, app_setting::AppSettings};
 use layers::{create_cors, create_trace};
-use services::{candles::candles_scheduler::CandlesScheduler, instruments::instruments_scheduler::InstrumentsScheduler, tinkoff_client_grpc::TinkoffClient};
+use services::{
+    candles::{client_candle::ClientCandle, scheduler_candles::SchedulerCandles},
+
+    shares::shares_scheduler::InstrumentsScheduler,
+    tinkoff_client_grpc::TinkoffClient,
+};
 use std::{net::SocketAddr, sync::Arc};
 use tokio::net::TcpListener;
 use tracing::{debug, error, info};
@@ -57,9 +59,7 @@ async fn initialize_application() -> AppSettings {
 }
 
 /// Establishes connections to databases
-async fn initialize_database_connections(
-    settings: Arc<AppSettings>,
-) -> (ClickhouseService) {
+async fn initialize_database_connections(settings: Arc<AppSettings>) -> ClickhouseService {
     info!("Initializing database connections...");
 
     // Initialize ClickHouse connection
@@ -73,8 +73,6 @@ async fn initialize_database_connections(
             panic!("Cannot continue without ClickHouse connection");
         }
     };
-
-    
 
     clickhouse_service
 }
@@ -113,15 +111,15 @@ async fn start_http_server(app: Router, addr: SocketAddr) {
 /// Initializes and starts all background services
 async fn initialize_background_services(app_state: Arc<AppState>) {
     // Initialize the instruments scheduler
-    let instruments_scheduler = InstrumentsScheduler::new(app_state.clone()).await;
-    
+    let shares_scheduler = InstrumentsScheduler::new(app_state.clone()).await;
+
     // Initialize the candles scheduler
-    let candles_scheduler = CandlesScheduler::new(app_state.clone());
-    
+    let candles_scheduler = SchedulerCandles::new(app_state.clone());
+
     // Start both schedulers (they'll check their enabled status internally)
-    instruments_scheduler.start().await;
+    shares_scheduler.start().await;
     candles_scheduler.start().await;
-    
+
     info!("Background services initialization completed");
 }
 
@@ -131,8 +129,7 @@ async fn main() {
     let settings: Arc<AppSettings> = Arc::new(initialize_application().await);
 
     // Connect to databases
-    let (clickhouse_service) =
-        initialize_database_connections(settings.clone()).await;
+    let clickhouse_service = initialize_database_connections(settings.clone()).await;
 
     // Parse server address from configuration
     let server_address: SocketAddr = format!(
@@ -152,12 +149,14 @@ async fn main() {
     );
 
     // Create application state with all services
-    let app_state: Arc<AppState> = Arc::new(AppState {
-        settings: settings.clone(),
-        clickhouse_service: Arc::new(clickhouse_service),
-  
-        grpc_tinkoff: tinkoff_client,
-    });
+    let app_state: Arc<AppState> = Arc::new(
+        AppState::new(
+            settings.clone(),
+            Arc::new(clickhouse_service),
+            tinkoff_client,
+        )
+        .await,
+    );
 
     // Initialize and start background services
     initialize_background_services(app_state.clone()).await;

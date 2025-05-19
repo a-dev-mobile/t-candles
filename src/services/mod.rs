@@ -1,3 +1,4 @@
 pub mod candles;
-pub mod instruments;
+pub mod shares;
+
 pub mod tinkoff_client_grpc;

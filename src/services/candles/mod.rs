@@ -1,2 +1,2 @@
-pub mod client;
-pub mod candles_scheduler;
+pub mod client_candle;
+pub mod scheduler_candles;

@@ -1,24 +1,23 @@
-
 use crate::db::clickhouse::{
     connection::ClickhouseConnection, repository::candle_repository::ClickhouseCandleRepository,
 };
-
 
 use crate::env_config::models::app_setting::AppSettings;
 use std::sync::Arc;
 use tracing::{error, info};
 
-use super::repository::share_repository::ShareRepository;
 use super::repository::candle_repository::CandleRepository;
+use super::repository::repository_my_instrument::RepositoryMyInstrument;
+use super::repository::repository_share::ShareRepository;
 
 pub struct ClickhouseService {
     // Connections
     pub connection: Arc<ClickhouseConnection>,
 
-    // Analytical repositories (ClickHouse)
     pub repository_candle: Arc<dyn CandleRepository + Send + Sync>,
 
-    pub share_repository: Arc<ShareRepository>,
+    pub repository_share: Arc<ShareRepository>,
+    pub repository_my_instrument: Arc<RepositoryMyInstrument>,
 }
 
 impl ClickhouseService {
@@ -40,13 +39,14 @@ impl ClickhouseService {
 
         // Initialize analytical repositories (ClickHouse)
         info!("Initialize repositories (ClickHouse)");
-        let candle_repository = Arc::new(ClickhouseCandleRepository::new(
+        let repository_candle = Arc::new(ClickhouseCandleRepository::new(
             clickhouse_connection.clone(),
         )) as Arc<dyn CandleRepository + Send + Sync>;
 
-        let analytics_share_repository =
-            Arc::new(ShareRepository::new(clickhouse_connection.clone()));
+        let repository_share = Arc::new(ShareRepository::new(clickhouse_connection.clone()));
 
+        let repository_my_instrument =
+            Arc::new(RepositoryMyInstrument::new(clickhouse_connection.clone()));
         // Initialize operational repositories (PostgreSQL)
         info!("Initialize repositories (PostgreSQL)");
 
@@ -54,14 +54,12 @@ impl ClickhouseService {
         Ok(Self {
             connection: clickhouse_connection,
 
-            repository_candle: candle_repository,
+            repository_candle,
 
-            share_repository: analytics_share_repository,
+            repository_share,
+            repository_my_instrument,
         })
     }
 
-    /// Форматирует полное имя таблицы с учетом схемы из конфигурации
-    pub fn format_table_name(&self, table: &str) -> String {
-        format!("{}.{}", self.connection.get_database(), table)
-    }
+
 }

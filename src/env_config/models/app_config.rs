@@ -1,12 +1,12 @@
-use chrono::{NaiveTime, Utc};
+use chrono::NaiveTime;
 use serde::Deserialize;
+
 #[derive(Debug, Deserialize)]
 pub struct AppConfig {
     pub log: LogConfig,
     pub clickhouse: ClickhouseConfig,
-    pub postgres: PostgresConfig,
     pub tinkoff_api: TinkoffApiConfig,
-    pub instruments_scheduler: InstrumentsScheduler,
+    pub shares_scheduler: InstrumentsScheduler,
     pub candles_scheduler: CandlesScheduler,
 }
 #[derive(Debug, Deserialize)]
@@ -27,17 +27,8 @@ pub struct LogConfig {
 #[derive(Debug, Deserialize)]
 pub struct ClickhouseConfig {
     pub timeout: u64,
-    pub pool_min: u32,
-    pub pool_max: u32,
 }
-#[derive(Debug, Deserialize)]
-pub struct PostgresConfig {
-    pub timeout: u64,
-    pub max_connections: u32,
-    pub min_connections: u32,
-    pub max_lifetime: u64,
-    pub idle_timeout: u64,
-}
+
 
 #[derive(Debug, Deserialize)]
 pub struct TinkoffApiConfig {

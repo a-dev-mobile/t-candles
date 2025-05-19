@@ -1,3 +1,3 @@
 pub mod client;
 pub mod models;
-pub mod instruments_scheduler;
+pub mod shares_scheduler;
