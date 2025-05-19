@@ -2,7 +2,7 @@
 use crate::db::clickhouse::{
     connection::ClickhouseConnection, repository::candle_repository::ClickhouseCandleRepository,
 };
-use crate::db::postgres::connection::PostgresConnection;
+
 
 use crate::env_config::models::app_setting::AppSettings;
 use std::sync::Arc;

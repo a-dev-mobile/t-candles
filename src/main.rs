@@ -12,7 +12,7 @@ use app_state::models::AppState;
 use axum::{Router, routing::get};
 use db::{
     clickhouse::clickhouse_service::ClickhouseService,
-    postgres::postgres_service::PostgresService,
+
 };
 use env_config::models::{app_config::AppConfig, app_env::AppEnv, app_setting::AppSettings};
 use layers::{create_cors, create_trace};
@@ -59,7 +59,7 @@ async fn initialize_application() -> AppSettings {
 /// Establishes connections to databases
 async fn initialize_database_connections(
     settings: Arc<AppSettings>,
-) -> (ClickhouseService, PostgresService) {
+) -> (ClickhouseService) {
     info!("Initializing database connections...");
 
     // Initialize ClickHouse connection
@@ -74,19 +74,9 @@ async fn initialize_database_connections(
         }
     };
 
-    // Initialize PostgreSQL connection
-    let postgres_service = match PostgresService::new(&settings).await {
-        Ok(service) => {
-            info!("PostgreSQL connection established successfully");
-            service
-        }
-        Err(err) => {
-            error!("Failed to connect to PostgreSQL: {}", err);
-            panic!("Cannot continue without PostgreSQL connection");
-        }
-    };
+    
 
-    (clickhouse_service, postgres_service)
+    clickhouse_service
 }
 
 /// Creates the application router with all API endpoints and middleware
@@ -141,7 +131,7 @@ async fn main() {
     let settings: Arc<AppSettings> = Arc::new(initialize_application().await);
 
     // Connect to databases
-    let (clickhouse_service, postgres_service) =
+    let (clickhouse_service) =
         initialize_database_connections(settings.clone()).await;
 
     // Parse server address from configuration
@@ -165,7 +155,7 @@ async fn main() {
     let app_state: Arc<AppState> = Arc::new(AppState {
         settings: settings.clone(),
         clickhouse_service: Arc::new(clickhouse_service),
-        postgres_service: Arc::new(postgres_service),
+  
         grpc_tinkoff: tinkoff_client,
     });
 

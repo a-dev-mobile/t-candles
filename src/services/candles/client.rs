@@ -96,137 +96,109 @@ impl TinkoffCandleClient {
             instrument_id
         );
 
-        // Получаем статус загрузки свечей для этого инструмента
-        let status_candle = self
-            .app_state
-            .postgres_service
-            .repository_tinkoff_candles_status
-            .get_by_instrument_uid(instrument_id)
-            .await?;
+    return  Ok(0);
 
-        // Получаем текущую дату и вычисляем дату предыдущего дня
-        let now = Utc::now();
-        let yesterday_end = Utc
-            .with_ymd_and_hms(now.year(), now.month(), now.day(), 0, 0, 0)
-            .single()
-            .unwrap_or_default()
-            .timestamp();
+        // // Получаем текущую дату и вычисляем дату предыдущего дня
+        // let now = Utc::now();
+        // let yesterday_end = Utc
+        //     .with_ymd_and_hms(now.year(), now.month(), now.day(), 0, 0, 0)
+        //     .single()
+        //     .unwrap_or_default()
+        //     .timestamp();
 
-        let mut candles_processed = 0;
+        // let mut candles_processed = 0;
 
-        if let Some(status) = status_candle {
-            // Инструмент уже обрабатывался ранее
-            let mut current_to_second = status.to_second;
+        // if let Some(status) = status_candle {
+        //     // Инструмент уже обрабатывался ранее
+        //     let mut current_to_second = status.to_second;
 
-            // Проверяем, не достигли ли мы уже вчерашнего дня
-            if current_to_second >= yesterday_end {
-                debug!(
-                    "Already up to date for {}, last update to {}",
-                    instrument_id, current_to_second
-                );
-                return Ok(0);
-            }
+        //     // Проверяем, не достигли ли мы уже вчерашнего дня
+        //     if current_to_second >= yesterday_end {
+        //         debug!(
+        //             "Already up to date for {}, last update to {}",
+        //             instrument_id, current_to_second
+        //         );
+        //         return Ok(0);
+        //     }
 
-            // Последовательно обрабатываем все дни с последнего сохраненного до вчерашнего
-            let mut total_day_candles = 0;
-            let mut days_processed = 0;
+        //     // Последовательно обрабатываем все дни с последнего сохраненного до вчерашнего
+        //     let mut total_day_candles = 0;
+        //     let mut days_processed = 0;
 
-            while current_to_second < yesterday_end {
-                let (next_day_start, next_day_end) = get_next_day_range(current_to_second);
+        //     while current_to_second < yesterday_end {
+        //         let (next_day_start, next_day_end) = get_next_day_range(current_to_second);
 
-                // Проверяем, не выходит ли следующий день за пределы вчерашнего
-                let end_time = std::cmp::min(next_day_end, yesterday_end);
+        //         // Проверяем, не выходит ли следующий день за пределы вчерашнего
+        //         let end_time = std::cmp::min(next_day_end, yesterday_end);
 
-                debug!(
-                    "Fetching day {}: {} to {} for {}",
-                    days_processed + 1,
-                    next_day_start,
-                    end_time,
-                    instrument_id
-                );
+        //         debug!(
+        //             "Fetching day {}: {} to {} for {}",
+        //             days_processed + 1,
+        //             next_day_start,
+        //             end_time,
+        //             instrument_id
+        //         );
 
-                let vec_candles: Vec<HistoricCandle> = self
-                    .get_minute_candles(instrument_id, next_day_start, end_time)
-                    .await?;
+        //         let vec_candles: Vec<HistoricCandle> = self
+        //             .get_minute_candles(instrument_id, next_day_start, end_time)
+        //             .await?;
 
-                let day_candles = vec_candles.len();
-                total_day_candles += day_candles;
+        //         let day_candles = vec_candles.len();
+        //         total_day_candles += day_candles;
 
-                // Сохраняем только если есть данные
-                if !vec_candles.is_empty() {
-                    self.app_state
-                        .clickhouse_service
-                        .repository_candle
-                        .insert_candles(vec_candles, instrument_id)
-                        .await?;
+        //         // Сохраняем только если есть данные
+        //         if !vec_candles.is_empty() {
+        //             self.app_state
+        //                 .clickhouse_service
+        //                 .repository_candle
+        //                 .insert_candles(vec_candles, instrument_id)
+        //                 .await?;
 
-                    self.app_state
-                        .postgres_service
-                        .repository_tinkoff_candles_status
-                        .update_to_second(instrument_id, end_time)
-                        .await?;
+  
+        //         }
 
-                    info!(
-                        "Processed day {}: {} candles for {} ({}/{})",
-                        days_processed + 1,
-                        day_candles,
-                        instrument_id,
-                        index + 1,
-                        total
-                    );
-                }
+              
+        //     }
 
-                // Обновляем текущую позицию для следующей итерации
-                current_to_second = end_time;
-                days_processed += 1;
+        //     candles_processed = total_day_candles;
+        //     info!(
+        //         "Completed processing {} days with total {} candles for {} ({}/{})",
+        //         days_processed,
+        //         total_day_candles,
+        //         instrument_id,
+        //         index + 1,
+        //         total
+        //     );
+        // } else {
+        //     // Первая загрузка для этого инструмента
+        //     let end_of_day = get_end_of_day(first_candle_date);
 
-                // Добавляем небольшую задержку между запросами к API
-                tokio::time::sleep(std::time::Duration::from_millis(250)).await;
-            }
+        //     let vec_candles: Vec<HistoricCandle> = self
+        //         .get_minute_candles(instrument_id, first_candle_date, end_of_day)
+        //         .await?;
 
-            candles_processed = total_day_candles;
-            info!(
-                "Completed processing {} days with total {} candles for {} ({}/{})",
-                days_processed,
-                total_day_candles,
-                instrument_id,
-                index + 1,
-                total
-            );
-        } else {
-            // Первая загрузка для этого инструмента
-            let end_of_day = get_end_of_day(first_candle_date);
+        //     candles_processed = vec_candles.len();
 
-            let vec_candles: Vec<HistoricCandle> = self
-                .get_minute_candles(instrument_id, first_candle_date, end_of_day)
-                .await?;
+        //     // Сохраняем только если есть данные
+        //     if !vec_candles.is_empty() {
+        //         self.app_state
+        //             .clickhouse_service
+        //             .repository_candle
+        //             .insert_candles(vec_candles, instrument_id)
+        //             .await?;
 
-            candles_processed = vec_candles.len();
+          
+        //     }
+        // }
 
-            // Сохраняем только если есть данные
-            if !vec_candles.is_empty() {
-                self.app_state
-                    .clickhouse_service
-                    .repository_candle
-                    .insert_candles(vec_candles, instrument_id)
-                    .await?;
-
-                self.app_state
-                    .postgres_service
-                    .repository_tinkoff_candles_status
-                    .upsert(instrument_id, end_of_day)
-                    .await?;
-            }
-        }
-
-        info!(
-            "Processed {} candles for instrument {}/{}: {}",
-            candles_processed,
-            index + 1,
-            total,
-            instrument_id
-        );
-        Ok(candles_processed)
+        // info!(
+        //     "Processed {} candles for instrument {}/{}: {}",
+        //     candles_processed,
+        //     index + 1,
+        //     total,
+        //     instrument_id
+        // );
+        // Ok(candles_processed)
     }
 
     /// Загрузка и сохранение свечей для всех ликвидных инструментов в БД
