@@ -25,7 +25,7 @@ impl ClientCandle {
     pub fn new(
         clickhouse_service: Arc<ClickhouseService>,
         grpc_tinkoff: Arc<TinkoffClient>,
-        settings: Arc<AppSettings>, 
+        settings: Arc<AppSettings>,
     ) -> Self {
         Self {
             clickhouse_service,
@@ -133,50 +133,60 @@ impl ClientCandle {
         let mut latest_timestamp = current_date;
 
         while current_date < yesterday_end {
-            let (next_day_start, next_day_end) = utils_date_time::get_next_day_range(current_date);
+            // Calculate the end of the current day
+            let current_day_end = utils_date_time::get_end_of_day(current_date);
 
             // Make sure we don't exceed yesterday
-            let end_time = std::cmp::min(next_day_end, yesterday_end);
+            let end_time = std::cmp::min(current_day_end, yesterday_end);
 
-            debug!(
-                "Fetching day {}: {} to {} for {}",
-                days_processed + 1,
-                next_day_start,
-                end_time,
-                instrument_id
-            );
+            // Ensure the time range is valid (end time is after start time)
+            if end_time > current_date {
+                debug!(
+                    "Fetching day {}: {} to {} for {}",
+                    days_processed + 1,
+                    current_date,
+                    end_time,
+                    instrument_id
+                );
 
-            let vec_candles: Vec<HistoricCandle> = self
-                .get_minute_candles(instrument_id, next_day_start, end_time)
-                .await?;
+                let vec_candles: Vec<HistoricCandle> = self
+                    .get_minute_candles(instrument_id, current_date, end_time)
+                    .await?;
 
-            let day_candles = vec_candles.len();
-            total_day_candles += day_candles;
+                let day_candles = vec_candles.len();
+                total_day_candles += day_candles;
 
-            // Save candles only if there are data
-            if !vec_candles.is_empty() {
-                // Find the latest timestamp in this batch of candles
-                if let Some(last_candle) = vec_candles.last() {
-                    if let Some(time) = &last_candle.time {
-                        latest_timestamp = time.seconds;
+                // Save candles only if there are data
+                if !vec_candles.is_empty() {
+                    // Find the latest timestamp in this batch of candles
+                    if let Some(last_candle) = vec_candles.last() {
+                        if let Some(time) = &last_candle.time {
+                            latest_timestamp = time.seconds;
+                        }
                     }
+
+                    // Insert candles
+                    self.clickhouse_service
+                        .repository_candle
+                        .insert_candles(vec_candles, instrument_id)
+                        .await?;
+
+                    // Update the last candle date in the database after each successful batch
+                    self.clickhouse_service
+                        .repository_my_instrument
+                        .update_last_candle_date(instrument_id, latest_timestamp)
+                        .await?;
                 }
-
-                // Insert candles
-                self.clickhouse_service
-                    .repository_candle
-                    .insert_candles(vec_candles, instrument_id)
-                    .await?;
-
-                // Update the last candle date in the database after each successful batch
-                self.clickhouse_service
-                    .repository_my_instrument
-                    .update_last_candle_date(instrument_id, latest_timestamp)
-                    .await?;
+            } else {
+                debug!(
+                    "Skipping invalid time range for {}: {} to {}",
+                    instrument_id, current_date, end_time
+                );
             }
 
             // Move to the next day
-            current_date = next_day_end;
+            let (next_day_start, _) = utils_date_time::get_next_day_range(current_date);
+            current_date = next_day_start;
             days_processed += 1;
         }
 
